@@ -9,6 +9,10 @@ const storySchema = new Schema({
     image:{
         type: String,
         default: ""
+    },
+    video : {
+        type : String,
+        default : ""
     }
 },{timestamps : true})
 

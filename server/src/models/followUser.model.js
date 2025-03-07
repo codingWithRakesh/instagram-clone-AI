@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const followUserSchema = new Schema({
-    followers : [{
+    follower : [{
         type : Schema.Types.ObjectId,
         ref : "User"
     }],

@@ -12,13 +12,9 @@ app.use(express.urlencoded())
 app.use(express.static("public"))
 app.use(cookieParser())
 
-// import userRouter from "./routes/user.route.js"
-// import keepNoteRouter from "./routes/keepNote.route.js"
-// import labelRouter from "./routes/label.router.js"
+import userRouter from "./routes/user.route.js"
 
-// app.use("/user", userRouter)
-// app.use("/keepnote", keepNoteRouter)
-// app.use("/label", labelRouter)
+app.use("/api/v1/user", userRouter)
 
 app.get("/", (req, res) => {
     res.send("working")

@@ -4,11 +4,17 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 const userSchema = new Schema({
-    numberOrEmail: {
+    number: {
         type: String,
-        required: true,
         unique: true,
         index: true
+    },
+    email : {
+        type: String,
+        unique: true,
+        index: true,
+        lowercase: true,
+        trim: true
     },
     fullName: {
         type: String,
