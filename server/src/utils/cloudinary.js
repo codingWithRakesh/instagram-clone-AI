@@ -12,7 +12,7 @@ const uploadOnCloudinary = async (base64Image) => {
     try {
         if(!base64Image) return null
         const result = await cloudinary.uploader.upload(base64Image, {
-            resource_type : 'auto', // Change folder as needed
+            resource_type : 'auto', 
           });      
 
         return result;
@@ -21,20 +21,6 @@ const uploadOnCloudinary = async (base64Image) => {
         return null;
     }
 };
-
-// const uploadOnCloudinary = async (filePath) => {
-//     try {
-//         if(!filePath) return null
-//         const result = await cloudinary.uploader.upload(filePath, {
-//             resource_type : 'auto'
-//         });
-//         fs.unlinkSync(filePath)
-//         return result;
-//     } catch (error) {
-//         fs.unlinkSync(filePath)
-//         return null;
-//     }
-// };
 
 const getPublicId = (url) => {
     const parts = url.split("/")

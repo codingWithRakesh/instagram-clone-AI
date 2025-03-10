@@ -29,6 +29,13 @@ const userSchema = new Schema({
         trim: true,
         index: true
     },
+    DOB : {
+        type : String,
+        required : true
+    },
+    websiteURL: {
+        type: String,
+    },
     profilePic: {
         type: String,
         default: ""
@@ -36,6 +43,10 @@ const userSchema = new Schema({
     bio: {
         type: String,
         default: ""
+    },
+    gender : {
+        type: String,
+        enum:['Male','Female','Other'],
     },
     password: {
         type: String,
