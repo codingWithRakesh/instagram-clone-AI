@@ -176,55 +176,63 @@ const currentUser = asyncHandler(async (req, res) => {
 const userProfile = asyncHandler(async (req, res) => {
     const user = await User.aggregate([
         {
-            $match : {
-                _id : new mongoose.Types.ObjectId(req.user._id)
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        {
+            $project: {
+                password: 0,
+                refreshToken: 0
+            }
+        },
+        {
+            $lookup: {
+                from: "posts",
+                localField: "_id",
+                foreignField: "owner",
+                as: "postsCounts"
+            }
+        },
+        {
+            $lookup: {
+                from: "followUsers",
+                localField: "_id",
+                foreignField: "following",
+                as: "followersCounts",
+            }
+        },
+        {
+            $lookup: {
+                from: "followUsers",
+                localField: "_id",
+                foreignField: "follower",
+                as: "followingCounts"
+            }
+        },
+        {
+            $addFields: {
+                postsCount: {
+                    $size: "$postsCounts"
+                },
+                followersCount: {
+                    $size: "$followersCounts"
+                },
+                followingCount: {
+                    $size: "$followingCounts"
+                }
             }
         },
         {
             $project : {
-                password : 0,
-                refreshToken : 0
-            }
-        },
-        {
-            $lookup : {
-                from : "posts",
-                localField : "_id",
-                foreignField : "owner",
-                as : "postsCounts"
-            }
-        },
-        {
-            $lookup : {
-                from : "followUsers",
-                localField : "_id",
-                foreignField : "follower",
-                as : "followersCounts",
-                pipeline : [
-                    {
-                        $lookup : {
-                            from : "users",
-                            localField : "follower",
-                            foreignField : "_id",
-                            as : "followersC"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            $addFields : {
-                postsCount : {
-                    $size : "$postsCounts"
-                },
-                followersCount : {
-                    $size : "$followersCounts"
-                }
+                postsCounts : 0,
+                followersCounts : 0,
+                followingCounts : 0
             }
         }
     ])
-    if(!user){
-        throw new ApiError(404,"User not found")
+    if (!user) {
+        throw new ApiError(404, "User not found")
     }
 
     return res.status(200).json(new ApiResponse(200, user[0], "User fetched successfully"))
