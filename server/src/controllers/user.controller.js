@@ -174,10 +174,11 @@ const currentUser = asyncHandler(async (req, res) => {
 })
 
 const userProfile = asyncHandler(async (req, res) => {
+    const {userName} = req.params
     const user = await User.aggregate([
         {
             $match: {
-                _id: new mongoose.Types.ObjectId(req.user._id)
+                userName
             }
         },
         {

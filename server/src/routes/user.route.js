@@ -21,6 +21,6 @@ router.route("/updateProfile").patch(verifyLogin, updateProfile)
 router.route("/updateProfileImage").patch(verifyLogin, upload.single("profileImg"), updateProfileImage)
 router.route("/deleteProfileImage").delete(verifyLogin, deleteProfileImage)
 router.route("/currentUser").get(verifyLogin, currentUser)
-router.route("/userProfile").get(verifyLogin, userProfile)
+router.route("/userProfile/:userName").get(verifyLogin, userProfile)
 
 export default router
