@@ -40,8 +40,8 @@ const createPost = asyncHandler(async (req, res) => {
     const post = await Post.create({
         owner: req.user._id,
         content: content || "",
-        image: imageUrl || "",
-        video: videoUrl || "",
+        image: imageUrl,
+        video: videoUrl,
         taggedUsers: taggedUsers || []
     });
 

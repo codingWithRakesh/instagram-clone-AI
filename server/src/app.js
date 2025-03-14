@@ -14,11 +14,15 @@ app.use(cookieParser())
 
 import userRouter from "./routes/user.route.js"
 import postRouter from "./routes/post.route.js"
+import storyRouter from "./routes/story.route.js"
+import likeRouter from "./routes/like.route.js"
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/post", postRouter)
+app.use("/api/v1/story", storyRouter)
+app.use("/api/v1/like", likeRouter)
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
     res.send("working")
 })
 

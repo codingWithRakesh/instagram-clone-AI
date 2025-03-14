@@ -6,6 +6,9 @@ const storySchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User"
     },
+    text : {
+        type : String
+    },
     image:{
         type: String,
         default: ""
@@ -13,7 +16,11 @@ const storySchema = new Schema({
     video : {
         type : String,
         default : ""
-    }
+    },
+    viewers : [{
+        type : Schema.Types.ObjectId,
+        ref : "User"
+    }]
 },{timestamps : true})
 
 storySchema.plugin(mongooseAggregatePaginate)

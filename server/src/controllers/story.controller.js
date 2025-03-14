@@ -1,0 +1,226 @@
+import { ApiError } from "../utils/apiError.js";
+import { ApiResponse } from "../utils/apiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { deleteFromCloudinary, getPublicId, uploadOnCloudinary } from '../utils/cloudinary.js'
+import { User } from "../models/user.model.js";
+import { Story } from "../models/story.model.js";
+import mongoose from "mongoose";
+
+const createStory = asyncHandler(async (req, res) => {
+    const { text } = req.body
+    if (!req.file) {
+        throw new ApiError(400, "File is required");
+    }
+    const fileMimeType = req.file.mimetype
+    const base64File = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`
+    if (!base64File) {
+        throw new ApiError(400, "File is required")
+    }
+    let imageUrl = "";
+    let videoUrl = "";
+
+    if (fileMimeType.startsWith("image/")) {
+        const postImage = await uploadOnCloudinary(base64File, "image")
+        if (!postImage.url) {
+            throw new ApiError(500, "Something went wrong")
+        }
+        imageUrl = postImage.url
+    } else if (fileMimeType.startsWith("video/")) {
+        const postVideo = await uploadOnCloudinary(base64File, "video")
+        if (!postVideo.url) {
+            throw new ApiError(500, "Something went wrong")
+        }
+        videoUrl = postVideo.url
+    } else {
+        throw new ApiError(400, "Only image or video files are allowed");
+    }
+
+    const story = await Story.create({
+        owner: req.user._id,
+        text: text || "",
+        image: imageUrl,
+        video: videoUrl
+    })
+
+    if (!story) {
+        throw new ApiError(500, "something went wrong")
+    }
+
+    return res.status(200).json(new ApiResponse(200, story, "Story Created Successfully"))
+})
+
+const updateStory = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { text } = req.body;
+
+    const story = await Story.findById(id)
+    if (!story) {
+        throw new ApiError(404, "not found")
+    }
+    if (story.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You are not authorized to update this post");
+    }
+
+    story.text = text
+
+    await story.save({ validateBeforeSave: false })
+
+    return res.status(200).json(new ApiResponse(200, story, "story upload successfully"))
+})
+
+const deleteStory = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        throw new ApiError(400, "bad request")
+    }
+
+    const story = await Story.findById(id)
+    if (!story) {
+        throw new ApiError(404, "story not found")
+    }
+
+    if (story.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You are not authorized to delete this story");
+    }
+
+    if (story.image) {
+        const publicId = getPublicId(story.image);
+        await deleteFromCloudinary(publicId, "image");
+    }
+
+    if (story.video) {
+        const publicId = getPublicId(story.video);
+        await deleteFromCloudinary(publicId, "video");
+    }
+
+    await Story.findByIdAndDelete(id);
+    return res.status(200).json(new ApiResponse(200, {}, "Story deleted successfully"));
+
+})
+
+const showStory = asyncHandler(async (req, res) => {
+    const { userName } = req.params;
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const story = await User.aggregate([
+        {
+            $match: { userName }
+        },
+        {
+            $project: {
+                "password": 0,
+                "refreshToken": 0,
+                "__v": 0
+            }
+        },
+        {
+            $lookup: {
+                from: "stories",
+                localField: "_id",
+                foreignField: "owner",
+                as: "stories",
+                pipeline: [
+                    {
+                        $match: { createdAt: { $gt: twentyFourHoursAgo } }
+                    }
+                ]
+            }
+        }
+    ]);
+
+    if (!story || story.length === 0) {
+        throw new ApiError(404, "not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, story, "userStory"));
+})
+
+const allStories = asyncHandler(async (req, res) => {
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const stories = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            }
+        },
+        {
+            $project: {
+                "password": 0,
+                "refreshToken": 0,
+                "__v": 0
+            }
+        },
+        {
+            $lookup: {
+                from: "followusers",
+                localField: "_id",
+                foreignField: "follower",
+                as: "followusers",
+                pipeline: [
+                    {
+                        $project: {
+                            "password": 0,
+                            "refreshToken": 0,
+                            "__v": 0
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "stories",
+                            localField: "_id",
+                            foreignField: "owner",
+                            as: "stories",
+                            pipeline: [
+                                {
+                                    $match: { createdAt: { $gt: twentyFourHoursAgo } }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $match: {
+                            $expr: { $gt: [{ $size: "$stories" }, 0] }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+    if (!stories) {
+        throw new ApiError(500, "something went wrong")
+    }
+
+    return res.status(200).json(new ApiResponse(200, stories, "all stories"))
+})
+
+const storyViewers = asyncHandler(async (req, res) => {
+    const { storyId } = req.params;
+    const userId = req.user._id;
+
+    try {
+        const story = await Story.findById(storyId);
+
+        if (!story) {
+            throw new ApiError(404, "Story not found")
+        }
+
+        if (!story.viewers.includes(userId)) {
+            story.viewers.push(userId); 
+            await story.save();
+        }
+
+        res.status(200).json(new ApiResponse(200, {viewers: story.viewers}, "all viewers"));
+    } catch (error) {
+        throw new ApiError(500, "Internal Server Error")
+    }
+})
+
+export {
+    createStory,
+    updateStory,
+    deleteStory,
+    showStory,
+    allStories,
+    storyViewers
+}
