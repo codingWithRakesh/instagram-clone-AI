@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { deleteFromCloudinary, getPublicId, uploadOnCloudinary } from '../utils/cloudinary.js'
 import { User } from "../models/user.model.js";
 import { Story } from "../models/story.model.js";
-import mongoose from "mongoose";
+import mongoose, { trusted } from "mongoose";
 
 const createStory = asyncHandler(async (req, res) => {
     const { text } = req.body
@@ -207,10 +207,163 @@ const storyViewers = asyncHandler(async (req, res) => {
 
         if (!story.viewers.includes(userId)) {
             story.viewers.push(userId); 
-            await story.save();
+            await story.save({ validateBeforeSave: false });
         }
 
         res.status(200).json(new ApiResponse(200, {viewers: story.viewers}, "all viewers"));
+    } catch (error) {
+        throw new ApiError(500, "Internal Server Error")
+    }
+})
+
+const storyViewClient = asyncHandler(async (req, res) => {
+    const {storyId} = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(storyId)) {
+        throw new ApiError(400, "Invalid Story ID");
+    }
+
+    try {
+        const userExists = await User.findById(req.user._id);
+        if (!userExists) {
+            throw new ApiError(404, "User not found");
+        }
+        
+        const story = await User.aggregate([
+            {
+                $match : {
+                    _id : new mongoose.Types.ObjectId(req.user._id)
+                }
+            },
+            {
+                $project: {
+                    "password": 0,
+                    "refreshToken": 0,
+                    "__v": 0
+                }
+            },
+            {
+                $lookup : {
+                    from : "stories",
+                    localField : "_id",
+                    foreignField : "owner",
+                    as : "stories",
+                    pipeline : [
+                        {
+                            $match : {
+                                _id : new mongoose.Types.ObjectId(storyId)
+                            }
+                        },
+                        {
+                            $project : {
+                                "__v" : 0
+                            }
+                        },
+                        {
+                            $lookup : {
+                                from : "users",
+                                localField : "viewers",
+                                foreignField : "_id",
+                                as : "views",
+                                pipeline : [
+                                    {
+                                        $project: {
+                                            "password": 0,
+                                            "refreshToken": 0,
+                                            "__v": 0
+                                        }
+                                    },
+                                ]
+                            }
+                        },
+                        {
+                            $lookup :{
+                                from : "likes",
+                                localField : "_id",
+                                foreignField : "storyId",
+                                as : "likes",
+                                pipeline : [
+                                    {
+                                        $lookup : {
+                                            from : "users",
+                                            localField : "likeOwner",
+                                            foreignField : "_id",
+                                            as : "usersLikes",
+                                        }
+                                    },
+                                    {
+                                        $addFields : {
+                                            profilePic: { $arrayElemAt: ["$usersLikes.profilePic", 0] },
+                                            userName: { $arrayElemAt: ["$usersLikes.userName", 0] },
+                                            _id: { $arrayElemAt: ["$usersLikes._id", 0] }
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            "profilePic": 1,
+                                            "userName": 1,
+                                            "_id": 1
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $lookup : {
+                                from : "comments",
+                                localField : "_id",
+                                foreignField : "storyId",
+                                as : "comments",
+                                pipeline : [
+                                    {
+                                        $lookup : {
+                                            from : "users",
+                                            localField : "commentOwner",
+                                            foreignField : "_id",
+                                            as : "userComments",
+                                        }
+                                    },
+                                    {
+                                        $addFields : {
+                                            profilePic: { $arrayElemAt: ["$userComments.profilePic", 0] },
+                                            userName: { $arrayElemAt: ["$userComments.userName", 0] },
+                                            _id: { $arrayElemAt: ["$userComments._id", 0] }
+                                        }
+                                    },
+                                    {
+                                        $project: {
+                                            "profilePic": 1,
+                                            "userName": 1,
+                                            "_id": 1,
+                                            "likeCount" : 1,
+                                            "content" : 1
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            $addFields : {
+                                likeCount: {
+                                    $size : "$likes"
+                                },
+                                commentCount : {
+                                    $size : "$comments"
+                                },
+                                viewsCount : {
+                                    $size : "$views"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ])
+        if(!story){
+            throw new ApiError(500, "Internal Server Error")
+        }
+
+        return res.status(200).json(new ApiResponse(200, story, "story"))
     } catch (error) {
         throw new ApiError(500, "Internal Server Error")
     }
@@ -222,5 +375,6 @@ export {
     deleteStory,
     showStory,
     allStories,
-    storyViewers
+    storyViewers,
+    storyViewClient
 }

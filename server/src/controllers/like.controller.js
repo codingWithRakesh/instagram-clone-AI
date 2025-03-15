@@ -1,7 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
-import { User } from "../models/user.model.js";
 import { Like } from "../models/like.model.js";
 import { Post } from "../models/post.model.js";
 import mongoose from "mongoose";
@@ -71,7 +70,7 @@ const toggleLikeStory = asyncHandler(async (req, res) =>{
 })
 
 const toggleLikeComment = asyncHandler(async (req, res) => {
-    const { commentId } = req.params;
+    const { commentId } = req.body;
 
     if (!mongoose.isValidObjectId(commentId)) {
         throw new ApiError(400, "Invalid post ID");

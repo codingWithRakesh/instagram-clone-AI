@@ -12,5 +12,5 @@ const followUserSchema = new Schema({
     }]
 },{timestamps : true})
 
-userSchema.plugin(mongooseAggregatePaginate)
+followUserSchema.plugin(mongooseAggregatePaginate)
 export const FollowUser = model("FollowUser",followUserSchema)

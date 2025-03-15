@@ -10,7 +10,7 @@ const router = Router();
 
 router.route("/toggleLikePost/:postId").get(verifyLogin, toggleLikePost)
 router.route("/toggleLikeStory/:storyId").get(verifyLogin, toggleLikeStory)
-router.route("/toggleLikeComment/:commentId").get(verifyLogin, toggleLikeComment)
+router.route("/toggleLikeComment").post(verifyLogin, toggleLikeComment)
 
 
 export default router;
