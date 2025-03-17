@@ -6,7 +6,6 @@ import { verifyLogin } from "../middlewares/user.middleware.js"
 
 const router = Router();
 
-router.route("/savePost/:postId").get(verifyLogin, toggleSavePost);
-router.route("/unSavePost/:postId").delete(verifyLogin, toggleSavePost);
+router.route("/saveUnsavePost").post(verifyLogin, toggleSavePost);
 
 export default router;

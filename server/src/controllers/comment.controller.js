@@ -71,7 +71,7 @@ const editComment = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, editComment, "update successfully"))
 })
 
-const deleteStory = asyncHandler(async (req, res) => {
+const deleteComment = asyncHandler(async (req, res) => {
     const {id} = req.body
     if (!mongoose.isValidObjectId(id)) {
         throw new ApiError(400, "Invalid ID");
@@ -88,5 +88,5 @@ export {
     addCommentPost,
     addCommentStory,
     editComment,
-    deleteStory
+    deleteComment
 }

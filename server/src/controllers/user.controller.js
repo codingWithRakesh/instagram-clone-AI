@@ -36,8 +36,8 @@ const register = asyncHandler(async (req, res) => {
     }
 
     const user = await User.create({
-        number: number || "",
-        email: email || "",
+        number: number || undefined,
+        email: email || undefined,
         fullName,
         userName,
         DOB,
@@ -197,7 +197,7 @@ const userProfile = asyncHandler(async (req, res) => {
         },
         {
             $lookup: {
-                from: "followUsers",
+                from: "followusers",
                 localField: "_id",
                 foreignField: "following",
                 as: "followersCounts",
@@ -205,7 +205,7 @@ const userProfile = asyncHandler(async (req, res) => {
         },
         {
             $lookup: {
-                from: "followUsers",
+                from: "followusers",
                 localField: "_id",
                 foreignField: "follower",
                 as: "followingCounts"

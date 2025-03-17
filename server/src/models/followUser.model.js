@@ -2,14 +2,14 @@ import { Schema, model } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const followUserSchema = new Schema({
-    follower : [{
+    follower : {
         type : Schema.Types.ObjectId,
         ref : "User"
-    }],
-    following : [{
+    },
+    following : {
         type : Schema.Types.ObjectId,
         ref : "User"
-    }]
+    }
 },{timestamps : true})
 
 followUserSchema.plugin(mongooseAggregatePaginate)

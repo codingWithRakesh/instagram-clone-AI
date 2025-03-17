@@ -5,29 +5,27 @@ import mongoose from "mongoose";
 import { SavedPost } from "../models/savedPost.model.js";
 
 const toggleSavePost = asyncHandler(async (req, res) => {
-    const { postId } = req.params;
-    
+    const { postId } = req.body;
+
     if (!mongoose.isValidObjectId(postId)) {
-        throw new ApiError(400, "Invalid ID");
+        throw new ApiError(400, "Invalid post ID");
     }
 
-    if (req.method === "GET") {
-        const savePost = await SavedPost.create({ postId, owner: req.user._id });
+    const existingSave = await SavedPost.findOne({ postId, owner: req.user._id });
+
+    if (existingSave) {
+        await SavedPost.deleteOne({ _id: existingSave._id });
+        return res.status(200).json(new ApiResponse(200, {}, "UnSaved successfully"));
+    } else {
+        const savePost = await SavedPost.create({
+            postId,
+            owner: req.user._id
+        });
         if (!savePost) {
-            throw new ApiError(500, "Internal server error");
+            throw new ApiError(500, "Server error");
         }
         return res.status(200).json(new ApiResponse(200, savePost, "Saved successfully"));
     }
-    
-    if (req.method === "DELETE") {
-        const unSavePost = await SavedPost.findOneAndDelete({ postId, owner: req.user._id });
-        if (!unSavePost) {
-            throw new ApiError(500, "Internal server error");
-        }
-        return res.status(200).json(new ApiResponse(200, {}, "UnSaved successfully"));
-    }
-    
-    throw new ApiError(405, "Method not allowed");
 });
 
 export { toggleSavePost };
