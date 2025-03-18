@@ -7,6 +7,8 @@ function App() {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [messages, setMessages] = useState([])
 
+  let chatUserData = new Map()
+
   const socket = useMemo(
     () =>
       io(import.meta.env.VITE_CORS_ORIGIN_SERVER, {
@@ -20,9 +22,16 @@ function App() {
       console.log("Socket connected:", socket.id);
     });
 
-    socket.on("reciveMessage", (data) => {
-      console.log(data)
-      setMessages((messages) => [...messages, { value: data, user: false }]);
+    socket.on("reciveMessage", ({message, receiverId}) => {
+      console.log(message, receiverId)
+      // setMessages((messages) => [...messages, chatUserData.get(userName)]);
+      // chatUserData.set(userName)
+      chatUserData.get(receiverId)
+      let tmp = [...chatUserData.get(receiverId), { value: message, user: false }]
+      chatUserData.set(receiverId,tmp)
+      setMessages((messages) => {
+        return tmp
+      });
     })
 
     socket.on("online-users", (users) => {
@@ -54,6 +63,10 @@ function App() {
     isOnline: onlineUsers.includes(user.userName), // Check if the user is online
   }));
 
+  // allUsers.map((v,i) => {
+  //   chatUserData.set(v.userName, [])
+  // })
+
 
   const [message, setMessage] = useState("")
   const submitClick = () => {
@@ -64,12 +77,22 @@ function App() {
   const [clickUserId, setClickUserId] = useState("")
   const setCurrentUser = (value) => {
     setClickUserId(value)
+    setMessages((valueMessage) => {
+      return chatUserData.get(value)
+    });
   }
 
   const sendMessage = () => {
-    socket.emit("message", { message, clickUserId });
-    setMessages((valueMessage) => [...valueMessage, { value: message, user: true }]);
-
+    socket.emit("message", { message, clickUserId, userName });
+    console.log({ message, clickUserId, userName })
+    // chatUserData.get(clickUserId)
+    let tmp = [...chatUserData.get(clickUserId), { value: message, user: true }]
+      chatUserData.set(clickUserId,tmp)
+    console.log("data:",chatUserData.get(clickUserId))
+    setMessages((valueMessage) => {
+      return tmp
+    });
+    setMessage("")
   }
 
   return (
@@ -81,7 +104,7 @@ function App() {
       <div className="showContact w-[30%] h-[80%] bg-white rounded py-2">
         {
           allUsers.map((v, i) => (
-            <div onClick={() => setCurrentUser(v.userName)} key={i} className="cols w-full h-[4rem] hover:bg-gray-200 hover:cursor-pointer mb-2 flex items-center gap-4 p-4">
+            <div onClick={() => {setCurrentUser(v.userName)}} key={i} className={`cols w-full h-[4rem] hover:bg-gray-200 hover:cursor-pointer mb-2 flex items-center gap-4 p-4 ${clickUserId == v.userName ? "bg-gray-200" : "bg-white"}`}>
               <div className='h-[3rem] w-[3rem] rounded-full bg-gray-300'></div>
               <p className='text-black'>{v.userName}</p>
               {v.isOnline ? <p className='text-green-700 font-bold'>Online</p>
