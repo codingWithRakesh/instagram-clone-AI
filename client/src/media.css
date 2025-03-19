@@ -1,0 +1,502 @@
+@media screen and (max-width: 900px){
+	.second {
+		width: 90%;
+	}
+	.profilCon{
+		display: none;
+	}
+	.first{
+		border-right: none;
+	}
+	#full{
+		display: none;
+	}
+	#hafe{
+		display: flex;
+	}
+	.postBox{
+		width: 60vw;
+	}
+	.searchContaner{
+		width: 50vw;
+	}
+	.notificationsContaner{
+		width: 50vw;
+	}
+	.exploreDiv{
+		padding: 1rem 1rem;
+	}
+	.explorePost {
+		width: 13rem;
+		height: 13rem;
+	}
+	.wrirmess_1{
+		font-size: 1rem;
+	}
+	.chatCon_1 {
+		width: 20%;
+	}
+	.chatCon_0{
+		width: 80%;
+	}
+	.upload{
+		width: 50vw;
+	}
+	.profileContaner {
+		padding: 1rem 1rem;
+	}
+	.profile_box{
+		padding: 0 0;
+	}
+	.bjdbvjd svg{
+		display: none;
+	}
+	.esitPro{
+		width: 6rem;
+	}
+	.profileBTN{
+		width: 70%;
+		margin: 0 1rem;
+	}
+	.proFollowers{
+		width: 80%;
+	}
+	.profilePhoto {
+		height: 10rem;
+		width: 11rem;
+	}
+	.profile_box1{
+		height: 1rem;
+	}
+	.asgbvsa{
+		display: none;
+	}
+	.imagesPro{
+		height: 12rem;
+		width: 12rem;
+		margin: 12px 0;
+	}
+	#postContentId{
+		justify-content: space-evenly;
+	}
+	#taggedContentId{
+		justify-content: space-evenly;
+	}
+	.tagImage{
+		height: 12rem;
+		width: 12rem;
+		margin: 12px 0;
+	}
+	.footerCOn_1 {
+		flex-wrap: wrap;
+		width: 100%;
+	}
+	.footerCOn_1 span {
+		padding: 0 3px;
+	}
+	.imgPro{
+		border: 2px solid #000;
+	}
+	.moreBtn{
+		width: 35vw;
+	}
+	.smallScrCon{
+		display: none;
+	}
+	.navTopSer{
+		display: none;
+	}
+	.notificationsLogo i{
+		display: none;
+	}
+	.leftArow{
+		display: none;
+	}
+	.leftBtn{
+		display: none;
+	}
+}
+
+@media screen and (max-width: 500px){
+	.first {
+		display: none;
+	}
+	.second{
+		width: 100%;
+	}
+	.content {
+		padding: 12vh 0;
+	}
+	.statusDiv {
+		width: 100vw;
+	} 
+	.slider-wrapper {
+		width: 100vw;
+	}
+	.postBox{
+		width: 100vw;
+		border-top: 1px solid #ECF3FF;
+		top: 27vh;
+	}
+	.post1 {
+		padding: 0 1rem;
+	}
+	.profilePost {
+		height: 40px;
+		width: 40px;
+		margin-right: 3vw;
+	}
+	.wirteProPost p{
+		font-size: 3vw;
+	}
+	.post3 {
+		padding: 0 1rem;
+	}
+	.post4{
+		padding: 0 1rem;
+	}
+	.post5{
+		padding: 0 1rem;
+	}
+	.post6{
+		padding: 0 1rem;
+	}
+	.post5 p {
+		margin: 0;
+	}
+
+
+
+	.exploreDiv{
+		padding: 10vh 0 0 0;
+	    align-items: flex-start;
+	    justify-content: space-between;
+	    width: 100vw;
+	    overflow-x: hidden;
+	    overflow-y: auto;
+	    align-content: space-between;
+	}
+	.explorePost{
+		height: 8rem;
+		width: 33%;
+		margin: 1px 0;
+	}
+	.exploreLike div {
+		margin: 0 6px;
+	}
+	.exploreLike{
+		font-size: 1rem;
+	}
+	.reelsBox{
+		height: 100vh;
+		width: 100vw;
+		padding: 0 0;
+		margin: 0 0;
+		border: none;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+	.reelContent{
+		height: 100vh;
+		width: 100vw;
+		padding: 0 0;
+		margin: 0 0;
+		border: none;
+	}
+	.videoCon{
+		height: 100vh;
+		width: 100vw;
+		padding: 0 0;
+		margin: 0 0;
+		border: none;
+	}
+	.videoRel{
+		height: 100vh;
+		width: 100vw;
+		padding: 0 0;
+		margin: 0 0;
+		border: none;
+	}
+	.videoRel video{
+		height: 100vh;
+		width: 100vw;
+		padding: 0 0;
+		margin: 0 0;
+		border: none;
+		object-fit: cover;
+	}
+	.videoLike{
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		z-index: 9;
+	}
+
+
+
+	.profileContaner{
+		padding: 0;
+	}
+	#postContentId {
+		width: 100vw;
+	}
+	.imagesPro{
+		height: 9rem;
+		width: 33%;
+		margin: 2px 0;
+	}
+	.savedContent_1_0 {
+		height: 13rem;
+	}
+	#taggedContentId{
+		width: 100vw;
+	}
+	.tagImage{
+		width: 33%;
+		height: 9rem;
+		margin: 2px 0;
+	}
+	.imaProNavigate {
+		height: 2rem;
+		width: 100vw;
+	}
+	.ImagePro {
+		width: 100vw;
+	}
+	.savedContent_0 {
+		padding: 0 1rem;
+	}
+	.profile_box{
+		width: 100vw;
+		border-top: 1px solid rgb(219, 219, 219);
+		position: relative;
+		margin-top: 10vh;
+	}
+	.borderSM{
+		border: 2px solid #000;
+	}
+	.profilePhoto{
+		margin: 0;
+	    height: 4.5rem;
+	    width: 4.5rem;
+	    position: absolute;
+	    top: 1rem;
+	    left: 1rem;
+	}
+	.bjdbvjd{
+		position: absolute;
+	    right: 0;
+	    top: 1rem;
+	    width: 70%;
+	    height: 35%;
+	    flex-wrap: wrap;
+	}
+	.proFollowers{
+		position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    width: 100%;
+	    justify-content: space-around;
+	    border-top: 1px solid rgb(219, 219, 219);
+	    border-bottom: 1px solid rgb(219, 219, 219);
+	}
+	.thred{
+		position: absolute;
+		top: 40%;
+		bottom: 50%;
+		left: 0;
+	}
+	.prodrapj{
+		position: absolute;
+		bottom: 18%;
+		left: 0;
+/*		top: 50%;*/
+	}
+	.profileBTN_0{
+		width: 100%;
+		padding: 0 1rem;
+	}
+	.proPost{
+		flex-direction: column;
+		align-items: center;
+	}
+	.proPost p{
+		font-size: 14px;
+	}
+	.proPost span{
+		font-size: 1rem;
+		color: #737373;
+	}
+	.asgbvsa{
+		display: flex;
+	}
+	.profile_box1{
+		height: 8rem;
+		padding: 0 1rem;
+		margin: 0 0;
+	}
+
+	/*small screel navigason*/
+	.smallScrCon{
+		display: flex;
+		height: 8vh;
+		width: 100vw;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		align-items: center;
+		justify-content: space-evenly;
+		background: #fff;
+		z-index: 9;
+	}
+	.navSmall{
+		height: 100%;
+		width: 15%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.profilrSmaNav{
+		height: 1.7rem;
+		width: 1.7rem;
+		border-radius: 50%;
+		background-image: url('images/profileImg.jpeg');
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+
+/*	nav serch small div*/
+	.navTopSer{
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 10vh;
+		width: 100vw;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		background: #fff;
+		border-bottom: 1px solid #ECF3FF;
+	}
+	.smaNavLogo{
+		height: 100%;
+		width: 4rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+	}
+	.smallNavHeart{
+		height: 100%;
+		width: 4rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+	}
+	.smallSerNav{
+		height: 100%;
+		flex-grow: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+	}
+	.samlInputBox{
+		height: 2.4rem;
+		width: 100%;
+		border-radius: 5px;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		padding: 0 10px;
+		background: #EFEFEF;
+	}
+	.weguwgInput{
+		flex-grow: 1;
+		height: 76%;
+	}
+	.samufgwIc{
+		margin-right: 10px;
+	}
+	.weguwgInput input{
+		width: 100%;
+		height: 100%;
+		font-size: 1.1rem;
+		background: #EFEFEF;
+		outline: none;
+		border: none;
+	}
+
+
+	.upload{
+		width: 80vw;
+	}
+	.uploadSelect label {
+		width: 55%;
+		padding: 0 1rem;
+	}
+
+
+	.notificationsContaner {
+		width: 100vw;
+		margin: 0;
+		left: 0;
+		padding-bottom: 8vh;
+	}
+	.notificationsLogo{
+		text-align: center;
+		position: relative;
+	}
+	.notificationsLogo i{
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 1rem;
+	}
+
+
+
+	.messContaner {
+		width: 100vw;
+		left: 0;
+	}
+	.message1{
+		width: 100vw;
+	}
+	.wrirmess_1{
+		font-size: 1.5rem;
+	}
+	.messCon1 {
+		padding: 1rem 1.5rem 8px 1.5rem;
+	}
+	.leftArow{
+		display: block;
+	}
+	.leftArow i{
+		font-size: 1.5rem;
+	}
+	.message2{
+		width: 100vw;
+		height: 100vh;
+	}
+	#firMessage{
+		display: none;
+	}
+	#naviga_1 svg:first-child{
+		display: none;
+	}
+	.leftBtn{
+		margin-right: 5px;
+		display: block;
+	}
+	.leftBtn i{
+		font-size: 1.1rem;
+	}
+
+
+	.messContaner{
+		background: #fff;
+	}
+
+	#newPost{
+		display: none;
+	}
+}
