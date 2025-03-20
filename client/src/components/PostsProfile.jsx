@@ -3,7 +3,7 @@ import SinglePost from './SinglePost'
 
 const PostsProfile = () => {
     return (
-        <div id="postContentId" className="displayNone displayFlex">
+        <div id="postContentId" className=" displayFlex">
             <SinglePost/>
             <SinglePost/>
             <SinglePost/>
