@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import './App.css';
 import Sidebar from './components/Sidebar';
-import Home from './pages/Home';
 import { Outlet } from 'react-router-dom';
 import Search from './components/Search';
 import { useSearch } from './contexts/searchContext';

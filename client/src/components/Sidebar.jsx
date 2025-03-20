@@ -11,9 +11,15 @@ const Sidebar = () => {
   const [isNotoficationVisible, setIsNotoficationVisible] = useNotification()
   const [isCreatVisible, setIsCreatVisible] = useUpload()
   const [forMessage, setForMessage] = useState(false)
-  const [more, setMore] = useMore()
+  const [, setMore] = useMore()
   const sides = [
     {
+      fun: () => {
+        setIsSerachVisible(false)
+        setIsNotoficationVisible(false)
+        setIsCreatVisible(false)
+        setForMessage(false)
+      },
       path: "/",
       code: <svg aria-label="Home" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
         role="img" viewBox="0 0 24 24" width="24">
@@ -24,7 +30,12 @@ const Sidebar = () => {
       name: "Home"
     },
     {
-      fun: () => setIsSerachVisible((v) => !v),
+      fun: () => {
+        setIsSerachVisible((v) => !v)
+        setIsNotoficationVisible(false)
+        setIsCreatVisible(false)
+        setForMessage(false)
+      },
       code:
         <svg aria-label="Search" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
           role="img" viewBox="0 0 24 24" width="24">
@@ -51,6 +62,12 @@ const Sidebar = () => {
       name: "Search"
     },
     {
+      fun: () => {
+        setIsSerachVisible(false)
+        setIsNotoficationVisible(false)
+        setIsCreatVisible(false)
+        setForMessage(false)
+      },
       path: "/explore",
       code: <svg aria-label="Explore" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
         role="img" viewBox="0 0 24 24" width="24">
@@ -80,6 +97,12 @@ const Sidebar = () => {
       name: "Explore"
     },
     {
+      fun: () => {
+        setIsSerachVisible(false)
+        setIsNotoficationVisible(false)
+        setIsCreatVisible(false)
+        setForMessage(false)
+      },
       path: "/reels",
       code: <svg aria-label="Reels" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
         role="img" viewBox="0 0 24 24" width="24">
@@ -131,7 +154,12 @@ const Sidebar = () => {
       name: "Reels"
     },
     {
-      fun : () => setForMessage(true),
+      fun : () => {
+        setForMessage(true)
+        setIsSerachVisible(false)
+        setIsNotoficationVisible(false)
+        setIsCreatVisible(false)
+      },
       path: "/direct/inbox",
       code: <svg aria-label="Direct" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
         role="img" viewBox="0 0 24 24" width="24">
@@ -156,7 +184,12 @@ const Sidebar = () => {
       name: "Messages"
     },
     {
-      fun: () => setIsNotoficationVisible((v) => !v),
+      fun: () => {
+        setIsNotoficationVisible((v) => !v)
+        setIsSerachVisible(false)
+        setIsCreatVisible(false)
+        setForMessage(false)
+      },
       code: <svg aria-label="Notifications" className="x1lliihq x1n2onr6" color="rgb(0, 0, 0)"
         fill="rgb(0, 0, 0)" height="24" role="img" viewBox="0 0 24 24" width="24">
         <title>Notifications</title>
@@ -185,6 +218,12 @@ const Sidebar = () => {
       name: "Create"
     },
     {
+      fun: () => {
+        setIsSerachVisible(false)
+        setIsNotoficationVisible(false)
+        setIsCreatVisible(false)
+        setForMessage(false)
+      },
       path: "/tarapada_9065",
       code:
         <div className={`imgPro ${(forMessage || isNotoficationVisible || isSerachVisible) ? `marginRight` : ""}`}>
