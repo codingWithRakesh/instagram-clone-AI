@@ -14,6 +14,8 @@ import SearchContextProvider from './contexts/searchContext.jsx'
 import NotificationContextProvider from './contexts/notificationContext.jsx'
 import UploadContextProvider from './contexts/uploadContext.jsx'
 import MoreContextProvider from './contexts/moreContext.jsx'
+import Login from './pages/Login.jsx'
+import Signup from './pages/Signup.jsx'
 
 const router = createBrowserRouter([
   {
@@ -53,6 +55,18 @@ const router = createBrowserRouter([
       }
     ]
   },
+  {
+    path: '/accounts/login',
+    element: (
+      <Login />
+    )
+  },
+  {
+    path: '/accounts/emailsignup',
+    element: (
+      <Signup />
+    )
+  }
 ]);
 
 createRoot(document.getElementById('root')).render(

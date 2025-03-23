@@ -299,7 +299,7 @@ const Sidebar = () => {
                   <span>{!(forMessage || isNotoficationVisible || isSerachVisible) && v.name}</span> {/*for bold the text className="fontWei" */}
                 </NavLink>
               ) : (
-                <div key={i} className={`navBox ${(checkClick.toLowerCase() == v.name.toLowerCase() && (isNotoficationVisible || isSerachVisible)) ? "border" : ""} ${(forMessage || isNotoficationVisible || isSerachVisible) ? `noMarginRight` : ""}`} onClick={v.fun}>
+                <div key={i} className={`navBox ${(checkClick.toLowerCase() == v.name.toLowerCase() && (isNotoficationVisible || isSerachVisible)) ? "borderR" : ""} ${(forMessage || isNotoficationVisible || isSerachVisible) ? `noMarginRight` : ""}`} onClick={v.fun}>
                   {(checkClick.toLowerCase() == v.name.toLowerCase() && (isNotoficationVisible || isSerachVisible)) ? v?.active : v.code}
                   <span>{!(forMessage || isNotoficationVisible || isSerachVisible) && v.name}</span>
                 </div>
