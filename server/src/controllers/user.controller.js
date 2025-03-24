@@ -22,21 +22,17 @@ const accessAndRefreshTokenGenrator = async (userId) => {
 }
 
 const register = asyncHandler(async (req, res) => {
-    const { number, email, fullName, userName, DOB, password } = req.body
-    if ([fullName, userName, DOB, password].some((f) => f?.trim() === "")) {
+    const { email, fullName, userName, DOB, password } = req.body
+    if ([email, fullName, userName, DOB, password].some((f) => f?.trim() === "")) {
         throw new ApiError(400, "All fields are required")
     }
-    if ((number == null && email == null) || (number != null && email != null)) {
-        throw new ApiError(400, "Either email or number is required")
-    }
 
-    const existedUser = await User.findOne({ $or: [{ number }, { email }, { userName }] })
+    const existedUser = await User.findOne({ $or: [ { email }, { userName }] })
     if (existedUser) {
         throw new ApiError(400, "User already exists")
     }
 
     const user = await User.create({
-        number: number || undefined,
         email: email || undefined,
         fullName,
         userName,
@@ -53,12 +49,12 @@ const register = asyncHandler(async (req, res) => {
 })
 
 const login = asyncHandler(async (req, res) => {
-    const { number, email, userName, password } = req.body
-    if ((number || email || userName) == null && password == null) {
+    const { email, userName, password } = req.body
+    if ((email || userName) == null && password == null) {
         throw new ApiError(400, "All fields are required")
     }
 
-    const user = await User.findOne({ $or: [{ number }, { email }, { userName }] })
+    const user = await User.findOne({ $or: [{ email }, { userName }] })
     console.log(user)
     if (!user) {
         throw new ApiError(404, "User not found")

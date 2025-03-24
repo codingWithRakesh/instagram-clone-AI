@@ -16,12 +16,13 @@ import UploadContextProvider from './contexts/uploadContext.jsx'
 import MoreContextProvider from './contexts/moreContext.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
+let user = true
 
 const router = createBrowserRouter([
   {
     path: "/",
     errorElement: <Error />,
-    element: <App />,
+    element: user ? <App /> : <Login />,
     children: [
       {
         path: "/",

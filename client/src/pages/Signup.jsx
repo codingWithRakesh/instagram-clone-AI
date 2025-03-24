@@ -4,6 +4,7 @@ import microsoft from "../assets/images/microsoft.png"
 import SignUpMainInput from '../components/SignUpMainInput';
 import SignUpBirthday from '../components/SignUpBirthday';
 import SignUpOTP from '../components/SignUpOTP';
+import { NavLink } from 'react-router-dom';
 
 const Signup = () => {
   return (
@@ -14,7 +15,7 @@ const Signup = () => {
         {/* <SignUpOTP/> */}
 
         <div className="otherOption border border-[#DBDBDB] w-full h-[5.5rem] flex flex-col items-center justify-center content-center">
-          <p>Have an account?</p><p className='text-[#0095f6] cursor-pointer font-bold'>Log in</p>
+          <p>Have an account?</p><NavLink to="/accounts/login" className='text-[#0095f6] cursor-pointer font-bold'>Log in</NavLink>
         </div>
         <div className="showStore w-full h-[5.938rem] flex flex-col items-center justify-center gap-2">
           <p>Get the app.</p>

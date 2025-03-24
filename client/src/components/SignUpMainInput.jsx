@@ -33,7 +33,7 @@ const SignUpMainInput = () => {
                 <div className="orText absolute bg-white p-4 text-[#737373] w-5 font-bold">OR</div>
             </div>
             <div className="formLogin w-full flex flex-col items-center justify-center gap-2">
-                <input type="text" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Mobile number or email' />
+                <input type="text" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Email' />
                 <input type="password" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Password' />
                 <input type="text" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Full Name' />
                 <input type="text" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Username' />
