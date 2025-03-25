@@ -16,7 +16,7 @@ import UploadContextProvider from './contexts/uploadContext.jsx'
 import MoreContextProvider from './contexts/moreContext.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
-let user = true
+let user = false
 
 const router = createBrowserRouter([
   {
