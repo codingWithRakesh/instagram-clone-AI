@@ -3,8 +3,10 @@ import profile from "../assets/images/profile.jpeg"
 import AllStory from '../components/AllStory'
 import AllPosts from '../components/AllPosts'
 import AllSuggaFollower from '../components/AllSuggaFollower'
+import { useSwitch } from '../contexts/switchContext'
 
 const Home = () => {
+  const [, setIsSwitch] = useSwitch()
   return (
     <div className="second Contaner">
       <div className="box content">
@@ -22,7 +24,7 @@ const Home = () => {
             <p className="bold">tarapada_9679</p>
             <p className="nameUs">Tarapada Garai</p>
           </div>
-          <div className="switchBtn">Switch</div>
+          <div className="switchBtn cursor-pointer"  onClick={() => setIsSwitch((v) => !v)}>Switch</div>
         </div>
 
         <div className="suggasonBtn">

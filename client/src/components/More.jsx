@@ -1,6 +1,8 @@
 import React from 'react'
+import { useSwitch } from '../contexts/switchContext'
 
 const More = () => {
+    const [, setIsSwitch] = useSwitch()
     return (
         <div className="moreBtn" id="moreSetting">
             <div className="moreB1">
@@ -26,7 +28,7 @@ const More = () => {
                 </div>
             </div>
             <div className="moreB2">
-                <div className="setting">
+                <div className="setting" onClick={() => setIsSwitch((v) => !v)}>
                     <p>Switch accounts</p>
                 </div>
                 <div className="setting">

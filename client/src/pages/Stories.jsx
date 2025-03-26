@@ -1,9 +1,20 @@
 import React from 'react'
+import {stories} from "../constants/constant.js"
+import Stories from 'react-insta-stories';
 
-const Stories = () => {
+const StoriesAll = () => {
   return (
-    <div>Stories</div>
+    <Stories
+    stories={stories}
+    defaultInterval={5000}
+    width={350}
+    height={600}
+    loop={true}
+    keyboardNavigation={true}
+    onAllStoriesEnd={() => console.log('All stories finished')}
+    onStoryEnd={(index) => console.log(`Story ${index + 1} finished`)}
+  />
   )
 }
 
-export default Stories
+export default StoriesAll

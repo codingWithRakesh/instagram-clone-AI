@@ -2372,7 +2372,7 @@
     cursor: pointer;
 }
 
-.bjdbvjd button {
+.bjdbvjd button,.esitPro {
     width: 8rem;
     height: 2rem;
     border: none;
@@ -2388,6 +2388,10 @@
 }
 
 .bjdbvjd button:hover {
+    background: #DBDBDB;
+}
+
+.esitPro:hover {
     background: #DBDBDB;
 }
 

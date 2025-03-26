@@ -1,0 +1,81 @@
+.navListDiv{
+    padding: 2.1rem 1rem;
+}
+
+.headingTitle{
+    padding: 0 1.5rem;
+}
+
+.listSetting{
+    padding:  1rem;
+}
+
+.listS{
+    padding: .8rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.shfhj{
+    padding: 12px 1rem;
+}
+
+.navListDivEdit{
+    padding: 2.1rem 5rem;
+}
+
+.profileSecEdit{
+    padding: 1rem 1rem;
+}
+
+.headingTitleEdit{
+    padding-bottom: 1.5rem;
+}
+
+.profileSecEdit{
+    margin: 1rem 0;
+}
+
+.sjfhkjfh{
+    margin-top: 1.5rem;
+}
+
+.websitesjdh input, textarea{
+    padding: 10px 12px;
+}
+
+.nameTitleWeb{
+    margin-bottom: .6rem;
+}
+
+.websitesjdh select{
+    padding: 10px 12px;
+}
+
+.forButtonEdit{
+    margin-top: 2rem;
+}
+
+.paddingNewhsdgh{
+    padding: 1rem 1rem;
+}
+
+.likeShowAndDo{
+    padding: .8rem 1rem;
+}
+
+.marginBottom{
+    margin-bottom: 1rem;
+}
+
+.no-scrollbar-container {
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .no-scrollbar-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
+  }

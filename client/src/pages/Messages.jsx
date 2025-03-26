@@ -39,8 +39,8 @@ const Messages = () => {
 
       </div>
       <div className="message2 displayNone displayFlex">
-        <DefaultMessageBox/>
-        {/* <MessageBox/> */}
+        {/* <DefaultMessageBox/> */}
+        <MessageBox/>
         
       </div>
     </div>
