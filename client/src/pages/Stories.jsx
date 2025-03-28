@@ -1,79 +1,56 @@
-import React, { useRef, useState } from 'react';
-import { Virtual, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import React, { useState } from 'react';
+import StoryViewSmall from '../components/StoryViewSmall';
+import StoryView from '../components/StoryView';
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
+export default function Stories() {
+  const [currentIndex, setCurrentIndex] = useState(2);
+  const stories = [0, 1, 2, 3, 4];
 
-import '../marginPadding.css';
-
-export default function App() {
-  const [swiperRef, setSwiperRef] = useState(null);
-  const appendNumber = useRef(500);
-  const prependNumber = useRef(1);
-  // Create array with 500 slides
-  const [slides, setSlides] = useState(
-    Array.from({ length: 500 }).map((_, index) => `Slide ${index + 1}`)
-  );
-
-  const prepend = () => {
-    setSlides([
-      `Slide ${prependNumber.current - 2}`,
-      `Slide ${prependNumber.current - 1}`,
-      ...slides,
-    ]);
-    prependNumber.current = prependNumber.current - 2;
-    swiperRef.slideTo(swiperRef.activeIndex + 2, 0);
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % stories.length);
   };
 
-  const append = () => {
-    setSlides([...slides, 'Slide ' + ++appendNumber.current]);
-  };
-
-  const slideTo = (index) => {
-    swiperRef.slideTo(index - 1, 0);
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + stories.length) % stories.length);
   };
 
   return (
-    <>
-      <Swiper
-        modules={[Virtual, Navigation, Pagination]}
-        onSwiper={setSwiperRef}
-        slidesPerView={8}
-        centeredSlides={true}
-        spaceBetween={30}
-        pagination={{
-          type: 'fraction',
-        }}
-        navigation={true}
-        virtual
-      >
-        {slides.map((slideContent, index) => (
-          <SwiperSlide key={slideContent} virtualIndex={index}>
-            {slideContent}
-          </SwiperSlide>
-        ))}
-      </Swiper>
+    <div className="h-screen w-full flex justify-center items-center gap-[2.5rem] bg-gray-800 relative">
+      {stories.map((index) => (
+        index === currentIndex ? (
+          <StoryView key={index} />
+        ) : (
+          <StoryViewSmall key={index} opacity={Math.abs(index - currentIndex) === 1 ? 70 : 50} />
+        )
+      ))}
 
-      <p className="append-buttons">
-        <button onClick={() => prepend()} className="prepend-2-slides">
-          Prepend 2 Slides
-        </button>
-        <button onClick={() => slideTo(1)} className="prepend-slide">
-          Slide 1
-        </button>
-        <button onClick={() => slideTo(250)} className="slide-250">
-          Slide 250
-        </button>
-        <button onClick={() => slideTo(500)} className="slide-500">
-          Slide 500
-        </button>
-        <button onClick={() => append()} className="append-slides">
-          Append Slide
-        </button>
-      </p>
-    </>
+      <div className="logoDivStory absolute left-4 top-4">
+        <i
+          aria-label="Instagram"
+          role="img"
+          style={{
+            backgroundImage: 'url(https://static.cdninstagram.com/rsrc.php/v4/yf/r/vI_SRjDNEcR.png)',
+            backgroundPosition: '0px 0px',
+            backgroundSize: 'auto',
+            width: '103px',
+            height: '29px',
+            backgroundRepeat: 'no-repeat',
+            display: 'inline-block',
+          }}
+        ></i>
+      </div>
+
+      <div className="croseStoryDIv absolute top-4 right-4 text-white cursor-pointer" onClick={() => window.history.back()}>
+        <svg aria-label="Close" fill="currentColor" height="24" viewBox="0 0 24 24" width="24"><title>Close</title><polyline fill="none" points="20.643 3.357 12 12 3.353 20.647" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3"></polyline><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" x1="20.649" x2="3.354" y1="20.649" y2="3.354"></line></svg>
+      </div>
+
+      <div className="leftSwife text-white cursor-pointer absolute left-[35%] top-[50%]" onClick={handlePrevious}>
+        <svg aria-label="Previous" fill="currentColor" height="24" viewBox="0 0 24 24" width="24"><title>Previous</title><path d="M12.005.503a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm2.207 15.294a1 1 0 1 1-1.416 1.412l-4.5-4.51a1 1 0 0 1 .002-1.415l4.5-4.489a1 1 0 0 1 1.412 1.416l-3.792 3.783Z"></path></svg>
+      </div>
+
+      <div className="rightSwife text-white cursor-pointer absolute right-[35%] top-[50%]" onClick={handleNext}>
+        <svg aria-label="Next" fill="currentColor" height="24" viewBox="0 0 24 24" width="24"><title>Next</title><path d="M12.005.503a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm3.707 12.22-4.5 4.488A1 1 0 0 1 9.8 15.795l3.792-3.783L9.798 8.21a1 1 0 1 1 1.416-1.412l4.5 4.511a1 1 0 0 1-.002 1.414Z"></path></svg>
+      </div>
+    </div>
   );
 }
