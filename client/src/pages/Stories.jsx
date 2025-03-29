@@ -1,28 +1,72 @@
 import React, { useState } from 'react';
 import StoryViewSmall from '../components/StoryViewSmall';
 import StoryView from '../components/StoryView';
+import { useNavigate } from 'react-router-dom';
+import { useNextStory } from '../contexts/nextStoryContext';
 
 export default function Stories() {
   const [currentIndex, setCurrentIndex] = useState(2);
-  const stories = [0, 1, 2, 3, 4];
+  const navigate = useNavigate()
+  const stories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+  const [isNextStory] = useNextStory(0)
+  const [startingIndex, setStartingIndex] = useState(0)
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % stories.length);
+    const storyN = isNextStory + 1;
+    if (storyN == 4) {
+      setCurrentIndex((v) => v + 1)
+      setStartingIndex(0)
+    } else {
+      setStartingIndex(storyN)
+    }
   };
 
   const handlePrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + stories.length) % stories.length);
+    const storyN = isNextStory - 1;
+    if (storyN == -1) {
+      setCurrentIndex((v) => v - 1)
+      setStartingIndex(0)
+    } else {
+      setStartingIndex(storyN)
+    }
   };
 
   return (
-    <div className="h-screen w-full flex justify-center items-center gap-[2.5rem] bg-gray-800 relative">
-      {stories.map((index) => (
-        index === currentIndex ? (
-          <StoryView key={index} />
-        ) : (
-          <StoryViewSmall key={index} opacity={Math.abs(index - currentIndex) === 1 ? 70 : 50} />
-        )
-      ))}
+    <div className="h-screen w-full flex justify-center items-center bg-gray-800 relative overflow-hidden">
+
+      {stories.map((index) => {
+        const position = index - currentIndex;
+        if (position <= 2 && position >= -2) {
+
+          let transformStyle = 'translateX(0) scale(1)';
+          let opacity = 1;
+
+          if (position === 0) {
+            transformStyle = 'translateX(0) scale(1)';
+          } else if (position < 0) {
+            transformStyle = `translateX(calc(${position * 50}px)) scale(0.9)`;
+            opacity = 0.7;
+          } else {
+            transformStyle = `translateX(calc(${position * 50}px)) scale(0.9)`;
+            opacity = 0.7;
+          }
+
+
+          return (
+            <div
+              key={index}
+              style={{
+                transform: transformStyle,
+                opacity,
+                transition: 'transform 0.5s ease, opacity 0.5s ease',
+              }}
+            >
+              {index === currentIndex ? <StoryView startIndex={startingIndex} /> : <StoryViewSmall opacity={opacity * 100} />}
+            </div>
+          );
+        }
+      })}
 
       <div className="logoDivStory absolute left-4 top-4">
         <i
@@ -40,7 +84,7 @@ export default function Stories() {
         ></i>
       </div>
 
-      <div className="croseStoryDIv absolute top-4 right-4 text-white cursor-pointer" onClick={() => window.history.back()}>
+      <div className="croseStoryDIv absolute top-4 right-4 text-white cursor-pointer" onClick={() => navigate(-1)}>
         <svg aria-label="Close" fill="currentColor" height="24" viewBox="0 0 24 24" width="24"><title>Close</title><polyline fill="none" points="20.643 3.357 12 12 3.353 20.647" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3"></polyline><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" x1="20.649" x2="3.354" y1="20.649" y2="3.354"></line></svg>
       </div>
 

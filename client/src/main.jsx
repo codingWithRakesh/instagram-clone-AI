@@ -23,6 +23,7 @@ import BlurBox from './components/BlurBox.jsx'
 import PostShow from './components/PostShow.jsx'
 import Stories from './pages/Stories.jsx'
 import StoriesAll from './pages/Stories.jsx'
+import NextStoryContextProvider from './contexts/nextStoryContext.jsx'
 let user = true
 
 const postShow = {
@@ -87,8 +88,8 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path : '/stories/:userId/:storyId',
-    element : <StoriesAll />
+    path: '/stories/:userId/:storyId',
+    element: <StoriesAll />
   },
   {
     path: '/accounts/login',
@@ -106,16 +107,18 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <SwitchContextProvider>
-      <MoreContextProvider>
-        <SearchContextProvider>
-          <UploadContextProvider>
-            <NotificationContextProvider>
-              <RouterProvider router={router} />
-            </NotificationContextProvider>
-          </UploadContextProvider>
-        </SearchContextProvider>
-      </MoreContextProvider>
-    </SwitchContextProvider>
+    <NextStoryContextProvider>
+      <SwitchContextProvider>
+        <MoreContextProvider>
+          <SearchContextProvider>
+            <UploadContextProvider>
+              <NotificationContextProvider>
+                <RouterProvider router={router} />
+              </NotificationContextProvider>
+            </UploadContextProvider>
+          </SearchContextProvider>
+        </MoreContextProvider>
+      </SwitchContextProvider>
+    </NextStoryContextProvider>
   </StrictMode>
 )

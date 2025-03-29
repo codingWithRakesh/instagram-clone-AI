@@ -7,12 +7,15 @@ import { IoVolumeHighOutline, IoVolumeMuteOutline } from "react-icons/io5";
 import { TbPlayerPauseFilled, TbPlayerPlayFilled } from "react-icons/tb";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
+import { useNextStory } from '../contexts/nextStoryContext.jsx';
 
-const StoryView = () => {
+const StoryView = ({startIndex}) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isLike, setIsLike] = useState(false)
   const storiesRef = useRef(null);
+
+  const [isNextStory, setIsNextStory] = useNextStory()
 
   const handlePausePlay = () => {
     setIsPaused(prev => !prev);
@@ -22,6 +25,8 @@ const StoryView = () => {
     setIsMuted((prev) => !prev);
   };
 
+  const startingIndex = startIndex
+
   return (
     <div className='h-[96vh] relative w-[350px] flex flex-col justify-center items-center rounded-[5px] overflow-hidden'>
       <Stories
@@ -30,10 +35,13 @@ const StoryView = () => {
         defaultInterval={5000}
         width={350}
         height={"96vh"}
-        loop={true}
+        currentIndex={startingIndex}
         keyboardNavigation={true}
         isPaused={isPaused} 
-        onStoryStart={() => console.log('Story started')}
+        onStoryStart={(index) => {
+          setIsNextStory(index)
+          console.log('Story started')
+        }}
         onStoryEnd={(index) => console.log(`Story ${index + 1} finished`)}
         storyContent={(story) => {
           if (story.type === 'video') {

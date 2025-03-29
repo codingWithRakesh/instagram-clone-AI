@@ -24,3 +24,37 @@ export const stories = [
         
     },
 ];
+
+[
+    {
+        userName : "rakesh_23",
+        profile : profile,
+        stories : [
+            {
+                url: profile,
+                duration: 5000,
+                time : "7h",
+                
+            },
+            {
+                url: video,
+                type: 'video',
+                duration: 10000,
+                time : "2h",
+                
+            },
+            {
+                url: profile,
+                duration: 5000,
+                time : "5m",
+                
+            },
+            {
+                url: video,
+                type: 'video',
+                duration: 10000,
+                time : "7h",
+            },
+        ]
+    }
+];
