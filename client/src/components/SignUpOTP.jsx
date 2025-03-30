@@ -1,6 +1,9 @@
 import React from 'react'
+import { useSignUp } from '../contexts/signUpDivContext'
 
-const SignUpOTP = () => {
+const SignUpOTP = ({inputsD}) => {
+    const [, setIsSignUp] = useSignUp()
+    const [signUpDetails, setSignUpDetails] = inputsD
     return (
         <div className="SignUpSiv border border-[#DBDBDB] w-full paddingTopBottom minH0 flex flex-col items-center justify-start">
             <div className="logoInstaO w-full h-[5rem] flex items-center justify-center">
@@ -26,9 +29,11 @@ const SignUpOTP = () => {
             </div>
             <div className="formLogin w-full flex flex-col items-center justify-center gap-2">
                 <input type="text" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] rounded-[5px] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Confirmation Code' />
-                <button className='w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>Next</button>
+                <button onClick={()=>{
+                    console.log(signUpDetails)
+                }} className='w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>Next</button>
             </div>
-            <div className='w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center'>Go Back</div>
+            <div onClick={()=>setIsSignUp("DOBB")} className='w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center'>Go Back</div>
 
         </div>
     )

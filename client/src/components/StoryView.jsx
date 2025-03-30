@@ -8,14 +8,18 @@ import { TbPlayerPauseFilled, TbPlayerPlayFilled } from "react-icons/tb";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { useNextStory } from '../contexts/nextStoryContext.jsx';
+import { useNextStory2 } from '../contexts/nextStory2Context.jsx';
+import { useStoryStartContext } from '../contexts/storyStartContext.jsx';
 
 const StoryView = ({startIndex}) => {
   const [isPaused, setIsPaused] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isLike, setIsLike] = useState(false)
   const storiesRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useNextStory2();
 
   const [isNextStory, setIsNextStory] = useNextStory()
+  const [startingIndex, setStartingIndex] = useStoryStartContext()
 
   const handlePausePlay = () => {
     setIsPaused(prev => !prev);
@@ -25,7 +29,7 @@ const StoryView = ({startIndex}) => {
     setIsMuted((prev) => !prev);
   };
 
-  const startingIndex = startIndex
+  const currentStoryIndex = startIndex
 
   return (
     <div className='h-[96vh] relative w-[350px] flex flex-col justify-center items-center rounded-[5px] overflow-hidden'>
@@ -35,14 +39,19 @@ const StoryView = ({startIndex}) => {
         defaultInterval={5000}
         width={350}
         height={"96vh"}
-        currentIndex={startingIndex}
+        currentIndex={currentStoryIndex}
         keyboardNavigation={true}
         isPaused={isPaused} 
         onStoryStart={(index) => {
           setIsNextStory(index)
           console.log('Story started')
         }}
-        onStoryEnd={(index) => console.log(`Story ${index + 1} finished`)}
+        onStoryEnd={(index) => {
+          if(index +1 == stories.length){
+            setCurrentIndex((v) => v +1)
+            setStartingIndex(0)
+          }
+        }}
         storyContent={(story) => {
           if (story.type === 'video') {
             return (

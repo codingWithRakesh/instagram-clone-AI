@@ -3,14 +3,16 @@ import StoryViewSmall from '../components/StoryViewSmall';
 import StoryView from '../components/StoryView';
 import { useNavigate } from 'react-router-dom';
 import { useNextStory } from '../contexts/nextStoryContext';
+import { useNextStory2 } from '../contexts/nextStory2Context';
+import { useStoryStartContext } from '../contexts/storyStartContext';
 
 export default function Stories() {
-  const [currentIndex, setCurrentIndex] = useState(2);
+  const [currentIndex, setCurrentIndex] = useNextStory2();
   const navigate = useNavigate()
   const stories = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   const [isNextStory] = useNextStory(0)
-  const [startingIndex, setStartingIndex] = useState(0)
+  const [startingIndex, setStartingIndex] = useStoryStartContext()
 
   const handleNext = () => {
     const storyN = isNextStory + 1;
@@ -37,6 +39,7 @@ export default function Stories() {
 
       {stories.map((index) => {
         const position = index - currentIndex;
+
         if (position <= 2 && position >= -2) {
 
           let transformStyle = 'translateX(0) scale(1)';
@@ -45,13 +48,78 @@ export default function Stories() {
           if (position === 0) {
             transformStyle = 'translateX(0) scale(1)';
           } else if (position < 0) {
-            transformStyle = `translateX(calc(${position * 50}px)) scale(0.9)`;
+            transformStyle = `translateX(calc(${position * 40}px)) scale(0.9)`;
             opacity = 0.7;
           } else {
-            transformStyle = `translateX(calc(${position * 50}px)) scale(0.9)`;
+            transformStyle = `translateX(calc(${position * 40}px)) scale(0.9)`;
             opacity = 0.7;
           }
 
+          if (index == 0 && currentIndex == 0) {
+            return (
+              <>
+                <div
+                  key={-2}
+                  style={{
+                    transform: transformStyle,
+                    opacity,
+                    transition: 'transform 0.5s ease, opacity 0.5s ease',
+                  }}
+                >
+                  <StoryViewSmall isEmpty={true} opacity={opacity * 100} />
+                </div>
+                <div
+                  key={-1}
+                  style={{
+                    transform: transformStyle,
+                    opacity,
+                    transition: 'transform 0.5s ease, opacity 0.5s ease',
+                  }}
+                >
+                  <StoryViewSmall isEmpty={true} opacity={opacity * 100} />
+                </div>
+
+                <div
+                  key={0}
+                  style={{
+                    transform: transformStyle,
+                    opacity,
+                    transition: 'transform 0.5s ease, opacity 0.5s ease',
+                  }}
+                >
+                  {index === currentIndex ? <StoryView startIndex={startingIndex} /> : <StoryViewSmall isEmpty={false} opacity={opacity * 100} />}
+                </div>
+              </>
+            );
+          }
+
+          if (index == 0 && currentIndex == 1) {
+            return (
+              <>
+                <div
+                  key={-1}
+                  style={{
+                    transform: transformStyle,
+                    opacity,
+                    transition: 'transform 0.5s ease, opacity 0.5s ease',
+                  }}
+                >
+                  <StoryViewSmall isEmpty={true} opacity={opacity * 100} />
+                </div>
+
+                <div
+                  key={0}
+                  style={{
+                    transform: transformStyle,
+                    opacity,
+                    transition: 'transform 0.5s ease, opacity 0.5s ease',
+                  }}
+                >
+                  {index === currentIndex ? <StoryView startIndex={startingIndex} /> : <StoryViewSmall isEmpty={false} opacity={opacity * 100} />}
+                </div>
+              </>
+            );
+          }
 
           return (
             <div
@@ -62,7 +130,7 @@ export default function Stories() {
                 transition: 'transform 0.5s ease, opacity 0.5s ease',
               }}
             >
-              {index === currentIndex ? <StoryView startIndex={startingIndex} /> : <StoryViewSmall opacity={opacity * 100} />}
+              {index === currentIndex ? <StoryView startIndex={startingIndex} /> : <StoryViewSmall userIndex={index} isEmpty={false} opacity={opacity * 100} />}
             </div>
           );
         }

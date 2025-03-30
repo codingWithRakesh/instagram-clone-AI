@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import { usegetDOB } from '../contexts/getDOBContext';
 
-const GenerateBirthBox = () => {
+const GenerateBirthBox = forwardRef((prop, ref) => {
+    const [getDOB, setGetDOB] = usegetDOB()
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
@@ -9,12 +11,32 @@ const GenerateBirthBox = () => {
     const years = Array.from({ length: 2025 - 1919 + 1 }, (_, i) => i + 1919);
 
     const [selectedMonth, setSelectedMonth] = useState('');
+    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedYear, setSelectedYear] = useState('');
 
     const daysInMonth = (month) => {
         if (!month) return 31;
         const index = months.indexOf(month);
         return new Date(2024, index + 1, 0).getDate();
     };
+
+    useImperativeHandle(ref, () => ({
+        logBirthDate: () => {
+            if (!selectedMonth || !selectedDate || !selectedYear) {
+                console.log('Please select all fields');
+                return;
+            }
+
+            const monthIndex = months.indexOf(selectedMonth) + 1;
+            const formattedMonth = monthIndex.toString().padStart(2, '0');
+            const formattedDate = selectedDate.toString().padStart(2, '0');
+
+            const birthDate = `${formattedDate}/${formattedMonth}/${selectedYear}`;
+            setGetDOB(birthDate);
+            console.log("child",birthDate,"getDOB",getDOB)
+        }
+    }));
+
 
     return (
         <div className="birthBox flex flex-col items-center justify-start">
@@ -25,13 +47,13 @@ const GenerateBirthBox = () => {
                         <option key={index} value={month}>{month}</option>
                     ))}
                 </select>
-                <select name="date" className='w-[4rem] rounded-[3px] h-full border border-[#DBDBDB] paddingLeftRightIn text-[#737373]'>
+                <select name="date" className='w-[4rem] rounded-[3px] h-full border border-[#DBDBDB] paddingLeftRightIn text-[#737373]' onChange={(e) => setSelectedDate(e.target.value)}>
                     <option value="">Date</option>
                     {[...Array(daysInMonth(selectedMonth)).keys()].map((_, i) => (
                         <option key={i} value={i + 1}>{i + 1}</option>
                     ))}
                 </select>
-                <select name="year" className='w-[4.5rem] h-full rounded-[3px] border border-[#DBDBDB] paddingLeftRightIn text-[#737373]'>
+                <select name="year" className='w-[4.5rem] h-full rounded-[3px] border border-[#DBDBDB] paddingLeftRightIn text-[#737373]' onChange={(e) => setSelectedYear(e.target.value)}>
                     <option value="">Year</option>
                     {years.map((year) => (
                         <option key={year} value={year}>{year}</option>
@@ -41,6 +63,6 @@ const GenerateBirthBox = () => {
             <p className='text-[#737373] text-[.90rem]'>You need to enter the date you were born</p>
         </div>
     );
-}
+});
 
-export default GenerateBirthBox
+export default GenerateBirthBox;

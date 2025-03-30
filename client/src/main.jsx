@@ -24,7 +24,11 @@ import PostShow from './components/PostShow.jsx'
 import Stories from './pages/Stories.jsx'
 import StoriesAll from './pages/Stories.jsx'
 import NextStoryContextProvider from './contexts/nextStoryContext.jsx'
-let user = true
+import SignUpContextProvider from './contexts/signUpDivContext.jsx'
+import NextStory2ContextProvider from './contexts/nextStory2Context.jsx'
+import StoryStartContextProvider from './contexts/storyStartContext.jsx'
+import GetDOBContextProvider from './contexts/getDOBContext.jsx'
+let user = false
 
 const postShow = {
   path: "p/:pId",
@@ -107,18 +111,26 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <NextStoryContextProvider>
-      <SwitchContextProvider>
-        <MoreContextProvider>
-          <SearchContextProvider>
-            <UploadContextProvider>
-              <NotificationContextProvider>
-                <RouterProvider router={router} />
-              </NotificationContextProvider>
-            </UploadContextProvider>
-          </SearchContextProvider>
-        </MoreContextProvider>
-      </SwitchContextProvider>
-    </NextStoryContextProvider>
+    <GetDOBContextProvider>
+      <StoryStartContextProvider>
+        <NextStory2ContextProvider>
+          <SignUpContextProvider>
+            <NextStoryContextProvider>
+              <SwitchContextProvider>
+                <MoreContextProvider>
+                  <SearchContextProvider>
+                    <UploadContextProvider>
+                      <NotificationContextProvider>
+                        <RouterProvider router={router} />
+                      </NotificationContextProvider>
+                    </UploadContextProvider>
+                  </SearchContextProvider>
+                </MoreContextProvider>
+              </SwitchContextProvider>
+            </NextStoryContextProvider>
+          </SignUpContextProvider>
+        </NextStory2ContextProvider>
+      </StoryStartContextProvider>
+    </GetDOBContextProvider>
   </StrictMode>
 )

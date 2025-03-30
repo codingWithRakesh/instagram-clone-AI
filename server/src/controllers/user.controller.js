@@ -5,6 +5,7 @@ import { User } from '../models/user.model.js'
 import { options } from '../constants.js'
 import { deleteFromCloudinary, getPublicId, uploadOnCloudinary } from '../utils/cloudinary.js'
 import mongoose from 'mongoose'
+import { sendVerificationEmail, sendWelcomeEmail } from '../utils/emailSend.js'
 
 const accessAndRefreshTokenGenrator = async (userId) => {
     try {
@@ -27,18 +28,31 @@ const register = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    const existedUser = await User.findOne({ $or: [ { email }, { userName }] })
+    const existedUser = await User.findOne({ $or: [{ email }, { userName }] })
     if (existedUser) {
         throw new ApiError(400, "User already exists")
     }
 
+    const OTP = Math.floor(100000 + Math.random() * 900000).toString()
+    if (!OTP) {
+        throw new ApiError(500, "Internal Server Error")
+    }
+
     const user = await User.create({
-        email: email || undefined,
+        email,
         fullName,
         userName,
         DOB,
-        password
+        password,
+        OTP,
+        OTPExpire: Date.now() + 24 * 60 * 60 * 1000
     })
+
+    if (!user) {
+        throw new ApiError(500, "Internal Server Error")
+    }
+
+    await sendVerificationEmail(user.email, OTP)
 
     const createUser = await User.findById(user._id).select("-password -refreshToken")
     if (!createUser) {
@@ -48,10 +62,36 @@ const register = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(200, createUser, "User created successfully"))
 })
 
+const verfiyEmail = asyncHandler(async (req, res) => {
+    const { otp } = req.body;
+    if (!otp) {
+        throw new ApiError(400, "otp is required")
+    }
+
+    const user = await User.findOne({
+        OTP: otp,
+        OTPExpire: { $gt: Date.now() }
+    }).select("-password -refreshToken")
+
+    if (!user) {
+        throw new ApiError(500, "Internal Server Error")
+    }
+
+    user.isVerified = true;
+    user.OTP = undefined;
+    user.OTPExpire = undefined;
+
+    await user.save({ validateBeforeSave: false })
+
+    await sendWelcomeEmail(user.email,user.name)
+
+    return res.status(200).json(new ApiResponse(200, user, "Successfully"))
+})
+
 const login = asyncHandler(async (req, res) => {
     const { email, userName, password } = req.body
-    if ((email || userName) == null && password == null) {
-        throw new ApiError(400, "All fields are required")
+    if ((!email && !userName) || !password) {
+        throw new ApiError(400, "All fields are required");
     }
 
     const user = await User.findOne({ $or: [{ email }, { userName }] })
@@ -170,7 +210,7 @@ const currentUser = asyncHandler(async (req, res) => {
 })
 
 const userProfile = asyncHandler(async (req, res) => {
-    const {userName} = req.params
+    const { userName } = req.params
     const user = await User.aggregate([
         {
             $match: {
@@ -221,10 +261,10 @@ const userProfile = asyncHandler(async (req, res) => {
             }
         },
         {
-            $project : {
-                postsCounts : 0,
-                followersCounts : 0,
-                followingCounts : 0
+            $project: {
+                postsCounts: 0,
+                followersCounts: 0,
+                followingCounts: 0
             }
         }
     ])
@@ -237,6 +277,7 @@ const userProfile = asyncHandler(async (req, res) => {
 
 export {
     register,
+    verfiyEmail,
     login,
     logout,
     updateProfile,

@@ -9,16 +9,16 @@ const AllStory = () => {
           chevron_left
         </button>
         <ul className="image-list">
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
-          <Story />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
+          <Story isClick={true} />
 
         </ul>
         <button id="next-slide" className="slide-button material-symbols-rounded">
