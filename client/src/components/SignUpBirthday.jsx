@@ -1,36 +1,43 @@
 import React, { useRef, useState, useEffect } from 'react';
 import GenerateBirthBox from './GenerateBirthBox';
 import { useSignUp } from '../contexts/signUpDivContext';
-import { usegetDOB } from '../contexts/getDOBContext';
+import axios from 'axios';
 
 const SignUpBirthday = ({ inputsD }) => {
-    const [isSignUp, setIsSignUp] = useSignUp();
-    const [signUpDetails, setSignUpDetails] = inputsD;
+    const [, setIsSignUp] = useSignUp();
     const birthBoxRef = useRef();
-    const [getDOB, setGetDOB] = usegetDOB()
 
-    const handleNext = () => {
-        birthBoxRef.current?.logBirthDate();
-        // console.log(getDOB);
-        //   setSignUpDetails((prev) => ({
-        //     ...prev,
-        //     DOB: getDOB,
-        //   }));
-        // //   console.log(signUpDetails)
-        //   setIsSignUp("OTP");
+    const handleNext = async () => {
+        const updatedDetails = birthBoxRef.current?.logBirthDate();
+
+        if (!updatedDetails) {
+            console.log('Invalid Date');
+            return;
+        }
+
+        console.log("Updated Sign-Up Details:", updatedDetails);
+
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/register`,
+                updatedDetails,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            alert('Login successful');
+            console.log('User Data:', response.data);
+        } catch (error) {
+            console.error('Error:', error.response?.data?.message || error.message);
+            alert(error.response?.data?.message || error.message);
+        }
+        setIsSignUp("OTP");
     };
 
-    useEffect(() => {
-        if (getDOB && isSignUp == "DOB") {
-          console.log(getDOB);
-          setSignUpDetails((prev) => ({
-            ...prev,
-            DOB: getDOB,
-          }));
-          console.log(signUpDetails)
-          setIsSignUp("OTP");
-        }
-      }, [getDOB]);
 
     return (
         <div className="SignUpSiv border border-[#DBDBDB] w-full paddingTopBottom minH0 flex flex-col items-center justify-start">
@@ -55,7 +62,7 @@ const SignUpBirthday = ({ inputsD }) => {
                 <p className="text-[#0095F6] text-center">Why do I need to provide my birthday?</p>
             </div>
 
-            <GenerateBirthBox ref={birthBoxRef} />
+            <GenerateBirthBox ref={birthBoxRef} inputsD={inputsD} />
 
             <div className="marginTopjdshkh w-[17.5rem] text-[#737373] text-[.87rem] leading-[1rem] text-center">
                 Use your own birthday, even if this account is for a business, a pet, or something else.

@@ -4,13 +4,11 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 
 const userSchema = new Schema({
-    phoneNumber: {
+    phoneNumber : {
         type: String,
-        unique: true,
-        index: true,
-        trim: true
+        default: ""
     },
-    email : {
+    email: {
         type: String,
         unique: true,
         index: true,
@@ -30,9 +28,9 @@ const userSchema = new Schema({
         trim: true,
         index: true
     },
-    DOB : {
-        type : String,
-        required : true
+    DOB: {
+        type: String,
+        required: true
     },
     websiteURL: {
         type: String,
@@ -45,19 +43,19 @@ const userSchema = new Schema({
         type: String,
         default: ""
     },
-    gender : {
+    gender: {
         type: String,
-        enum:['Male','Female','Other'],
+        enum: ['male', 'female', 'other'],
     },
-    isVerified:{
-        type:Boolean,
-        default:false
+    isVerified: {
+        type: Boolean,
+        default: false
     },
-    OTP : {
-        type : String
+    OTP: {
+        type: String
     },
-    OTPExpire : {
-        type : Date
+    OTPExpire: {
+        type: Date
     },
     password: {
         type: String,
@@ -105,5 +103,17 @@ userSchema.methods.generateRefreshToken = function () {
 }
 
 userSchema.plugin(mongooseAggregatePaginate)
+
+userSchema.statics.removeInvalidIndex = async function () {
+    try {
+        const indexes = await this.collection.getIndexes();
+        if (indexes.number_1) {
+            console.log("Removing invalid index 'number_1'");
+            await this.collection.dropIndex("number_1");
+        }
+    } catch (error) {
+        console.error("Error removing index:", error);
+    }
+};
 
 export const User = model("User", userSchema)

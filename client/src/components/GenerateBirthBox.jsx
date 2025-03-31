@@ -1,8 +1,7 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
-import { usegetDOB } from '../contexts/getDOBContext';
 
-const GenerateBirthBox = forwardRef((prop, ref) => {
-    const [getDOB, setGetDOB] = usegetDOB()
+const GenerateBirthBox = forwardRef(({ inputsD }, ref) => {
+    const [signUpDetails, setSignUpDetails] = inputsD;
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
@@ -22,20 +21,27 @@ const GenerateBirthBox = forwardRef((prop, ref) => {
 
     useImperativeHandle(ref, () => ({
         logBirthDate: () => {
-            if (!selectedMonth || !selectedDate || !selectedYear) {
-                console.log('Please select all fields');
-                return;
-            }
-
-            const monthIndex = months.indexOf(selectedMonth) + 1;
-            const formattedMonth = monthIndex.toString().padStart(2, '0');
-            const formattedDate = selectedDate.toString().padStart(2, '0');
-
-            const birthDate = `${formattedDate}/${formattedMonth}/${selectedYear}`;
-            setGetDOB(birthDate);
-            console.log("child",birthDate,"getDOB",getDOB)
+          if (!selectedMonth || !selectedDate || !selectedYear) {
+            console.log('Please select all fields');
+            return null;
+          }
+      
+          const monthIndex = months.indexOf(selectedMonth) + 1;
+          const formattedMonth = monthIndex.toString().padStart(2, '0');
+          const formattedDate = selectedDate.toString().padStart(2, '0');
+      
+          const birthDate = `${formattedDate}/${formattedMonth}/${selectedYear}`;
+          
+          const updatedDetails = {
+            ...signUpDetails,
+            DOB: birthDate,
+          };
+      
+          setSignUpDetails(updatedDetails); 
+          return updatedDetails;
         }
-    }));
+      }));
+      
 
 
     return (

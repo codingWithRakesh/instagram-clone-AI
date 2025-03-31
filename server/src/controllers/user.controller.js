@@ -38,6 +38,8 @@ const register = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Internal Server Error")
     }
 
+    await User.removeInvalidIndex();
+
     const user = await User.create({
         email,
         fullName,
@@ -59,7 +61,7 @@ const register = asyncHandler(async (req, res) => {
         throw new ApiError(500, "Something went wrong")
     }
 
-    return res.status(201).json(new ApiResponse(200, createUser, "User created successfully"))
+    return res.status(201).json(new ApiResponse(200, {}, "User created successfully"))
 })
 
 const verfiyEmail = asyncHandler(async (req, res) => {
@@ -83,26 +85,44 @@ const verfiyEmail = asyncHandler(async (req, res) => {
 
     await user.save({ validateBeforeSave: false })
 
-    await sendWelcomeEmail(user.email,user.name)
+    await sendWelcomeEmail(user.email, user.fullName)
 
     return res.status(200).json(new ApiResponse(200, user, "Successfully"))
 })
 
 const login = asyncHandler(async (req, res) => {
-    const { email, userName, password } = req.body
-    if ((!email && !userName) || !password) {
-        throw new ApiError(400, "All fields are required");
+    const { email, userName, password, fullName, DOB, profilePic, gender } = req.body
+
+    let user = await User.findOne({ $or: [{ email }, { userName }] })
+
+    if (!user && fullName && DOB && gender && email) {
+        try {
+            user = await User.create({
+                email,
+                fullName,
+                userName: email.split('@')[0] + "_" +  Date.now().toString().slice(-2),
+                DOB,
+                OTP: undefined,
+                OTPExpire: undefined,
+                profilePic,
+                gender,
+                isVerified: true,
+                password: email.split('@')[0] + "!$@" + DOB.slice(-2)
+            });
+        } catch (error) {
+            throw new ApiError(409, "User already exists with this email or username");
+        }
     }
 
-    const user = await User.findOne({ $or: [{ email }, { userName }] })
-    console.log(user)
     if (!user) {
-        throw new ApiError(404, "User not found")
+        throw new ApiError(400, "Missing required information for registration");
     }
 
-    const isPassword = await user.isPasswordCorrect(password)
-    if (!isPassword) {
-        throw new ApiError(401, "Invalid credentials")
+    if ((email || userName) && password) {
+        const isPassword = await user.isPasswordCorrect(password)
+        if (!isPassword) {
+            throw new ApiError(401, "Invalid credentials")
+        }
     }
 
     const { accessToken, refreshToken } = await accessAndRefreshTokenGenrator(user._id)

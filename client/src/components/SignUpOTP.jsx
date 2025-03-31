@@ -1,9 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSignUp } from '../contexts/signUpDivContext'
+import axios from 'axios'
 
-const SignUpOTP = ({inputsD}) => {
+const SignUpOTP = () => {
     const [, setIsSignUp] = useSignUp()
-    const [signUpDetails, setSignUpDetails] = inputsD
+    const [otp, setOtp] = useState("")
+
+    const submitOtp = async () => {
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/verfiyEmail`,
+                {otp},
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            alert('Login successful');
+            console.log('User Data:', response.data);
+        } catch (error) {
+            console.error('Error:', error.response?.data?.message || error.message);
+            alert(error.response?.data?.message || error.message);
+        }
+    }
+
     return (
         <div className="SignUpSiv border border-[#DBDBDB] w-full paddingTopBottom minH0 flex flex-col items-center justify-start">
             <div className="logoInstaO w-full h-[5rem] flex items-center justify-center">
@@ -28,12 +51,10 @@ const SignUpOTP = ({inputsD}) => {
                 Enter the confirmation code we sent to sndlkaddaj@gmail.com. <span className='text-[#0095F6] cursor-pointer font-bold'>Resend Code</span>
             </div>
             <div className="formLogin w-full flex flex-col items-center justify-center gap-2">
-                <input type="text" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] rounded-[5px] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Confirmation Code' />
-                <button onClick={()=>{
-                    console.log(signUpDetails)
-                }} className='w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>Next</button>
+                <input type="text" value={otp} onChange={(e)=>setOtp(e.target.value)} className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] rounded-[5px] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Confirmation Code' />
+                <button onClick={submitOtp} className='w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>Next</button>
             </div>
-            <div onClick={()=>setIsSignUp("DOBB")} className='w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center'>Go Back</div>
+            <div onClick={()=>setIsSignUp("DOB")} className='w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center'>Go Back</div>
 
         </div>
     )
