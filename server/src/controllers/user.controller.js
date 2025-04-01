@@ -87,7 +87,17 @@ const verfiyEmail = asyncHandler(async (req, res) => {
 
     await sendWelcomeEmail(user.email, user.fullName)
 
-    return res.status(200).json(new ApiResponse(200, user, "Successfully"))
+    const { accessToken, refreshToken } = await accessAndRefreshTokenGenrator(user._id)
+    const loginUser = await User.findById(user._id).select("-password -refreshToken")
+    if (!loginUser) {
+        throw new ApiError(500, "Something went wrong")
+    }
+
+    return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refreshToken", refreshToken, options)
+        .json(new ApiResponse(200, { user: loginUser, accessToken, refreshToken }, "User created successfully"))
 })
 
 const login = asyncHandler(async (req, res) => {
@@ -100,7 +110,7 @@ const login = asyncHandler(async (req, res) => {
             user = await User.create({
                 email,
                 fullName,
-                userName: email.split('@')[0] + "_" +  Date.now().toString().slice(-2),
+                userName: email.split('@')[0] + "_" + Date.now().toString().slice(-2),
                 DOB,
                 OTP: undefined,
                 OTPExpire: undefined,

@@ -1,70 +1,71 @@
-.navListDiv{
+.navListDiv {
     padding: 2.1rem 1rem;
 }
 
-.headingTitle{
+.headingTitle {
     padding: 0 1.5rem;
 }
 
-.listSetting{
-    padding:  1rem;
+.listSetting {
+    padding: 1rem;
 }
 
-.listS{
+.listS {
     padding: .8rem 1rem;
     border-radius: 8px;
     cursor: pointer;
 }
 
-.shfhj{
+.shfhj {
     padding: 12px 1rem;
 }
 
-.navListDivEdit{
+.navListDivEdit {
     padding: 2.1rem 5rem;
 }
 
-.profileSecEdit{
+.profileSecEdit {
     padding: 1rem 1rem;
 }
 
-.headingTitleEdit{
+.headingTitleEdit {
     padding-bottom: 1.5rem;
 }
 
-.profileSecEdit{
+.profileSecEdit {
     margin: 1rem 0;
 }
 
-.sjfhkjfh{
+.sjfhkjfh {
     margin-top: 1.5rem;
 }
 
-.websitesjdh input, textarea{
+.websitesjdh input,
+textarea {
     padding: 10px 12px;
 }
 
-.nameTitleWeb{
+.nameTitleWeb {
     margin-bottom: .6rem;
 }
 
-.websitesjdh select{
+.websitesjdh select {
     padding: 10px 12px;
 }
 
-.forButtonEdit{
+.forButtonEdit {
     margin-top: 2rem;
 }
 
-.paddingNewhsdgh{
+.paddingNewhsdgh {
     padding: 1rem 1rem;
 }
 
-.likeShowAndDo{
+.likeShowAndDo {
     padding: .8rem 1rem;
 }
 
-.marginBottom{
+.marginBottom {
     margin-bottom: 1rem;
 }
 
@@ -72,42 +73,53 @@
     width: 100%;
     height: 100vh;
     overflow-y: scroll;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-  }
-  
-  .no-scrollbar-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, and Opera */
-  }
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+.no-scrollbar-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, and Opera */
+}
 
 
 
 
-  /* swiper */
-  .swiper {
+/* swiper */
+.swiper {
     width: 100%;
     padding-top: 50px;
     padding-bottom: 50px;
-  }
-  
-  .swiper-slide {
+}
+
+.swiper-slide {
     background-position: center;
     background-size: cover;
     width: 300px;
     height: 300px;
-  }
-  
-  .swiper-slide img {
+}
+
+.swiper-slide img {
     display: block;
     width: 100%;
-  }
-  
-  
+}
 
-  .paddingLER{
+
+
+.paddingLER {
     padding: 0 .8rem;
-  }
+}
 
-  .paddinInputStory{
+.paddinInputStory {
     padding: 0 1.2rem;
-  }
+}
+
+
+
+.itemCenterAllhild {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

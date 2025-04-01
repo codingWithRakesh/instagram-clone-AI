@@ -1,10 +1,20 @@
 import React, { useState } from 'react'
 import { IoLogoFacebook } from 'react-icons/io'
 import { useSignUp } from '../contexts/signUpDivContext'
+import FacebookLogin from '@greatsumini/react-facebook-login'
+import axios from 'axios'
+import { handleError, handleSuccess } from './ErrorMessage'
+import { setAuthUser } from '../redux/authSlice'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import Spinner from './Spinner'
 
 const SignUpMainInput = ({ inputsD }) => {
   const [, setIsSignUp] = useSignUp()
   const [signUpDetails, setSignUpDetails] = inputsD
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
 
   const signUpDataCollect = (e) => {
     e.preventDefault()
@@ -19,7 +29,40 @@ const SignUpMainInput = ({ inputsD }) => {
 
     console.log('Sign Up Details:', userData)
     setIsSignUp('DOB')
-    // Add further logic like sending data to API or validating inputs
+
+  }
+
+  const loginWithFacebook = async (response) => {
+    const userData = {
+      fullName: response.name,
+      email: response.email,
+      DOB: response.birthday,
+      profilePic: response.picture?.data?.url,
+      gender: response.gender
+    }
+
+    setLoading(true)
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/login`,
+        userData,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      dispatch(setAuthUser(response.data.data.user));
+      handleSuccess(response.data.message);
+      setLoading(false)
+      navigate("/");
+    } catch (error) {
+      console.error('Error:', error.response?.data?.message || error.message);
+      handleError(error.response?.data?.message || error.message);
+    }
   }
 
   return (
@@ -42,12 +85,25 @@ const SignUpMainInput = ({ inputsD }) => {
       <div className="textJHJ w-[16.75rem] min-h-2 text-center flex items-center justify-center text-[#737373] text-[1.2rem] leading-tight">
         Sign up to see photos and videos from your friends.
       </div>
-      <button className='gap-1 forMarginFace flex items-center justify-center w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
+      <div className='gap-1 forMarginFace flex items-center justify-center w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
         <span className='text-[1.3rem]'>
           <IoLogoFacebook />
         </span>
-        <p>Log in with Facebook</p>
-      </button>
+        {/* <p>Log in with Facebook</p> */}
+        <FacebookLogin
+          appId={import.meta.env.VITE_FACEBOOK_USER}
+          fields="name,email,birthday,picture,gender"
+          scope="public_profile,email,user_birthday,user_gender"
+          onSuccess={(response) => {
+            console.log('Login Success!', response);
+          }}
+          onFail={(error) => {
+            console.log('Login Failed!', error);
+          }}
+          onProfileSuccess={loginWithFacebook}
+          className=" cursor-pointer"
+        />
+      </div>
       <div className="orLoginS w-[16.75rem] flex items-center justify-center relative h-[2rem] marginOrLoginS">
         <div className="lineLogin w-full h-[1px] bg-[#DBDBDB]"></div>
         <div className="orText absolute bg-white p-4 text-[#737373] w-5 font-bold">OR</div>
@@ -65,7 +121,9 @@ const SignUpMainInput = ({ inputsD }) => {
           By signing up, you agree to our <span className='text-[#00376B] cursor-pointer'>Terms, Privacy Policy and Cookies Policy.</span>
         </p>
 
-        <button type='submit' className='w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>Sign up</button>
+        <button type='submit' className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
+          {loading ? <Spinner /> : `Sign up`}
+        </button>
       </form>
     </div>
   )

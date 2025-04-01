@@ -15,8 +15,13 @@ import { useMore } from './contexts/moreContext';
 import BlurBox from './components/BlurBox';
 import { useSwitch } from './contexts/switchContext';
 import LoginBox from './components/LoginBox';
+import { ToastContainer } from 'react-toastify';
+import Login from './pages/Login';
+import { useSelector } from 'react-redux';
 
 function App() {
+  const {user} = useSelector(store=>store.auth);
+  console.log(user)
   const [isNotoficationVisible] = useNotification()
   const [isSerachVisible] = useSearch()
   const [isCreatVisible, setIsCreatVisible] = useUpload()
@@ -38,7 +43,7 @@ function App() {
     });
 
     socket.on("online-users", (users) => {
-      setOnlineUsers(users); // Update online users list
+      setOnlineUsers(users);
     });
 
     socket.on("connect_error", (err) => {
@@ -50,11 +55,11 @@ function App() {
     });
 
     return () => {
-      socket.disconnect(); // Clean up on unmount
+      socket.disconnect();
     };
   }, []);
   return (
-    <div className="mainContaner">
+    user ? <div className="mainContaner">
       <Sidebar />
       <Suspense>
         <Outlet />
@@ -64,7 +69,10 @@ function App() {
       {isCreatVisible && <BlurBox fun={() => setIsCreatVisible((v) => !v)}><Upload /></BlurBox>}
       {more && <More />}
       {isSwitch && <BlurBox fun={() => setIsSwitch((v) => !v)}> <LoginBox /> </BlurBox>}
+      <ToastContainer />
     </div>
+    :
+    <Login />
   )
 }
 

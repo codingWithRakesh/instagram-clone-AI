@@ -1,16 +1,25 @@
 import React, { useState } from 'react'
 import { useSignUp } from '../contexts/signUpDivContext'
 import axios from 'axios'
+import { handleError, handleSuccess } from './ErrorMessage.jsx'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setAuthUser } from '../redux/authSlice.js'
+import Spinner from './Spinner.jsx'
 
-const SignUpOTP = () => {
+const SignUpOTP = ({ setsignUpDetails }) => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [, setIsSignUp] = useSignUp()
     const [otp, setOtp] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const submitOtp = async () => {
+        setLoading(true)
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/verfiyEmail`,
-                {otp},
+                { otp },
                 {
                     withCredentials: true,
                     headers: {
@@ -19,11 +28,13 @@ const SignUpOTP = () => {
                 }
             );
 
-            alert('Login successful');
-            console.log('User Data:', response.data);
+            dispatch(setAuthUser(response.data.data.user));
+            handleSuccess(response.data.message);
+            setLoading(false)
+            navigate("/")
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
-            alert(error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
         }
     }
 
@@ -48,13 +59,15 @@ const SignUpOTP = () => {
                 Enter Confirmation Code
             </div>
             <div className='w-[16.75rem] text-center marginTopBottomHS leading-tight'>
-                Enter the confirmation code we sent to sndlkaddaj@gmail.com. <span className='text-[#0095F6] cursor-pointer font-bold'>Resend Code</span>
+                Enter the confirmation code we sent to {setsignUpDetails.email}. <span className='text-[#0095F6] cursor-pointer font-bold'>Resend Code</span>
             </div>
             <div className="formLogin w-full flex flex-col items-center justify-center gap-2">
-                <input type="text" value={otp} onChange={(e)=>setOtp(e.target.value)} className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] rounded-[5px] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Confirmation Code' />
-                <button onClick={submitOtp} className='w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>Next</button>
+                <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] rounded-[5px] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Confirmation Code' />
+                <button onClick={submitOtp} className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
+                    {loading ? <Spinner /> : "Next"}
+                </button>
             </div>
-            <div onClick={()=>setIsSignUp("DOB")} className='w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center'>Go Back</div>
+            <div onClick={() => setIsSignUp("DOB")} className='w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center'>Go Back</div>
 
         </div>
     )

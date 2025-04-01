@@ -19,7 +19,7 @@ const Signup = () => {
   return (
     <div className='flex items-center justify-center w-full minH paddingTopBottomP'>
       <div className='w-[22rem] minH flex flex-col items-center justify-start gap-2'>
-        {isSignUp == "input" ? <SignUpMainInput inputsD={[setsignUpDetails, setSetsignUpDetails]} /> : isSignUp == "DOB" ? <SignUpBirthday inputsD={[setsignUpDetails, setSetsignUpDetails]} /> : isSignUp == "OTP" ? <SignUpOTP /> : null}
+        {isSignUp == "input" ? <SignUpMainInput inputsD={[setsignUpDetails, setSetsignUpDetails]} /> : isSignUp == "DOB" ? <SignUpBirthday inputsD={[setsignUpDetails, setSetsignUpDetails]} /> : isSignUp == "OTP" ? <SignUpOTP setsignUpDetails={setsignUpDetails} /> : null}
 
         <div className="otherOption border border-[#DBDBDB] w-full h-[5.5rem] flex flex-col items-center justify-center content-center">
           <p>Have an account?</p><NavLink to="/accounts/login" className='text-[#0095f6] cursor-pointer font-bold'>Log in</NavLink>

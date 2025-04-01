@@ -1,8 +1,32 @@
 import React from 'react'
 import { useSwitch } from '../contexts/switchContext'
+import { setAuthUser } from '../redux/authSlice.js'
+import { useDispatch } from 'react-redux'
+import axios from 'axios'
+import { handleError, handleSuccess } from './ErrorMessage.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const More = () => {
     const [, setIsSwitch] = useSwitch()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const logout = async () => {
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/logout`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            dispatch(setAuthUser(null));
+            handleSuccess(response.data.message);
+            navigate("/");
+        } catch (error) {
+            console.error('Error:', error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
+        }
+    }
     return (
         <div className="moreBtn" id="moreSetting">
             <div className="moreB1">
@@ -31,7 +55,7 @@ const More = () => {
                 <div className="setting" onClick={() => setIsSwitch((v) => !v)}>
                     <p>Switch accounts</p>
                 </div>
-                <div className="setting">
+                <div className="setting" onClick={logout}>
                     <p>Log out</p>
                 </div>
             </div>

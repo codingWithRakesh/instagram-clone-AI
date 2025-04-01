@@ -8,8 +8,8 @@ const ShowPost = () => {
   return (
     <div className='bg-white h-[37rem] flex items-center justify-center rounded-tr-[3px] rounded-br-[3px] overflow-hidden'>
       <div className={`imgOrVideo h-full ${!videoCheck ? `w-[38rem]` : ""}`}>
-        <img src={profile} alt="" className='h-full w-full object-cover' />
-        {/* <video src={video} className='h-full w-full object-cover'></video> */}
+        {!videoCheck ? <img src={profile} alt="" className='h-full w-full object-cover' /> :
+        <video src={video} className='h-full w-full object-cover'></video>}
       </div>
 
       <div className="showLikeComment w-[30rem] h-full flex flex-col align-center justify-between">

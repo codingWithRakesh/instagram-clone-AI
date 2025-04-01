@@ -2,21 +2,24 @@ import React, { useRef, useState, useEffect } from 'react';
 import GenerateBirthBox from './GenerateBirthBox';
 import { useSignUp } from '../contexts/signUpDivContext';
 import axios from 'axios';
+import { handleError, handleSuccess } from './ErrorMessage';
+import Spinner from './Spinner';
 
 const SignUpBirthday = ({ inputsD }) => {
     const [, setIsSignUp] = useSignUp();
     const birthBoxRef = useRef();
+    const [loading, setLoading] = useState(false)
 
     const handleNext = async () => {
         const updatedDetails = birthBoxRef.current?.logBirthDate();
 
         if (!updatedDetails) {
-            console.log('Invalid Date');
+            handleError('Invalid Date');
             return;
         }
 
         console.log("Updated Sign-Up Details:", updatedDetails);
-
+        setLoading(true)
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/register`,
@@ -29,11 +32,12 @@ const SignUpBirthday = ({ inputsD }) => {
                 }
             );
 
-            alert('Login successful');
-            console.log('User Data:', response.data);
+            handleSuccess("OTP send Successfully");
+            setLoading(false)
+            console.log('User Data:', response.data, response.data.message);
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
-            alert(error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
         }
         setIsSignUp("OTP");
     };
@@ -68,8 +72,8 @@ const SignUpBirthday = ({ inputsD }) => {
                 Use your own birthday, even if this account is for a business, a pet, or something else.
             </div>
 
-            <button onClick={handleNext} className="w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin">
-                Next
+            <button onClick={handleNext} className="itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin">
+                {loading ? <Spinner /> : `Next`}
             </button>
             <div onClick={() => setIsSignUp('input')} className="w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center">
                 Go Back

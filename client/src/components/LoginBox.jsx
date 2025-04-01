@@ -2,25 +2,34 @@ import React, { useState } from 'react'
 import { useSwitch } from '../contexts/switchContext'
 import axios from 'axios';
 import FacebookLogin from '@greatsumini/react-facebook-login';
+import { handleError, handleSuccess } from './ErrorMessage.jsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuthUser } from '../redux/authSlice.js';
+import { useNavigate } from 'react-router-dom';
+import Spinner from './Spinner.jsx';
 
 const LoginBox = () => {
     const [isSwitch] = useSwitch()
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
+    const { user } = useSelector(store => store.auth);
+    const navigate = useNavigate()
+
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!identifier || !password) {
-            console.log('Please enter your username or email and password.');
+            handleError('Please enter your username or email and password.');
             return;
         }
 
         const isEmail = /\S+@\S+\.\S+/.test(identifier);
         const data = isEmail ? { email: identifier, password } : { userName: identifier, password };
 
-        console.log(data)
-
+        setLoading(true)
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/login`,
@@ -33,15 +42,17 @@ const LoginBox = () => {
                 }
             );
 
-            alert('Login successful');
-            console.log('User Data:', response.data);
+            dispatch(setAuthUser(response.data.data.user));
+            handleSuccess(response.data.message);
+            setLoading(false)
+            navigate("/");
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
-            alert(error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
         }
     };
 
-    const handleSuccess = async (response) => {
+    const loginWithFacebook = async (response) => {
         const userData = {
             fullName: response.name,
             email: response.email,
@@ -49,7 +60,7 @@ const LoginBox = () => {
             profilePic: response.picture?.data?.url,
             gender: response.gender
         }
-        console.log(userData)
+        setLoading(true)
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/login`,
@@ -62,11 +73,13 @@ const LoginBox = () => {
                 }
             );
 
-            alert('Login successful');
-            console.log('User Data:', response.data);
+            dispatch(setAuthUser(response.data.data.user));
+            handleSuccess(response.data.message);
+            setLoading(false)
+            navigate("/");
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
-            alert(error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
         }
     }
 
@@ -102,7 +115,9 @@ const LoginBox = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button type='submit' className='w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>Log in</button>
+                <button type='submit' className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
+                    {loading ? <Spinner /> :`Log in`}
+                </button>
             </form>
             <div className="orLogin w-[16.75rem] flex items-center justify-center relative h-[2rem] marginOrLogin">
                 <div className="lineLogin w-full h-[1px] bg-[#DBDBDB]"></div>
@@ -121,7 +136,7 @@ const LoginBox = () => {
                         onFail={(error) => {
                             console.log('Login Failed!', error);
                         }}
-                        onProfileSuccess={handleSuccess}
+                        onProfileSuccess={loginWithFacebook}
                         className=" cursor-pointer"
                     />
 

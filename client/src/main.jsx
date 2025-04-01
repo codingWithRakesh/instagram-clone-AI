@@ -27,8 +27,12 @@ import NextStoryContextProvider from './contexts/nextStoryContext.jsx'
 import SignUpContextProvider from './contexts/signUpDivContext.jsx'
 import NextStory2ContextProvider from './contexts/nextStory2Context.jsx'
 import StoryStartContextProvider from './contexts/storyStartContext.jsx'
-
-let user = false
+import { ToastContainer } from 'react-toastify'
+import { Provider } from 'react-redux'
+import store from './redux/store.js'
+import { PersistGate } from 'redux-persist/integration/react'
+import persistStore from 'redux-persist/es/persistStore'
+import { AuthenticatedUserRoute, ProtectRoute } from './utils/userAuthenticated.jsx'
 
 const postShow = {
   path: "p/:pId",
@@ -39,14 +43,16 @@ const router = createBrowserRouter([
   {
     path: "/",
     errorElement: <Error />,
-    element: user ? <App /> : <Login />,
+    element: <App />,
     children: [
       {
         path: "/",
         element: (
           <>
-            <Home />
-            <Outlet />
+            <ProtectRoute>
+              <Home />
+              <Outlet />
+            </ProtectRoute>
           </>
         ),
         children: [postShow]
@@ -55,8 +61,10 @@ const router = createBrowserRouter([
         path: '/explore',
         element: (
           <>
-            <Explore />
-            <Outlet />
+            <ProtectRoute>
+              <Explore />
+              <Outlet />
+            </ProtectRoute>
           </>
         ),
         children: [postShow]
@@ -64,21 +72,27 @@ const router = createBrowserRouter([
       {
         path: '/reels',
         element: (
-          <Reels />
+          <ProtectRoute>
+            <Reels />
+          </ProtectRoute>
         )
       },
       {
         path: '/direct/inbox',
         element: (
-          <Messages />
+          <ProtectRoute>
+            <Messages />
+          </ProtectRoute>
         )
       },
       {
         path: '/:profile',
         element: (
           <>
-            <Profile />
-            <Outlet />
+            <ProtectRoute>
+              <Profile />
+              <Outlet />
+            </ProtectRoute>
           </>
         ),
         children: [postShow]
@@ -86,49 +100,66 @@ const router = createBrowserRouter([
       {
         path: '/accounts/edit',
         element: (
-          <EditProfile />
+          <ProtectRoute>
+            <EditProfile />
+          </ProtectRoute>
         )
       }
     ]
   },
   {
     path: '/stories/:userId/:storyId',
-    element: <StoriesAll />
+    element: (
+      <ProtectRoute>
+        <StoriesAll />
+      </ProtectRoute>
+    )
   },
   {
     path: '/accounts/login',
     element: (
-      <Login />
+      <AuthenticatedUserRoute>
+        <Login />
+      </AuthenticatedUserRoute>
     )
   },
   {
     path: '/accounts/emailsignup',
     element: (
-      <Signup />
+      <AuthenticatedUserRoute>
+        <Signup />
+      </AuthenticatedUserRoute>
     )
   }
 ]);
 
+let persistor = persistStore(store)
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <StoryStartContextProvider>
-      <NextStory2ContextProvider>
-        <SignUpContextProvider>
-          <NextStoryContextProvider>
-            <SwitchContextProvider>
-              <MoreContextProvider>
-                <SearchContextProvider>
-                  <UploadContextProvider>
-                    <NotificationContextProvider>
-                      <RouterProvider router={router} />
-                    </NotificationContextProvider>
-                  </UploadContextProvider>
-                </SearchContextProvider>
-              </MoreContextProvider>
-            </SwitchContextProvider>
-          </NextStoryContextProvider>
-        </SignUpContextProvider>
-      </NextStory2ContextProvider>
-    </StoryStartContextProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <StoryStartContextProvider>
+          <NextStory2ContextProvider>
+            <SignUpContextProvider>
+              <NextStoryContextProvider>
+                <SwitchContextProvider>
+                  <MoreContextProvider>
+                    <SearchContextProvider>
+                      <UploadContextProvider>
+                        <NotificationContextProvider>
+                          <RouterProvider router={router} />
+                        </NotificationContextProvider>
+                      </UploadContextProvider>
+                    </SearchContextProvider>
+                  </MoreContextProvider>
+                </SwitchContextProvider>
+              </NextStoryContextProvider>
+            </SignUpContextProvider>
+          </NextStory2ContextProvider>
+        </StoryStartContextProvider>
+      </PersistGate>
+    </Provider>
+    <ToastContainer />
   </StrictMode>
 )
