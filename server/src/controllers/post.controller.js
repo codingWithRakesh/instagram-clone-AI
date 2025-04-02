@@ -511,10 +511,11 @@ const allReels = asyncHandler(async (req, res) => {
 })
 
 const allTagUsers = asyncHandler(async (req, res) => {
-    const {userName} = req.params
+    const { userName } = req.params;
+
     const users = await User.aggregate([
         {
-            $match: { userName }
+            $match: { userName: userName } 
         },
         {
             $lookup: {
@@ -525,31 +526,38 @@ const allTagUsers = asyncHandler(async (req, res) => {
             }
         },
         {
-            $unwind: "$taggedPosts"
+            $unwind: {
+                path: "$taggedPosts",
+                preserveNullAndEmptyArrays: true
+            }
         },
         {
             $lookup: {
                 from: "users",
                 localField: "taggedPosts.taggedUsers",
                 foreignField: "_id",
-                as: "taggedUsers"
+                as: "taggedUsersDetails"
             }
         },
         {
             $project: {
-                "password": 0,
-                "refreshToken": 0,
-                "__v": 0,
-                "taggedPosts": 0
+                password: 0,
+                refreshToken: 0,
+                __v: 0,
+                "taggedUsersDetails.password": 0,
+                "taggedUsersDetails.refreshToken": 0,
+                "taggedUsersDetails.__v": 0
             }
         }
     ]);
-    if(!users){
-        throw new ApiError(404, "not found")
+
+    if (users.length === 0) {
+        throw new ApiError(404, "Not Found");
     }
 
-    return res.status(200).json(new ApiResponse(200, users, "all tag users"))
-})
+    return res.status(200).json(new ApiResponse(200, users, "All tagged users"));
+});
+
 
 export {
     createPost,

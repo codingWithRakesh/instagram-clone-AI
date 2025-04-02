@@ -5,6 +5,8 @@ import { useSearch } from '../contexts/searchContext'
 import { useNotification } from '../contexts/notificationContext'
 import { useUpload } from '../contexts/uploadContext'
 import { useMore } from '../contexts/moreContext'
+import { useSelector } from 'react-redux'
+import userNotPhoto from "../assets/images/profileNot.jpg"
 
 const Sidebar = () => {
   const [isSerachVisible, setIsSerachVisible] = useSearch()
@@ -14,6 +16,7 @@ const Sidebar = () => {
   const [, setMore] = useMore()
   const [checkClick, setCheckClick] = useState("home")
   const location = useLocation();
+  const { user } = useSelector(store => store.auth);
 
   const sidebarClick = (value) => {
     setCheckClick(value)
@@ -256,14 +259,14 @@ const Sidebar = () => {
     },
     {
       fun: () => sidebarClick("profile"),
-      path: "/tarapada_9065",
+      path: user.userName,
       code:
-        <div className={`imgPro ${(forMessage || isNotoficationVisible || isSerachVisible) ? `marginRight` : ""}`}>
-          <img src={profile} />
+        <div className={`imgPro ${(forMessage || isNotoficationVisible || isSerachVisible) ? `marginRight ` : ""}`}>
+          {user.profilePic ? <img src={user.profilePic} /> : <img src={userNotPhoto} /> }
         </div>,
       name: "Profile",
       active: <div className={`imgPro ${(forMessage || isNotoficationVisible || isSerachVisible) ? `marginRight` : ""}`}>
-        <img src={profile} />
+        {user.profilePic ? <img src={user.profilePic} /> : <img src={userNotPhoto} />}
       </div>
     }
   ]

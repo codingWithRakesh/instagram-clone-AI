@@ -33,11 +33,12 @@ const SignUpBirthday = ({ inputsD }) => {
             );
 
             handleSuccess("OTP send Successfully");
-            setLoading(false)
             console.log('User Data:', response.data, response.data.message);
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false)
         }
         setIsSignUp("OTP");
     };

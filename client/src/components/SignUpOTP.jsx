@@ -30,11 +30,12 @@ const SignUpOTP = ({ setsignUpDetails }) => {
 
             dispatch(setAuthUser(response.data.data.user));
             handleSuccess(response.data.message);
-            setLoading(false)
             navigate("/")
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false)
         }
     }
 

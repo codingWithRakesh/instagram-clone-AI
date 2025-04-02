@@ -17,10 +17,13 @@ import { useSwitch } from './contexts/switchContext';
 import LoginBox from './components/LoginBox';
 import { ToastContainer } from 'react-toastify';
 import Login from './pages/Login';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { handleError, handleSuccess } from './components/ErrorMessage';
+import { setAuthUser } from './redux/authSlice';
 
 function App() {
-  const {user} = useSelector(store=>store.auth);
+  const { user } = useSelector(store => store.auth);
   console.log(user)
   const [isNotoficationVisible] = useNotification()
   const [isSerachVisible] = useSearch()
@@ -28,6 +31,26 @@ function App() {
   const [more] = useMore()
   const [isSwitch, setIsSwitch] = useSwitch()
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const dispatch = useDispatch()
+
+  const fetchAuth = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/currentUser`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      dispatch(setAuthUser(response.data.data))
+      // handleSuccess("user fetch Successfully");
+      console.log('User Data APP:', response.data.data, response.data.message);
+    } catch (error) {
+      dispatch(setAuthUser(null))
+      console.error('Error:', error.response?.data?.message || error.message);
+      handleError(error.response?.data?.message || error.message);
+    }
+  }
 
   const socket = useMemo(
     () =>
@@ -38,6 +61,8 @@ function App() {
   );
 
   useEffect(() => {
+    fetchAuth()
+
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
     });
@@ -50,9 +75,11 @@ function App() {
       console.error("Socket connection error:", err);
     });
 
+
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
+
 
     return () => {
       socket.disconnect();
@@ -71,8 +98,8 @@ function App() {
       {isSwitch && <BlurBox fun={() => setIsSwitch((v) => !v)}> <LoginBox /> </BlurBox>}
       <ToastContainer />
     </div>
-    :
-    <Login />
+      :
+      <Login />
   )
 }
 

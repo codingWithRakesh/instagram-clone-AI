@@ -20,8 +20,8 @@ const More = () => {
             );
 
             dispatch(setAuthUser(null));
+            navigate("/accounts/login");
             handleSuccess(response.data.message);
-            navigate("/");
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);

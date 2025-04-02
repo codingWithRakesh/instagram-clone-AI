@@ -7,9 +7,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthUser } from '../redux/authSlice.js';
 import { useNavigate } from 'react-router-dom';
 import Spinner from './Spinner.jsx';
+import { useMore } from '../contexts/moreContext.jsx';
 
 const LoginBox = () => {
-    const [isSwitch] = useSwitch()
+    const [isSwitch,setIsSwitch] = useSwitch()
+    const [, setMore] = useMore()
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
@@ -44,11 +46,14 @@ const LoginBox = () => {
 
             dispatch(setAuthUser(response.data.data.user));
             handleSuccess(response.data.message);
-            setLoading(false)
             navigate("/");
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false)
+            setMore(false)
+            setIsSwitch(false)
         }
     };
 
@@ -60,6 +65,7 @@ const LoginBox = () => {
             profilePic: response.picture?.data?.url,
             gender: response.gender
         }
+        console.log(userData)
         setLoading(true)
         try {
             const response = await axios.post(
@@ -75,11 +81,14 @@ const LoginBox = () => {
 
             dispatch(setAuthUser(response.data.data.user));
             handleSuccess(response.data.message);
-            setLoading(false)
             navigate("/");
         } catch (error) {
             console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false)
+            setMore(false)
+            setIsSwitch(false)
         }
     }
 
@@ -116,7 +125,7 @@ const LoginBox = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button type='submit' className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
-                    {loading ? <Spinner /> :`Log in`}
+                    {loading ? <Spinner /> : `Log in`}
                 </button>
             </form>
             <div className="orLogin w-[16.75rem] flex items-center justify-center relative h-[2rem] marginOrLogin">
@@ -128,7 +137,7 @@ const LoginBox = () => {
                     <svg aria-label="Log in with Facebook" className="x1lliihq x1n2onr6 x173jzuc" fill="currentColor" height="20" role="img" viewBox="0 0 16 16" width="20"><title>Log in with Facebook</title><g clipPath="url(#a)"><path d="M8 0C3.6 0 0 3.6 0 8c0 4 2.9 7.3 6.8 7.9v-5.6h-2V8h2V6.2c0-2 1.2-3.1 3-3.1.9 0 1.8.2 1.8.2v2h-1c-1 0-1.3.6-1.3 1.3V8h2.2l-.4 2.3H9.2v5.6C13.1 15.3 16 12 16 8c0-4.4-3.6-8-8-8Z" fill="currentColor"></path></g><defs><clipPath id="a"><rect fill="currentColor" height="16" width="16"></rect></clipPath></defs></svg>
                     <FacebookLogin
                         appId={import.meta.env.VITE_FACEBOOK_USER}
-                        fields="name,email,birthday,picture,gender"
+                        fields="name,email,birthday,picture.width(500).height(500),gender"
                         scope="public_profile,email,user_birthday,user_gender"
                         onSuccess={(response) => {
                             console.log('Login Success!', response);
