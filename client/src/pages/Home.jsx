@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import profile from "../assets/images/profile.jpeg"
 import AllStory from '../components/AllStory'
 import AllPosts from '../components/AllPosts'
@@ -8,10 +8,32 @@ import { useSelector } from 'react-redux'
 import { FaRegCircleUser, FaRegUser } from 'react-icons/fa6'
 import { NavLink } from 'react-router-dom'
 import userNotPhoto from "../assets/images/profileNot.jpg"
+import axios from 'axios'
+import { handleError } from '../components/ErrorMessage'
 
 const Home = () => {
   const [, setIsSwitch] = useSwitch()
-  const { user } = useSelector(store => store.auth);
+  const [user, setUser] = useState("")
+  const fetchAuth = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/currentUser`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      setUser(response.data.data)
+      // handleSuccess("user fetch Successfully");
+      console.log('User Data APP:', response.data.data, response.data.message);
+    } catch (error) {
+      console.error('Error:', error.response?.data?.message || error.message);
+      handleError(error.response?.data?.message || error.message);
+    }
+  }
+  useEffect(() => {
+    fetchAuth()
+  }, []);
   return (
     <div className="second Contaner">
       <div className="box content">

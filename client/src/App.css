@@ -2369,7 +2369,8 @@
     /*	border: 1px solid;*/
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: flex-start;
+    gap: 1rem;
 }
 
 .bjdbvjd svg {
@@ -2427,7 +2428,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 1rem;
+    /* padding: 0 1rem; */
 }
 
 .proPost {
@@ -2441,13 +2442,13 @@
 }
 
 .thred {
-    height: 4rem;
+    height: 2rem;
     width: 50%;
     /*	border: 1px solid;*/
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    padding: 0 1rem;
+    /* padding: 0 1rem; */
 }
 
 .tsfsbsfh {
@@ -2463,12 +2464,13 @@
 }
 
 .prodrapj {
-    height: 3rem;
+    max-height: 5rem;
     width: 90%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 0 1rem;
+    line-height: 18px;
+    /* padding: 0 1rem; */
     /*	border: 1px solid;*/
 }
 

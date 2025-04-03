@@ -163,8 +163,8 @@ const logout = asyncHandler(async (req, res) => {
 })
 
 const updateProfile = asyncHandler(async (req, res) => {
-    const { gender, bio, websiteURL } = req.body
-    if (!(gender || bio || websiteURL)) {
+    const { gender, bio, websiteURL, phoneNumber } = req.body
+    if (!(gender || bio || websiteURL || phoneNumber)) {
         throw new ApiError(400, "All fields are required")
     }
 
@@ -173,7 +173,8 @@ const updateProfile = asyncHandler(async (req, res) => {
         {
             gender,
             bio,
-            websiteURL
+            websiteURL,
+            phoneNumber
         },
         { new: true }
     ).select("-password -refreshToken")

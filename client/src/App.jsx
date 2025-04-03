@@ -99,7 +99,10 @@ function App() {
       <ToastContainer />
     </div>
       :
-      <Login />
+      <>
+        <Login />
+        <ToastContainer />
+      </>
   )
 }
 

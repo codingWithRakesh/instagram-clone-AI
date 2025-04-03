@@ -23,7 +23,6 @@ const TaggedPost = () => {
 
                 dispatch(setTaggedPosts(response.data.data[0]));
                 console.log("all tagged", response.data.data[0])
-                handleSuccess(response.data.message);
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
                 handleError(error.response?.data?.message || error.message);
