@@ -9,9 +9,8 @@ import DefaultBoxProfile from './DefaultBoxProfile'
 
 const PostsProfile = () => {
     // const { userPosts } = useSelector(store => store.post);
-    const dispatch = useDispatch()
     const {profile} = useParams()
-    const [userPosts, setUserPosts] = useState("")
+    const [userPosts, setUserPosts] = useState([])
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -21,9 +20,9 @@ const PostsProfile = () => {
                         withCredentials: true,
                     }
                 ); 
-
-                dispatch(setPosts(response.data.data[0]));
-                setUserPosts(response.data.data[0])
+                const postData = response.data.data[0];
+               
+                setUserPosts(postData);
                 console.log("all posts",response.data.data[0])
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
@@ -33,16 +32,16 @@ const PostsProfile = () => {
         fetchPosts()
     }, [])
 
-    // console.log("userPosts",userPosts.posts.length ? true : false)
+    console.log("userPosts", userPosts.posts != undefined && userPosts.posts?.length    )
 
     return (
         <div id="postContentId" className=" displayFlex">
-            {/* {userPosts.posts.length ? (userPosts.posts.map((v,i)=>(
+            {userPosts.posts != undefined && userPosts.posts?.length ? (userPosts.posts.map((v,i)=>(
                 <SinglePost key={i} values={v}/>
             )))
             :
-            <DefaultBoxProfile name="photo" />} */}
-            <DefaultBoxProfile name="photo" />
+            <DefaultBoxProfile name="photo" />}
+            {/* <DefaultBoxProfile name="photo" /> */}
         </div>
     )
 }

@@ -3,22 +3,20 @@ import { useSwitch } from '../contexts/switchContext'
 import axios from 'axios';
 import FacebookLogin from '@greatsumini/react-facebook-login';
 import { handleError, handleSuccess } from './ErrorMessage.jsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAuthUser } from '../redux/authSlice.js';
 import { useNavigate } from 'react-router-dom';
 import Spinner from './Spinner.jsx';
 import { useMore } from '../contexts/moreContext.jsx';
+import { useAuthStore } from '../store/authStore.js';
 
 const LoginBox = () => {
     const [isSwitch,setIsSwitch] = useSwitch()
     const [, setMore] = useMore()
     const [identifier, setIdentifier] = useState('');
     const [password, setPassword] = useState('');
-    const dispatch = useDispatch();
-    const { user } = useSelector(store => store.auth);
     const navigate = useNavigate()
-
-    const [loading, setLoading] = useState(false)
+    const logIn = useAuthStore((state) => state.logIn);
+    const isLoading = useAuthStore((state) => state.isLoading);
+    const logInFacebook = useAuthStore((state) => state.logInFacebook);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,30 +29,8 @@ const LoginBox = () => {
         const isEmail = /\S+@\S+\.\S+/.test(identifier);
         const data = isEmail ? { email: identifier, password } : { userName: identifier, password };
 
-        setLoading(true)
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/login`,
-                data,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-
-            dispatch(setAuthUser(response.data.data.user));
-            handleSuccess(response.data.message);
-            navigate("/");
-        } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
-            handleError(error.response?.data?.message || error.message);
-        } finally {
-            setLoading(false)
-            setMore(false)
-            setIsSwitch(false)
-        }
+        logIn(data, setIsSwitch, setMore, navigate)
+ 
     };
 
     const loginWithFacebook = async (response) => {
@@ -65,31 +41,9 @@ const LoginBox = () => {
             profilePic: response.picture?.data?.url,
             gender: response.gender
         }
-        console.log(userData)
-        setLoading(true)
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/login`,
-                userData,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
 
-            dispatch(setAuthUser(response.data.data.user));
-            handleSuccess(response.data.message);
-            navigate("/");
-        } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
-            handleError(error.response?.data?.message || error.message);
-        } finally {
-            setLoading(false)
-            setMore(false)
-            setIsSwitch(false)
-        }
+        console.log("userData from Input local",userData)
+        logInFacebook(userData, setIsSwitch, setMore, navigate)
     }
 
     return (
@@ -125,7 +79,7 @@ const LoginBox = () => {
                     onChange={(e) => setPassword(e.target.value)}
                 />
                 <button type='submit' className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
-                    {loading ? <Spinner /> : `Log in`}
+                    {isLoading ? <Spinner /> : `Log in`}
                 </button>
             </form>
             <div className="orLogin w-[16.75rem] flex items-center justify-center relative h-[2rem] marginOrLogin">

@@ -7,6 +7,7 @@ import { useUpload } from '../contexts/uploadContext'
 import { useMore } from '../contexts/moreContext'
 import { useSelector } from 'react-redux'
 import userNotPhoto from "../assets/images/profileNot.jpg"
+import { useAuthStore } from '../store/authStore.js'
 
 const Sidebar = () => {
   const [isSerachVisible, setIsSerachVisible] = useSearch()
@@ -16,7 +17,7 @@ const Sidebar = () => {
   const [, setMore] = useMore()
   const [checkClick, setCheckClick] = useState("home")
   const location = useLocation();
-  const { user } = useSelector(store => store.auth);
+  const user = useAuthStore((state) => state.user);
 
   const sidebarClick = (value) => {
     setCheckClick(value)
@@ -61,6 +62,8 @@ const Sidebar = () => {
       setForMessage(false)
     }
   }
+
+  console.log("user from sidebar", user)
 
   const sides = [
     {

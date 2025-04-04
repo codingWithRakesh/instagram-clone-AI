@@ -4,92 +4,95 @@ import axios from 'axios'
 import { handleError, handleSuccess } from './ErrorMessage'
 import { useDispatch, useSelector } from 'react-redux'
 import noProfile from "../assets/images/profileNot.jpg"
-import { setUserProfile } from '../redux/authSlice.js'
+// import { setuser } from '../redux/authSlice.js'
+import { useAuthStore } from '../store/authStore.js'
 
 const EditProfileBox = () => {
 
-    const { userProfile } = useSelector(store => store.auth) || {};
+    const user = useAuthStore((state) => state.user);
     const dispatch = useDispatch()
 
     const [updateProfile, setUpdateProfile] = useState({
-        gender: userProfile?.gender || "",
-        bio: userProfile?.bio || "",
-        websiteURL: userProfile?.websiteURL || "",
-        phoneNumber: userProfile?.phoneNumber || ""
+        gender: user?.gender || "",
+        bio: user?.bio || "",
+        websiteURL: user?.websiteURL || "",
+        phoneNumber: user?.phoneNumber || ""
     })
 
-    const [file, setFile] = useState("")
+    console.log("user from edit profile", user)
+
+    // const [file, setFile] = useState("")
     const [imageSrc, setImageSrc] = useState("")
 
     const handleChange = (e) => {
-        const { name, value } = e.target
-        setUpdateProfile((prev) => ({
-            ...prev, [name]: value
-        }))
+        // const { name, value } = e.target
+        // setUpdateProfile((prev) => ({
+        //     ...prev, [name]: value
+        // }))
     }
 
     const fileChange = async (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-            const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
-            if (!validImageTypes.includes(selectedFile.type)) {
-                handleError("only image allow")
-                e.target.value = "";
-                return;
-            }
+        // const selectedFile = e.target.files[0];
+        // if (selectedFile) {
+        //     const validImageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+        //     if (!validImageTypes.includes(selectedFile.type)) {
+        //         handleError("only image allow")
+        //         e.target.value = "";
+        //         return;
+        //     }
 
-            const maxSizeInBytes = 4 * 1024 * 1024;
-            if (selectedFile.size > maxSizeInBytes) {
-                handleError("Image size must be less than 4 MB.")
-                e.target.value = "";
-                return;
-            }
+        //     const maxSizeInBytes = 4 * 1024 * 1024;
+        //     if (selectedFile.size > maxSizeInBytes) {
+        //         handleError("Image size must be less than 4 MB.")
+        //         e.target.value = "";
+        //         return;
+        //     }
 
-            const formData = new FormData();
-            formData.append('profileImg', selectedFile);
+        //     const formData = new FormData();
+        //     formData.append('profileImg', selectedFile);
 
-            try {
-                const response = await axios.patch(
-                    `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/updateProfileImage`,
-                    formData,
-                    {
-                        withCredentials: true,
-                    }
-                );
+        //     try {
+        //         const response = await axios.patch(
+        //             `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/updateProfileImage`,
+        //             formData,
+        //             {
+        //                 withCredentials: true,
+        //             }
+        //         );
     
-                // dispatch(setUserProfile(response.data.data));
-                console.log("response.data", response.data.data)
-                handleSuccess(response.data.message);
-                setImageSrc(URL.createObjectURL(selectedFile));
-            } catch (error) {
-                console.error('Error:', error.response?.data?.message || error.message);
-                handleError(error.response?.data?.message || error.message);
-            }
-        }
+        //         // dispatch(setuser(response.data.data));
+        //         console.log("response.data", response.data.data)
+        //         handleSuccess(response.data.message);
+        //         setImageSrc(URL.createObjectURL(selectedFile));
+        //     } catch (error) {
+        //         console.error('Error:', error.response?.data?.message || error.message);
+        //         handleError(error.response?.data?.message || error.message);
+        //     }
+        // }
     }
 
     const editProfile = async (e) => {
         e.preventDefault()
-        try {
-            const response = await axios.patch(
-                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/updateProfile`,
-                updateProfile,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
+        // try {
+        //     const response = await axios.patch(
+        //         `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/updateProfile`,
+        //         updateProfile,
+        //         {
+        //             withCredentials: true,
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             }
+        //         }
+        //     );
 
-            dispatch(setUserProfile(response.data.data));
-            console.log("response.data", response.data.data)
-            handleSuccess(response.data.message);
-        } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
-            handleError(error.response?.data?.message || error.message);
-        }
-        console.log(updateProfile)
+        //     dispatch(setuser(response.data.data));
+        //     console.log("response.data", response.data.data)
+        //     handleSuccess(response.data.message);
+        // } catch (error) {
+        //     console.error('Error:', error.response?.data?.message || error.message);
+        //     handleError(error.response?.data?.message || error.message);
+        // }
+        // console.log(updateProfile)
     }
 
     return (
@@ -101,11 +104,11 @@ const EditProfileBox = () => {
             <div className="profileSecEdit bg-[#EFEFEF] flex items-center justify-between w-full h-[5.5rem] rounded-2xl">
                 <div className="profileEdit flex items-center gap-3.5">
                     <div className='w-[3.5rem] h-[3.5rem] rounded-full overflow-hidden'>
-                        <img src={imageSrc ? imageSrc : (userProfile.profilePic ? userProfile.profilePic : noProfile)} alt="" className='h-full w-full object-cover' />
+                        <img src={imageSrc ? imageSrc : (user?.profilePic ? user.profilePic : noProfile)} alt="" className='h-full w-full object-cover' />
                     </div>
                     <div className='leading-tight'>
-                        <p className='font-bold text-[18px]'>{userProfile.userName}</p>
-                        <p className='text-[#737373] text-[14px]'>{userProfile.fullName}</p>
+                        <p className='font-bold text-[18px]'>{user?.userName}</p>
+                        <p className='text-[#737373] text-[14px]'>{user?.fullName}</p>
                     </div>
                 </div>
                 <div className="selectImageBox h-[2rem] w-[8rem] bg-[#0095F6] text-white font-bold text-[14px] flex items-center justify-center rounded-[10px] cursor-pointer">

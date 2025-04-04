@@ -4,11 +4,13 @@ import { useSignUp } from '../contexts/signUpDivContext';
 import axios from 'axios';
 import { handleError, handleSuccess } from './ErrorMessage';
 import Spinner from './Spinner';
+import { useAuthStore } from '../store/authStore.js';
 
 const SignUpBirthday = ({ inputsD }) => {
     const [, setIsSignUp] = useSignUp();
     const birthBoxRef = useRef();
-    const [loading, setLoading] = useState(false)
+    const isLoading = useAuthStore((state) => state.isLoading);
+    const signUp = useAuthStore((state) => state.signUp);
 
     const handleNext = async () => {
         const updatedDetails = birthBoxRef.current?.logBirthDate();
@@ -19,27 +21,7 @@ const SignUpBirthday = ({ inputsD }) => {
         }
 
         console.log("Updated Sign-Up Details:", updatedDetails);
-        setLoading(true)
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/register`,
-                updatedDetails,
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-
-            handleSuccess("OTP send Successfully");
-            console.log('User Data:', response.data, response.data.message);
-        } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
-            handleError(error.response?.data?.message || error.message);
-        } finally {
-            setLoading(false)
-        }
+        await signUp(updatedDetails)
         setIsSignUp("OTP");
     };
 
@@ -74,7 +56,7 @@ const SignUpBirthday = ({ inputsD }) => {
             </div>
 
             <button onClick={handleNext} className="itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin">
-                {loading ? <Spinner /> : `Next`}
+                {isLoading ? <Spinner /> : `Next`}
             </button>
             <div onClick={() => setIsSignUp('input')} className="w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center">
                 Go Back

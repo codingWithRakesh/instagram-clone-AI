@@ -1,54 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import profileIMG from "../assets/images/profile.jpeg"
 import { NavLink, useParams } from 'react-router-dom'
-import axios from 'axios'
-import { setUserProfile } from '../redux/authSlice'
-import { useDispatch, useSelector } from 'react-redux'
-import { handleError, handleSuccess } from './ErrorMessage'
-import { FaRegUser } from 'react-icons/fa6'
 import userNotPhoto from "../assets/images/profileNot.jpg"
 import { AiOutlineLink } from "react-icons/ai";
+import { useAuthStore } from '../store/authStore.js'
 
 const ProfileShow = () => {
     const { profile } = useParams()
-    const dispatch = useDispatch()
-    // const { userProfile } = useSelector(store => store.auth);
-    const [userProfile, setUserProfile] = useState("")
+    const isLoading = useAuthStore((state) => state.isLoading);
+    const fetchSelectedUser = useAuthStore((state) => state.fetchSelectedUser);
+    const selectedUser = useAuthStore((state) => state.selectedUser);
+
 
     useEffect(() => {
         const fetchUserProfile = async () => {
-            try {
-                const response = await axios.get(
-                    `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/userProfile/${profile}`,
-                    {
-                        withCredentials: true,
-                    }
-                );
-
-                dispatch(setUserProfile(response.data.data));
-                setUserProfile(response.data.data)
-                console.log("user profile from URL", response.data.data)
-            } catch (error) {
-                console.error('Error:', error.response?.data?.message || error.message);
-                handleError(error.response?.data?.message || error.message);
-            }
+            fetchSelectedUser(profile)
         }
         fetchUserProfile()
-    }, [])
+    }, [fetchSelectedUser, profile])
 
-    console.log("userProfile", userProfile)
+    console.log("userProfile", selectedUser)
 
     return (
         <div className="profile_box">
             <div className="profilePhoto">
-                {userProfile.profilePic ? <img src={userProfile.profilePic} />
+                {selectedUser?.profilePic ? <img src={selectedUser?.profilePic} />
                 :
                 <img src={userNotPhoto}/>}
             </div>
             <div className="profileBTN">
                 <div className="bjdbvjd">
                     <div className="profileBTN_0">
-                        {userProfile.userName}
+                        {selectedUser?.userName}
                     </div>
                     <NavLink to="/accounts/edit" className="esitPro">Edit profile</NavLink>
                     <button className="viewArch">View Archive</button>
@@ -57,27 +39,27 @@ const ProfileShow = () => {
                 </div>
                 <div className="proFollowers">
                     <div className="proPost">
-                        <p className="bold">{userProfile.postsCount}</p><span>posts</span>
+                        <p className="bold">{selectedUser?.postsCount}</p><span>posts</span>
                     </div>
                     <div className="proPost">
-                        <p className="bold">{userProfile.followersCount}</p><span>followers</span>
+                        <p className="bold">{selectedUser?.followersCount}</p><span>followers</span>
                     </div>
                     <div className="proPost">
-                        <p className="bold">{userProfile.followingCount}</p><span>following</span>
+                        <p className="bold">{selectedUser?.followingCount}</p><span>following</span>
                     </div>
                 </div>
                 <div className="thred">
-                    <p className="bold">{userProfile.fullName}</p>
+                    <p className="bold">{selectedUser?.fullName}</p>
                 </div>
-                <div className="prodrapj">
-                    {userProfile.bio || "00100001 00100001 01110101 01101110 01100100 01100101 01100110 01101001 01101110 01100101 01100100"}
-                </div>
-                <a href={`https://${userProfile.websiteURL}`} target='_blank' className='flex items-center gap-1 ml-2 text-[#00376B] cursor-pointer'>
+                {selectedUser?.bio && <div className="prodrapj">
+                    {selectedUser?.bio}
+                </div>}
+                {selectedUser?.websiteURL && <a href={`https://${selectedUser?.websiteURL}`} target='_blank' className='flex items-center gap-1 ml-2 text-[#00376B] cursor-pointer'>
                     <span>
                         <AiOutlineLink />
                     </span>
-                    {userProfile.websiteURL}
-                </a>
+                    {selectedUser?.websiteURL}
+                </a>}
             </div>
         </div>
     )

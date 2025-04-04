@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setAuthUser } from '../redux/authSlice.js'
 import Spinner from './Spinner.jsx'
+import { useAuthStore } from '../store/authStore.js'
 
 const SignUpOTP = ({ setsignUpDetails }) => {
     const navigate = useNavigate()
@@ -13,31 +14,18 @@ const SignUpOTP = ({ setsignUpDetails }) => {
     const [, setIsSignUp] = useSignUp()
     const [otp, setOtp] = useState("")
     const [loading, setLoading] = useState(false)
+    const isLoading = useAuthStore((state) => state.isLoading);
+    const otpSubmit = useAuthStore((state) => state.otpSubmit);
+
+
 
     const submitOtp = async () => {
-        setLoading(true)
-        try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/verfiyEmail`,
-                { otp },
-                {
-                    withCredentials: true,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-
-            dispatch(setAuthUser(response.data.data.user));
-            handleSuccess(response.data.message);
-            navigate("/")
-        } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
-            handleError(error.response?.data?.message || error.message);
-        } finally {
-            setLoading(false)
+        if (otp.length !== 6) {
+            handleError("Please enter a valid OTP");
+            return;
         }
-    }
+        otpSubmit(otp, navigate);
+    };
 
     return (
         <div className="SignUpSiv border border-[#DBDBDB] w-full paddingTopBottom minH0 flex flex-col items-center justify-start">
@@ -65,7 +53,7 @@ const SignUpOTP = ({ setsignUpDetails }) => {
             <div className="formLogin w-full flex flex-col items-center justify-center gap-2">
                 <input type="text" value={otp} onChange={(e) => setOtp(e.target.value)} className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] rounded-[5px] h-[2.375rem] forPaddingInputLogin' name="" placeholder='Confirmation Code' />
                 <button onClick={submitOtp} className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
-                    {loading ? <Spinner /> : "Next"}
+                    {isLoading ? <Spinner /> : "Next"}
                 </button>
             </div>
             <div onClick={() => setIsSignUp("DOB")} className='w-[16.75rem] cursor-pointer text-[#0095F6] font-bold hover:text-[#000] marginTopBottom text-center'>Go Back</div>

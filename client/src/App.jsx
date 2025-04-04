@@ -21,9 +21,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { handleError, handleSuccess } from './components/ErrorMessage';
 import { setAuthUser } from './redux/authSlice';
+import { useAuthStore } from './store/authStore.js';
 
 function App() {
-  const { user } = useSelector(store => store.auth);
+  const user = useAuthStore((state) => state.user);
   console.log(user)
   const [isNotoficationVisible] = useNotification()
   const [isSerachVisible] = useSearch()
@@ -33,24 +34,7 @@ function App() {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const dispatch = useDispatch()
 
-  const fetchAuth = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/currentUser`,
-        {
-          withCredentials: true,
-        }
-      );
-
-      dispatch(setAuthUser(response.data.data))
-      // handleSuccess("user fetch Successfully");
-      console.log('User Data APP:', response.data.data, response.data.message);
-    } catch (error) {
-      dispatch(setAuthUser(null))
-      console.error('Error:', error.response?.data?.message || error.message);
-      handleError(error.response?.data?.message || error.message);
-    }
-  }
+  const fetchAuth = useAuthStore((state) => state.fetchAuth);
 
   const socket = useMemo(
     () =>
@@ -61,7 +45,7 @@ function App() {
   );
 
   useEffect(() => {
-    fetchAuth()
+    fetchAuth();
 
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
@@ -84,7 +68,7 @@ function App() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [fetchAuth]);
   return (
     user ? <div className="mainContaner">
       <Sidebar />

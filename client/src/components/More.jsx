@@ -5,27 +5,15 @@ import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { handleError, handleSuccess } from './ErrorMessage.jsx'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../store/authStore.js'
 
 const More = () => {
     const [, setIsSwitch] = useSwitch()
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const logout = async () => {
-        try {
-            const response = await axios.get(
-                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/logout`,
-                {
-                    withCredentials: true,
-                }
-            );
-
-            dispatch(setAuthUser(null));
-            handleSuccess(response.data.message);
-            navigate("/accounts/login");
-        } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
-            handleError(error.response?.data?.message || error.message);
-        }
+    const logOut = useAuthStore((state) => state.logOut);
+    const logoutF = async () => {
+        logOut(navigate)
     }
     return (
         <div className="moreBtn" id="moreSetting">
@@ -55,7 +43,7 @@ const More = () => {
                 <div className="setting" onClick={() => setIsSwitch((v) => !v)}>
                     <p>Switch accounts</p>
                 </div>
-                <div className="setting" onClick={logout}>
+                <div className="setting" onClick={logoutF}>
                     <p>Log out</p>
                 </div>
             </div>

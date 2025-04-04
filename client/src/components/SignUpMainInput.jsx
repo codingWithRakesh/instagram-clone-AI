@@ -8,13 +8,18 @@ import { setAuthUser } from '../redux/authSlice'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Spinner from './Spinner'
+import { useAuthStore } from '../store/authStore.js'
+import { useSwitch } from '../contexts/switchContext.jsx'
+import { useMore } from '../contexts/moreContext.jsx'
 
 const SignUpMainInput = ({ inputsD }) => {
+  const [isSwitch, setIsSwitch] = useSwitch()
+  const [, setMore] = useMore()
   const [, setIsSignUp] = useSignUp()
   const [signUpDetails, setSignUpDetails] = inputsD
-  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(false)
+  const logInFacebook = useAuthStore((state) => state.logInFacebook);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
   const signUpDataCollect = (e) => {
     e.preventDefault()
@@ -41,29 +46,7 @@ const SignUpMainInput = ({ inputsD }) => {
       gender: response.gender
     }
 
-    setLoading(true)
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/login`,
-        userData,
-        {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      dispatch(setAuthUser(response.data.data.user));
-      handleSuccess(response.data.message);
-      navigate("/");
-    } catch (error) {
-      console.error('Error:', error.response?.data?.message || error.message);
-      handleError(error.response?.data?.message || error.message);
-    } finally {
-      setLoading(false)
-    }
+    logInFacebook(userData, setIsSwitch, setMore, navigate)
   }
 
   return (
@@ -123,7 +106,7 @@ const SignUpMainInput = ({ inputsD }) => {
         </p>
 
         <button type='submit' className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
-          {loading ? <Spinner /> : `Sign up`}
+          {isLoading ? <Spinner /> : `Sign up`}
         </button>
       </form>
     </div>
