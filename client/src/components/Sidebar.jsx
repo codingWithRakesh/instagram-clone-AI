@@ -18,6 +18,12 @@ const Sidebar = () => {
   const [checkClick, setCheckClick] = useState("home")
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
+  const fetchAuth = useAuthStore((state) => state.fetchAuth);
+
+  useEffect(() => {
+    fetchAuth()
+  }, [fetchAuth])
+  
 
   const sidebarClick = (value) => {
     setCheckClick(value)

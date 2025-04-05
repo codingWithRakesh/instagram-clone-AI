@@ -8,7 +8,7 @@ const useAuthStore = create((set) => ({
     error: null,
     message: null,
     isAuthenticated: false,
-    selectedUser : null,
+    selectedUser: null,
 
     fetchAuth: async () => {
         try {
@@ -33,7 +33,7 @@ const useAuthStore = create((set) => ({
         }
     },
 
-    signUp : async (updatedDetails) => {
+    signUp: async (updatedDetails) => {
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(
@@ -70,7 +70,7 @@ const useAuthStore = create((set) => ({
         }
     },
 
-    otpSubmit : async (otp, navigate) => {
+    otpSubmit: async (otp, navigate) => {
         set({ isLoading: true, error: null });
 
         try {
@@ -240,6 +240,95 @@ const useAuthStore = create((set) => ({
             set({ isLoading: false, error: error.message });
             console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
+            throw error;
+        }
+    },
+
+    uploadProfileImage: async (formData, setImageSrc, selectedFile) => {
+        set({ isLoading: true, error: null });
+        setImageSrc(URL.createObjectURL(selectedFile));
+        try {
+            const response = await axios.patch(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/updateProfileImage`,
+                formData,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
+                console.log("from store", response.data.data);
+                handleSuccess(response.data.message);
+            } else {
+                set({ isLoading: false });
+            }
+
+        } catch (error) {
+            console.error('Error:', error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+
+    uploadProfileDetails: async (updateProfile) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.patch(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/updateProfile`,
+                updateProfile,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                set({
+                    user: response.data.data,
+                    isLoading: false
+                });
+
+                console.log("response.data", response.data.data)
+                handleSuccess(response.data.message);
+            } else {
+                set({ isLoading: false });
+            }
+
+        } catch (error) {
+            console.error('Error:', error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+        console.log(updateProfile)
+    },
+
+    deleteProfileImage: async () => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.delete(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/deleteProfileImage`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
+                console.log("from store", response.data.data);
+                handleSuccess(response.data.message);
+            } else {
+                set({ isLoading: false });
+            }
+
+        } catch (error) {
+            console.error('Error:', error.response?.data?.message || error.message);
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
             throw error;
         }
     }

@@ -32,7 +32,7 @@ const PostsProfile = () => {
         fetchPosts()
     }, [])
 
-    console.log("userPosts", userPosts.posts != undefined && userPosts.posts?.length    )
+    console.log("userPosts", userPosts.posts != undefined && userPosts.posts?.length)
 
     return (
         <div id="postContentId" className=" displayFlex">

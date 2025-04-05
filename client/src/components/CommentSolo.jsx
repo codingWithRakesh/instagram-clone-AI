@@ -1,18 +1,20 @@
 import React from 'react'
 import profile from '../assets/images/profile.jpeg'
+import TimeAgo from './TimeAgo'
 
-const CommentSolo = () => {
+const CommentSolo = ({values}) => {
+    // console.log("values", values)
     return (
         <div className="commentDiV w-full h-[3.438rem] flex items-center justify-between marginBottom">
             <div className="firstDetels flex items-center gap-4">
                 <div className="imgPage h-8 w-8 rounded-full overflow-hidden">
-                    <img src={profile} alt="" className='h-full w-full object-cover' />
+                    <img src={values?.commentOwner && values?.commentOwner[0]?.profilePic} alt="" className='h-full w-full object-cover' />
                 </div>
                 <div className="deleteaboutLi flex flex-col">
-                    <p><span className='font-bold'>tarapada_90</span> Ki lagche ra....vaii...🔥😍..</p>
+                    <p><span className='font-bold'>{values?.commentOwner && values?.commentOwner[0]?.userName}</span> {values.content}</p>
                     <p className='flex gap-3'>
-                        <p className='text-[12px] text-[#737373]'>1 w</p>
-                        <p className='text-[12px] text-[#737373]'>1 like</p>
+                        <p className='text-[12px] text-[#737373]'> <TimeAgo date={values.createdAt} /> </p>
+                        {values.likeCount > 0 && <p className='text-[12px] text-[#737373]'>{values.likeCount} like</p>}
                     </p>
                 </div>
             </div>

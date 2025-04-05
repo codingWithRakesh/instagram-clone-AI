@@ -244,6 +244,31 @@ const viewPost = asyncHandler(async (req, res) => {
                     }
                 ]
             }
+        },
+        {
+            $lookup: {
+                from: "savedposts",
+                localField: "_id",
+                foreignField: "postId",
+                as: "savedPosts",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owner",
+                            pipeline: [{
+                                $project: {
+                                    "_id": 1,
+                                    "userName": 1,
+                                    "profilePic": 1
+                                }
+                            }]
+                        }
+                    }
+                ]
+            }
         }
     ])
     if (!post) {
