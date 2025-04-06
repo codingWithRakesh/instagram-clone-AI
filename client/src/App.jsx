@@ -22,15 +22,18 @@ import axios from 'axios';
 import { handleError, handleSuccess } from './components/ErrorMessage';
 import { setAuthUser } from './redux/authSlice';
 import { useAuthStore } from './store/authStore.js';
+import ControlPost from './components/ControlPost.jsx';
+import { useControl } from './contexts/controlContext.jsx';
 
 function App() {
   const user = useAuthStore((state) => state.user);
-  console.log(user)
+  // console.log(user)
   const [isNotoficationVisible] = useNotification()
   const [isSerachVisible] = useSearch()
   const [isCreatVisible, setIsCreatVisible] = useUpload()
   const [more] = useMore()
   const [isSwitch, setIsSwitch] = useSwitch()
+  const [control, setControl] = useControl()
   const [onlineUsers, setOnlineUsers] = useState([]);
   const dispatch = useDispatch()
 
@@ -80,6 +83,9 @@ function App() {
       {isCreatVisible && <BlurBox fun={() => setIsCreatVisible((v) => !v)}><Upload /></BlurBox>}
       {more && <More />}
       {isSwitch && <BlurBox fun={() => setIsSwitch((v) => !v)}> <LoginBox /> </BlurBox>}
+      {control && <BlurBox checkCrose={true} fun={() => {} }>
+        <ControlPost />
+      </BlurBox>}
       <ToastContainer />
     </div>
       :

@@ -8,7 +8,7 @@ import { verifyLogin } from "../middlewares/user.middleware.js"
 
 const router = Router();
 
-router.route("/toggleLikePost/:postId").get(verifyLogin, toggleLikePost)
+router.route("/toggleLikePost").post(verifyLogin, toggleLikePost)
 router.route("/toggleLikeStory/:storyId").get(verifyLogin, toggleLikeStory)
 router.route("/toggleLikeComment").post(verifyLogin, toggleLikeComment)
 

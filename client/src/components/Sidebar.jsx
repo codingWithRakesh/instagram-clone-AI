@@ -69,7 +69,7 @@ const Sidebar = () => {
     }
   }
 
-  console.log("user from sidebar", user)
+  // console.log("user from sidebar", user)
 
   const sides = [
     {

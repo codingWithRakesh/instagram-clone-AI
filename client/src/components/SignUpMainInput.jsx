@@ -32,7 +32,7 @@ const SignUpMainInput = ({ inputsD }) => {
       ...userData,
     }))
 
-    console.log('Sign Up Details:', userData)
+    // console.log('Sign Up Details:', userData)
     setIsSignUp('DOB')
 
   }

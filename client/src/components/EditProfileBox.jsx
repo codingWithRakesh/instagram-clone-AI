@@ -30,7 +30,7 @@ const EditProfileBox = () => {
         phoneNumber: user?.phoneNumber || ""
     })
 
-    console.log("user from edit profile", user)
+    // console.log("user from edit profile", user)
 
 
     const handleChange = (e) => {

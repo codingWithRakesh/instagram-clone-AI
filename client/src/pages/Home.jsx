@@ -25,9 +25,9 @@ const Home = () => {
 
       setUser(response.data.data)
       // handleSuccess("user fetch Successfully");
-      console.log('User Data APP:', response.data.data, response.data.message);
+      // console.log('User Data APP:', response.data.data, response.data.message);
     } catch (error) {
-      console.error('Error:', error.response?.data?.message || error.message);
+      // console.error('Error:', error.response?.data?.message || error.message);
       handleError(error.response?.data?.message || error.message);
     }
   }

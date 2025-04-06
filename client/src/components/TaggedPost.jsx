@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import SinglePost from './SinglePost'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -8,8 +8,7 @@ import axios from 'axios';
 import DefaultBoxProfile from './DefaultBoxProfile.jsx';
 
 const TaggedPost = () => {
-    const { userTaggedPosts } = useSelector(store => store.post);
-    const dispatch = useDispatch()
+    const [userTaggedPosts, seUserTaggedPosts] = useState("")
     const { profile } = useParams()
     useEffect(() => {
         const fetchPosts = async () => {
@@ -21,8 +20,8 @@ const TaggedPost = () => {
                     }
                 );
 
-                dispatch(setTaggedPosts(response.data.data[0]));
-                console.log("all tagged", response.data.data[0])
+                seUserTaggedPosts(response.data.data[0])
+                // console.log("all tagged", response.data.data[0])
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
                 handleError(error.response?.data?.message || error.message);
@@ -31,11 +30,11 @@ const TaggedPost = () => {
         fetchPosts()
     }, [])
 
-    console.log("userTaggedPosts", userTaggedPosts?.taggedUsersDetails)
+    // console.log("userTaggedPosts", userTaggedPosts?.taggedPosts)
     return (
         <div id="postContentId" className=" displayFlex">
-            {userTaggedPosts?.taggedUsersDetails.length ? (userTaggedPosts?.taggedUsersDetails.map((v, i) => (
-                <SinglePost key={i} values={v} />
+            {userTaggedPosts?.taggedUsersDetails?.length ? (userTaggedPosts?.taggedUsersDetails?.map((v, i) => (
+                <SinglePost key={i} values={userTaggedPosts?.taggedPosts} />
             )))
             :
             <DefaultBoxProfile name="tagged" />

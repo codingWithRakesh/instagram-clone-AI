@@ -3,9 +3,9 @@ import profile from "../assets/images/profile.jpeg"
 import { Link, useLocation, useParams } from 'react-router-dom'
 
 const SinglePost = ({values}) => {
-    console.log("values from savePost",values)
+    // console.log("values from savePost",values)
     const location = useLocation();
-    console.log(location)
+    // console.log(location)
     return (
         <Link to={`${location.pathname === "/" ? "" : location.pathname}/p/${values?._id}`} className="imagesPro">
             <img src={values?.image || profile} alt="" />

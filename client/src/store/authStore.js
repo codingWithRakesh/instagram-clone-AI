@@ -21,7 +21,7 @@ const useAuthStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ user: response.data.data, isAuthenticated: true });
-                console.log("from store", response.data.data);
+                // console.log("from store", response.data.data);
                 handleSuccess(response.data.message);
             } else {
                 set({ user: null, isAuthenticated: false });
@@ -54,15 +54,15 @@ const useAuthStore = create((set) => ({
                     isLoading: false
                 });
 
-                console.log("from store", response.data);
+                // console.log("from store", response.data);
                 handleSuccess("OTP send Successfully");
             } else {
                 set({ user: null, isAuthenticated: false, isLoading: false });
             }
-            console.log('User Data:', response.data, response.data.message);
+            // console.log('User Data:', response.data, response.data.message);
         } catch (error) {
             set({ isLoading: false, error: error.message });
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             throw error;
         } finally {
@@ -92,7 +92,7 @@ const useAuthStore = create((set) => ({
                     isLoading: false
                 });
 
-                console.log("from store", response.data.data);
+                // console.log("from store", response.data.data);
                 handleSuccess(response.data.message);
                 navigate("/");
             } else {
@@ -101,7 +101,7 @@ const useAuthStore = create((set) => ({
 
         } catch (error) {
             set({ isLoading: false, error: error.message });
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             throw error;
         } finally {
@@ -131,7 +131,7 @@ const useAuthStore = create((set) => ({
                     isLoading: false
                 });
 
-                console.log("from store", response.data.data);
+                // console.log("from store", response.data.data);
                 handleSuccess(response.data.message);
                 navigate("/");
             } else {
@@ -139,7 +139,7 @@ const useAuthStore = create((set) => ({
             }
         } catch (error) {
             set({ isLoading: false, error: error.message });
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             throw error;
         } finally {
@@ -170,7 +170,7 @@ const useAuthStore = create((set) => ({
                     isLoading: false
                 });
 
-                console.log("from store", response.data.data);
+                // console.log("from store", response.data.data);
                 handleSuccess(response.data.message);
                 navigate("/");
             } else {
@@ -179,7 +179,7 @@ const useAuthStore = create((set) => ({
 
         } catch (error) {
             set({ isLoading: false, error: error.message });
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             throw error;
         } finally {
@@ -209,7 +209,7 @@ const useAuthStore = create((set) => ({
             navigate("/accounts/login");
         } catch (error) {
             set({ isLoading: false, error: error.message });
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             throw error;
         }
@@ -231,14 +231,14 @@ const useAuthStore = create((set) => ({
                     isLoading: false
                 });
 
-                console.log("from store", response.data.data);
+                // console.log("from store", response.data.data);
                 handleSuccess(response.data.message);
             } else {
                 set({ selectedUser: null, isLoading: false });
             }
         } catch (error) {
             set({ isLoading: false, error: error.message });
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             throw error;
         }
@@ -258,14 +258,14 @@ const useAuthStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                console.log("from store", response.data.data);
+                // console.log("from store", response.data.data);
                 handleSuccess(response.data.message);
             } else {
                 set({ isLoading: false });
             }
 
         } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             set({ isLoading: false, error: error.message });
             throw error;
@@ -292,14 +292,14 @@ const useAuthStore = create((set) => ({
                     isLoading: false
                 });
 
-                console.log("response.data", response.data.data)
+                // console.log("response.data", response.data.data)
                 handleSuccess(response.data.message);
             } else {
                 set({ isLoading: false });
             }
 
         } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             set({ isLoading: false, error: error.message });
             throw error;
@@ -319,14 +319,14 @@ const useAuthStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                console.log("from store", response.data.data);
+                // console.log("from store", response.data.data);
                 handleSuccess(response.data.message);
             } else {
                 set({ isLoading: false });
             }
 
         } catch (error) {
-            console.error('Error:', error.response?.data?.message || error.message);
+            // console.error('Error:', error.response?.data?.message || error.message);
             handleError(error.response?.data?.message || error.message);
             set({ isLoading: false, error: error.message });
             throw error;

@@ -23,7 +23,7 @@ const PostsProfile = () => {
                 const postData = response.data.data[0];
                
                 setUserPosts(postData);
-                console.log("all posts",response.data.data[0])
+                // console.log("all posts",response.data.data[0])
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
                 handleError(error.response?.data?.message || error.message);
@@ -32,7 +32,7 @@ const PostsProfile = () => {
         fetchPosts()
     }, [])
 
-    console.log("userPosts", userPosts.posts != undefined && userPosts.posts?.length)
+    // console.log("userPosts", userPosts.posts != undefined && userPosts.posts?.length)
 
     return (
         <div id="postContentId" className=" displayFlex">

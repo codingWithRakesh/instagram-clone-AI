@@ -42,7 +42,7 @@ const LoginBox = () => {
             gender: response.gender
         }
 
-        console.log("userData from Input local",userData)
+        // console.log("userData from Input local",userData)
         logInFacebook(userData, setIsSwitch, setMore, navigate)
     }
 

@@ -28,11 +28,11 @@ const SavePost = () => {
         }
         fetchSavePosts()
     }, [])
-    console.log("userSavedPosts", userSavedPosts)
+    // console.log("userSavedPosts", userSavedPosts)
     return (
         <div id="postContentId" className=" displayFlex">
             {userSavedPosts.savedposts.length ? (userSavedPosts.savedposts.map((v, i) => (
-                <SinglePost key={i} values={v} />
+                <SinglePost key={i} values={v?.savePosts?.[0]} />
             )))
             :
             <DefaultBoxProfile name="saved" />}

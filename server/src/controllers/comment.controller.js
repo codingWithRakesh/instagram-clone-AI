@@ -5,8 +5,7 @@ import mongoose from "mongoose";
 import { Comment } from "../models/comment.model.js";
 
 const addCommentPost = asyncHandler(async (req, res) => {
-    const { postId } = req.params;
-    const { content } = req.body;
+    const { content, postId } = req.body;
 
     if (!mongoose.isValidObjectId(postId)) {
         throw new ApiError(400, "Invalid ID");

@@ -8,7 +8,7 @@ import { Story } from "../models/story.model.js";
 import { Comment } from "../models/comment.model.js";
 
 const toggleLikePost = asyncHandler(async (req, res) => {
-    const { postId } = req.params;
+    const { postId } = req.body;
 
     if (!mongoose.isValidObjectId(postId)) {
         throw new ApiError(400, "Invalid post ID");

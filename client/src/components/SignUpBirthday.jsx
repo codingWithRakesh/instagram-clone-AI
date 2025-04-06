@@ -20,7 +20,7 @@ const SignUpBirthday = ({ inputsD }) => {
             return;
         }
 
-        console.log("Updated Sign-Up Details:", updatedDetails);
+        // console.log("Updated Sign-Up Details:", updatedDetails);
         await signUp(updatedDetails)
         setIsSignUp("OTP");
     };

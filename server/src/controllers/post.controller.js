@@ -241,6 +241,31 @@ const viewPost = asyncHandler(async (req, res) => {
                                 }
                             }]
                         }
+                    },
+                    {
+                        $lookup : {
+                            from : "likes",
+                            localField : "_id",
+                            foreignField : "commentId",
+                            as : "likes",
+                            pipeline : [
+                                {
+                                    $lookup : {
+                                        from : "users",
+                                        localField : "likeOwner",
+                                        foreignField : "_id",
+                                        as : "likeOwner",
+                                        pipeline : [{
+                                            $project : {
+                                                "_id" : 1,
+                                                "userName" : 1,
+                                                "profilePic" : 1
+                                            }
+                                        }]
+                                    }
+                                }
+                            ]
+                        }
                     }
                 ]
             }
@@ -484,7 +509,24 @@ const savePost = asyncHandler(async (req, res) => {
                             from: "posts",
                             localField: "postId",
                             foreignField: "_id",
-                            as: "savePosts"
+                            as: "savePosts",
+                            pipeline: [
+                                {
+                                    $lookup: {
+                                        from: "comments",
+                                        localField: "_id",
+                                        foreignField: "postId",
+                                        as: "comments"
+                                    }
+                                },
+                                {
+                                    $addFields: {
+                                        commentCount: {
+                                            $size: "$comments"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 ]
@@ -547,7 +589,24 @@ const allTagUsers = asyncHandler(async (req, res) => {
                 from: "posts",
                 localField: "_id",
                 foreignField: "taggedUsers",
-                as: "taggedPosts"
+                as: "taggedPosts",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "comments",
+                            localField: "_id",
+                            foreignField: "postId",
+                            as: "comments"
+                        }
+                    },
+                    {
+                        $addFields: {
+                            commentCount: {
+                                $size: "$comments"
+                            }
+                        }
+                    }
+                ]
             }
         },
         {
