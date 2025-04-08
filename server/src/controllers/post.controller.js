@@ -5,6 +5,7 @@ import { Post } from "../models/post.model.js";
 import { deleteFromCloudinary, getPublicId, uploadOnCloudinary } from '../utils/cloudinary.js'
 import mongoose from 'mongoose'
 import { User } from "../models/user.model.js";
+import { SavedPost } from "../models/savedPost.model.js";
 
 const createPost = asyncHandler(async (req, res) => {
     const { content, taggedUsers } = req.body;
@@ -53,7 +54,7 @@ const createPost = asyncHandler(async (req, res) => {
 })
 
 const deletePost = asyncHandler(async (req, res) => {
-    const { postId } = req.params;
+    const { postId } = req.body;
     if (!mongoose.isValidObjectId(postId)) {
         throw new ApiError(400, "Invalid post id");
     }
@@ -78,6 +79,7 @@ const deletePost = asyncHandler(async (req, res) => {
     }
 
     await Post.findByIdAndDelete(postId);
+    await SavedPost.deleteOne({postId : postId})
 
     res.status(200).json(new ApiResponse(200, {}, "Post deleted successfully"));
 })

@@ -83,7 +83,7 @@ function App() {
       {isCreatVisible && <BlurBox fun={() => setIsCreatVisible((v) => !v)}><Upload /></BlurBox>}
       {more && <More />}
       {isSwitch && <BlurBox fun={() => setIsSwitch((v) => !v)}> <LoginBox /> </BlurBox>}
-      {control && <BlurBox checkCrose={true} fun={() => {} }>
+      {control.isOn && <BlurBox checkCrose={true} fun={() => {} }>
         <ControlPost />
       </BlurBox>}
       <ToastContainer />

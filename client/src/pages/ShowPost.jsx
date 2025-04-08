@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import profile from '../assets/images/profile.jpeg';
+// import profile from '../assets/images/profile.jpeg';
 import video from '../assets/videos/videoMin.mp4';
 import CommentSolo from '../components/CommentSolo';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { handleError, handleSuccess } from '../components/ErrorMessage';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore.js';
@@ -18,8 +18,11 @@ const ShowPost = () => {
   const fetchPost = postStore((state) => state.fetchPost);
   const likePost = postStore((state) => state.likePost);
   const savePost = postStore((state) => state.savePost);
+  const deletePost = postStore((state) => state.deletePost);
   const uploadComment = postStore((state) => state.uploadComment);
-  const { pId, profile: profileParam } = useParams(); 
+  const fetchPosts = postStore((state) => state.fetchPosts);
+  const { pId, profile } = useParams();
+  const navigate = useNavigate()
 
   const [control, setControl] = useControl()
 
@@ -68,6 +71,32 @@ const ShowPost = () => {
       saved?.postId === pId
   );
 
+  const commentControl = {
+    isOn: true,
+    data: [
+      {
+        name: "Delete",
+        action: async () => {
+          await deletePost(showPost._id);
+          await navigate(-1);
+          await setControl(v => !v);
+          await fetchPosts(profile)
+        },
+        colorC: "ED4956"
+      },
+      {
+        name: "Edit",
+        action: () => setControl(v => !v),
+        colorC: "000"
+      },
+      {
+        name: "Cancel",
+        action: () => setControl(v => !v),
+        colorC: "000"
+      }
+    ]
+  }
+
   return (
     <div className='bg-white h-[37rem] flex items-center justify-center rounded-tr-[3px] rounded-br-[3px] overflow-hidden'>
       <div className={`imgOrVideo h-full ${showPost?.image ? `w-[38rem]` : ""}`}>
@@ -90,9 +119,9 @@ const ShowPost = () => {
             </div>
             <p className='font-bold'>{showPost?.owner?.[0]?.userName}</p>
           </div>
-          <div className="arrowSide h-[1.5rem] w-[1.5rem] cursor-pointer" onClick={() => setControl((v) => !v)}>
+          {user?.userName === showPost?.owner?.[0]?.userName && <div className="arrowSide h-[1.5rem] w-[1.5rem] cursor-pointer" onClick={() => setControl(commentControl)}>
             <svg aria-label="More options" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>More options</title><circle cx="12" cy="12" r="1.5"></circle><circle cx="6" cy="12" r="1.5"></circle><circle cx="18" cy="12" r="1.5"></circle></svg>
-          </div>
+          </div>}
         </div>
 
         <div className="forCommentShowOther paddingNewhsdgh flex-1 border-b border-[#dbdbdb] overflow-auto no-scrollbar-container">
@@ -158,7 +187,7 @@ const ShowPost = () => {
             <svg aria-label="Emoji" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Emoji</title><path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path></svg>
           </div>
           <div className="inputBOxCo flex-1">
-            <input type="text" className='w-full outline-none' value={comment} onChange={(e)=>setComment(e.target.value)} placeholder='Add a comment...' />
+            <input type="text" className='w-full outline-none' value={comment} onChange={(e) => setComment(e.target.value)} placeholder='Add a comment...' />
           </div>
           <div className="postButtonadg h-[3.3rem] w-[3.8rem] flex items-center justify-center cursor-pointer">
             <button className='cursor-pointer' onClick={addComment}>Post</button>

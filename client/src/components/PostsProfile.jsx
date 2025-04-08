@@ -6,37 +6,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setPosts } from '../redux/postSlice.js'
 import { useParams } from 'react-router-dom'
 import DefaultBoxProfile from './DefaultBoxProfile'
+import { postStore } from '../store/postStore.js'
 
 const PostsProfile = () => {
     // const { userPosts } = useSelector(store => store.post);
     const {profile} = useParams()
-    const [userPosts, setUserPosts] = useState([])
+    console.log("profile",profile)
+    const fetchPosts = postStore((state) => state.fetchPosts);
+    const userPosts = postStore((state) => state.userPosts);
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await axios.get(
-                    `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/allUserPosts/${profile}`,
-                    {
-                        withCredentials: true,
-                    }
-                ); 
-                const postData = response.data.data[0];
-               
-                setUserPosts(postData);
-                // console.log("all posts",response.data.data[0])
-            } catch (error) {
-                console.error('Error:', error.response?.data?.message || error.message);
-                handleError(error.response?.data?.message || error.message);
-            }
-        }
-        fetchPosts()
+        fetchPosts(profile)
     }, [])
 
     // console.log("userPosts", userPosts.posts != undefined && userPosts.posts?.length)
 
     return (
         <div id="postContentId" className=" displayFlex">
-            {userPosts.posts != undefined && userPosts.posts?.length ? (userPosts.posts.map((v,i)=>(
+            {userPosts?.posts && userPosts?.posts?.length ? (userPosts?.posts?.map((v,i)=>(
                 <SinglePost key={i} values={v}/>
             )))
             :

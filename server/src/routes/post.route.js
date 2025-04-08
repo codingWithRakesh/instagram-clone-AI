@@ -16,7 +16,7 @@ import { upload } from "../middlewares/multer.middleware.js"
 const router = Router();
 
 router.route("/createPost").post(verifyLogin, upload.single("file"), createPost);
-router.route("/deletePost/:postId").delete(verifyLogin, deletePost);
+router.route("/deletePost").delete(verifyLogin, deletePost);
 router.route("/updatePost/:postId").patch(verifyLogin, upload.single("file"), updatePost);
 router.route("/viewPost/:postId").get(verifyLogin, viewPost);
 router.route("/allUserPosts/:userName").get(verifyLogin, allUserPosts);

@@ -3,7 +3,7 @@ import profile from '../assets/images/profile.jpeg'
 import TimeAgo from './TimeAgo'
 import { useAuthStore } from '../store/authStore.js'
 import { postStore } from '../store/postStore.js'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { useControl } from '../contexts/controlContext.jsx'
 
@@ -11,10 +11,31 @@ const CommentSolo = ({ values, noLike }) => {
     const user = useAuthStore((state) => state.user);
     const likeComment = postStore((state) => state.likeComment);
     const fetchPost = postStore((state) => state.fetchPost);
+    const showPost = postStore((state) => state.showPost);
+    const deleteComment = postStore((state) => state.deleteComment);
     const { pId, profile: profileParam } = useParams();
     const [control, setControl] = useControl()
 
     console.log("values", values)
+
+    const commentControl = {
+        isOn : true,
+        data : [
+        {
+            name: "Delete",
+            action: async () => {
+                await deleteComment(values._id);
+                await fetchPost(pId);
+                await setControl(v => !v);
+            },
+            colorC : "ED4956"
+        },
+        {
+            name: "Cancel",
+            action: () => setControl(v => !v),
+            colorC : "000"
+        }
+    ]}
 
     const commentLikeFunction = async () => {
         await likeComment(values._id);
@@ -25,18 +46,20 @@ const CommentSolo = ({ values, noLike }) => {
         (like) => like?.likeOwner?.[0]?.userName === user?.userName
     );
 
+    const showOption = noLike && (user?.userName === values?.commentOwner?.[0]?.userName || user?.userName === showPost?.owner?.[0]?.userName)
+
     return (
-        <div className="commentDiV group  w-full h-[3.438rem] flex items-center justify-between marginBottom">
+        <div className="commentDiV group w-full h-[3.438rem] flex items-center justify-between marginBottom">
             <div className="firstDetels flex items-center gap-4">
-                <div className="imgPage h-8 w-8 rounded-full overflow-hidden">
+                <Link to={`/${values?.commentOwner?.[0]?.userName}`} className="imgPage h-8 w-8 rounded-full overflow-hidden">
                     <img src={values?.commentOwner && values?.commentOwner[0]?.profilePic} alt="" className='h-full w-full object-cover' />
-                </div>
+                </Link>
                 <div className="deleteaboutLi flex flex-col">
-                    <p><span className='font-bold'>{values?.commentOwner && values?.commentOwner[0]?.userName}</span> {values.content}</p>
+                    <p><Link to={`/${values?.commentOwner?.[0]?.userName}`} className='font-bold'>{values?.commentOwner && values?.commentOwner[0]?.userName}</Link> {values.content}</p>
                     <p className='flex gap-3'>
                         <p className='text-[12px] text-[#737373]'> <TimeAgo date={values.createdAt} /> </p>
                         {values.likeCount > 0 && <p className='text-[12px] text-[#737373]'>{values.likeCount} like</p>}
-                        {noLike && <div onClick={()=>setControl(v=>!v)} className='showControl hidden group-hover:flex cursor-pointer items-center justify-center'>
+                        {showOption && <div onClick={()=>setControl(commentControl)} className='showControl hidden group-hover:flex cursor-pointer items-center justify-center'>
                             <HiOutlineDotsHorizontal />
                         </div>}
                     </p>

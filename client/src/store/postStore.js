@@ -7,6 +7,7 @@ const postStore = create((set) => ({
     isLoading: false,
     error: null,
     message: null,
+    userPosts : null,
     fetchPost: async (pId) => {
         set({ isLoading: true, error: null });
         try {
@@ -36,6 +37,9 @@ const postStore = create((set) => ({
                 {postId : pId},
                 {
                     withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
             );
 
@@ -57,6 +61,9 @@ const postStore = create((set) => ({
                 {commentId : cId},
                 {
                     withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
             );
 
@@ -78,6 +85,9 @@ const postStore = create((set) => ({
                 {postId : pId},
                 {
                     withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
             );
 
@@ -99,6 +109,9 @@ const postStore = create((set) => ({
                 data,
                 {
                     withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 }
             );
 
@@ -110,6 +123,75 @@ const postStore = create((set) => ({
             handleError(error.response?.data?.message || error.message);
             set({ isLoading: false, error: error.message });
             throw error
+        }
+    },
+    deleteComment: async (cId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.delete(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_COMMENT}/deleteComment`,
+                {
+                    data: { id: cId },
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+    
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+    deletePost: async (pId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.delete(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/deletePost`,
+                {   
+                    data: { postId: pId },
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+    fetchPosts : async (profile) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/allUserPosts/${profile}`,
+                {
+                    withCredentials: true,
+                }
+            );
+        
+            if (response.status === 200) {
+                set({ isLoading: false, userPosts: response.data.data[0] });
+                handleSuccess(response.data.message);
+            }
+            // console.log("all posts",response.data.data[0])
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
         }
     }
 
