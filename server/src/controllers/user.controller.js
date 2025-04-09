@@ -294,8 +294,8 @@ const userProfile = asyncHandler(async (req, res) => {
         {
             $project: {
                 postsCounts: 0,
-                followersCounts: 0,
-                followingCounts: 0
+                // followersCounts: 0,
+                // followingCounts: 0
             }
         }
     ])

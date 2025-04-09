@@ -11,12 +11,12 @@ import { postStore } from '../store/postStore.js'
 const PostsProfile = () => {
     // const { userPosts } = useSelector(store => store.post);
     const {profile} = useParams()
-    console.log("profile",profile)
+    // console.log("profile",profile)
     const fetchPosts = postStore((state) => state.fetchPosts);
     const userPosts = postStore((state) => state.userPosts);
     useEffect(() => {
         fetchPosts(profile)
-    }, [])
+    }, [profile])
 
     // console.log("userPosts", userPosts.posts != undefined && userPosts.posts?.length)
 

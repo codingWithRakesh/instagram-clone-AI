@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import SinglePost from './SinglePost'
 import { handleError, handleSuccess } from './ErrorMessage'
 import axios from 'axios'
@@ -7,8 +7,7 @@ import { setSavedPosts } from '../redux/postSlice.js'
 import DefaultBoxProfile from './DefaultBoxProfile.jsx'
 
 const SavePost = () => {
-    const { userSavedPosts } = useSelector(store => store.post);
-    const dispatch = useDispatch()
+    const [userSavedPosts, setUserSavedPosts] = useState("")
     useEffect(() => {
         const fetchSavePosts = async () => {
             try {
@@ -19,7 +18,7 @@ const SavePost = () => {
                     }
                 );
 
-                dispatch(setSavedPosts(response.data.data[0]));
+                setUserSavedPosts(response.data.data[0]);
                 console.log("all save posts", response.data.data[0])
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
@@ -31,7 +30,7 @@ const SavePost = () => {
     // console.log("userSavedPosts", userSavedPosts)
     return (
         <div id="postContentId" className=" displayFlex">
-            {userSavedPosts.savedposts.length ? (userSavedPosts.savedposts.map((v, i) => (
+            {userSavedPosts?.savedposts?.length ? (userSavedPosts?.savedposts?.map((v, i) => (
                 <SinglePost key={i} values={v?.savePosts?.[0]} />
             )))
             :

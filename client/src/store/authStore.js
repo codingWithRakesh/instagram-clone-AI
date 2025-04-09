@@ -331,6 +331,31 @@ const useAuthStore = create((set) => ({
             set({ isLoading: false, error: error.message });
             throw error;
         }
+    },
+
+    followUnFollow : async (userId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_FOLLOW}/followUnfollow`,
+                { userId: userId },
+                {   
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
     }
 }));
 

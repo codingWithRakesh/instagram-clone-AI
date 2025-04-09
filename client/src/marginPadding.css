@@ -127,3 +127,12 @@ textarea {
 .marginLeftP{
     margin-left: .6rem;
 }
+
+.forFollow{
+    background-color: #0095F6 !important;
+    color: #fff;
+}
+
+.forFollow:hover{
+    background-color: hsl(213.85deg 89.34% 52.16%) !important; 
+}
