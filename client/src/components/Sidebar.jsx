@@ -8,6 +8,7 @@ import { useMore } from '../contexts/moreContext'
 import { useSelector } from 'react-redux'
 import userNotPhoto from "../assets/images/profileNot.jpg"
 import { useAuthStore } from '../store/authStore.js'
+import { IoMenu } from "react-icons/io5";
 
 const Sidebar = () => {
   const [isSerachVisible, setIsSerachVisible] = useSearch()
@@ -321,7 +322,7 @@ const Sidebar = () => {
         </div>
         <div className="more" onClick={() => setMore((v) => !v)}>
           <div className="xyasb">
-            <i className="fa fa-bars"></i>
+          <IoMenu />
             {!(forMessage || isNotoficationVisible || isSerachVisible) && <span>More</span>}
           </div>
         </div>

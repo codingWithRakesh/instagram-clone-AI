@@ -136,3 +136,20 @@ textarea {
 .forFollow:hover{
     background-color: hsl(213.85deg 89.34% 52.16%) !important; 
 }
+
+.paddingLeftRight{
+    padding: 0 1rem;
+}
+
+.marginLeftRight1rem{
+    margin-left: 1rem;
+    margin-right: .7rem;
+}
+
+.marginTop1rem{
+    margin: .5rem 0;
+}
+
+.paddingleftRight{
+    padding: 0 1rem;
+}
