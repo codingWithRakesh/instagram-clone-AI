@@ -29,6 +29,29 @@ const postStore = create((set) => ({
             throw error
         }
     },
+    uploadPost: async (formData) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/createPost`,
+                formData,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error
+        } finally {
+            set({ isLoading: false});
+        }
+    },
     likePost : async (pId) => {
         set({ isLoading: true, error: null });
         try {

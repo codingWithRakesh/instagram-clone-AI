@@ -99,15 +99,15 @@ const ShowPost = () => {
 
   return (
     <div className='bg-white h-[37rem] flex items-center justify-center rounded-tr-[3px] rounded-br-[3px] overflow-hidden'>
-      <div className={`imgOrVideo h-full ${showPost?.image ? `w-[38rem]` : ""}`}>
+      <div className={`imgOrVideo h-full bg-[rgba(0,0,0,.05)] ${showPost?.image ? `w-[38rem]` : ""}`}>
         {showPost?.image ? (
-          <img src={showPost?.image} alt="" className='h-full w-full object-cover' />
+          <img src={showPost?.image} alt="" className='h-full w-full object-contain' />
         ) : (
-          <video src={showPost?.video} className='h-full w-full object-cover' />
+          <video src={showPost?.video} className='h-full w-full object-contain' />
         )}
       </div>
 
-      <div className="showLikeComment w-[30rem] h-full flex flex-col align-center justify-between">
+      <div className="showLikeComment w-[30rem] border-l border-[#dbdbdb] h-full flex flex-col align-center justify-between">
         <div className="rowForUser w-full h-[3.75rem] border-b border-[#dbdbdb] flex items-center justify-between paddingNewhsdgh">
           <div className="imageSIde flex items-center justify-center gap-3">
             <div className="imgjdhks h-8 w-8 rounded-full overflow-hidden">

@@ -10,6 +10,8 @@ import { SavedPost } from "../models/savedPost.model.js";
 const createPost = asyncHandler(async (req, res) => {
     const { content, taggedUsers } = req.body;
 
+    const parsedTaggedUsers = JSON.parse(taggedUsers || '[]');
+
     if (!req.file) {
         throw new ApiError(400, "File is required");
     }
@@ -43,7 +45,7 @@ const createPost = asyncHandler(async (req, res) => {
         content: content || "",
         image: imageUrl,
         video: videoUrl,
-        taggedUsers: taggedUsers || []
+        taggedUsers: parsedTaggedUsers
     });
 
     if (!post) {
@@ -85,8 +87,7 @@ const deletePost = asyncHandler(async (req, res) => {
 })
 
 const updatePost = asyncHandler(async (req, res) => {
-    const { postId } = req.params;
-    const { content, taggedUsers } = req.body;
+    const { content, taggedUsers, postId } = req.body;
 
     if (!mongoose.isValidObjectId(postId)) {
         throw new ApiError(400, "Invalid post id");
@@ -101,48 +102,9 @@ const updatePost = asyncHandler(async (req, res) => {
         throw new ApiError(403, "You are not authorized to update this post");
     }
 
-    let imageUrl = "";
-    let videoUrl = "";
-    if (req.file) {
-        if (post.image) {
-            const publicId = getPublicId(post.image);
-            await deleteFromCloudinary(publicId, "image");
-        }
-
-        if (post.video) {
-            const publicId = getPublicId(post.video);
-            await deleteFromCloudinary(publicId, "video");
-        }
-
-        const fileMimeType = req.file.mimetype;
-        const base64File = `data:${req.file.mimetype};base64,${req.file.buffer.toString("base64")}`
-        if (!base64File) {
-            throw new ApiError(400, "File is required")
-        }
-
-        if (fileMimeType.startsWith("image/")) {
-            const postImage = await uploadOnCloudinary(base64File, "image")
-            if (!postImage.url) {
-                throw new ApiError(500, "Something went wrong")
-            }
-            imageUrl = postImage.url
-        } else if (fileMimeType.startsWith("video/")) {
-            const postVideo = await uploadOnCloudinary(base64File, "video")
-            if (!postVideo.url) {
-                throw new ApiError(500, "Something went wrong")
-            }
-            videoUrl = postVideo.url
-        } else {
-            throw new ApiError(400, "Only image or video files are allowed");
-        }
-    }
-
-
     const updatedPost = await Post.findByIdAndUpdate(postId, {
         content: content || post.content,
         taggedUsers: taggedUsers || post.taggedUsers,
-        image: imageUrl || req.file ? "" : post.image,
-        video: videoUrl || req.file ? "" : post.video
     }, { new: true });
 
     if (!updatedPost) {
@@ -150,6 +112,42 @@ const updatePost = asyncHandler(async (req, res) => {
     }
 
     res.status(200).json(new ApiResponse(200, updatedPost, "Post updated successfully"));
+})
+
+const editPostData = asyncHandler(async (req, res) => {
+    const { postId } = req.body;
+    if (!mongoose.isValidObjectId(postId)) {
+        throw new ApiError(400, "Invalid post id");
+    }
+
+    const post = await Post.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(postId) }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            "password": 0,
+                            "refreshToken": 0,
+                            "__v": 0
+                        }
+                    }
+                ]
+            },
+        },
+    ])
+
+    if(!post){
+        throw new ApiError(500, "something went wrong")
+    }
+
+    return res.status(200).json(new ApiResponse(200, post, "fetch successfully"))
 })
 
 const viewPost = asyncHandler(async (req, res) => {
@@ -654,5 +652,6 @@ export {
     allPosts,
     savePost,
     allReels,
-    allTagUsers
+    allTagUsers,
+    editPostData
 }
