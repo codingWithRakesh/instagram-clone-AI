@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import loaderIMG from "../assets/gif/loaderGif.gif"
 import doneUpload from "../assets/gif/successfullyDone.gif"
 import { handleError, handleSuccess } from "./ErrorMessage";
 import { postStore } from '../store/postStore';
+import { useEditPost } from '../contexts/editPostContext';
+import { usePostData } from '../contexts/postDataContext';
 
-const TakePost = ({ loader, setChecktab,setPostData }) => {
+const TakePost = ({ loader }) => {
+    const [checktab, setChecktab] = useEditPost()
+    const [, setPostData] = usePostData()
 
     const uploadPostImg = async (e) => {
         const selectedFile = e.target.files[0];
@@ -39,10 +43,23 @@ const TakePost = ({ loader, setChecktab,setPostData }) => {
             file: selectedFile
         }));
 
-        setChecktab("view")
+        setChecktab({
+            value : "view",
+            postId : null
+        })
     };
 
     const isLoading = postStore((state) => state.isLoading);
+
+    useEffect(() => {
+      if(isLoading){
+        setChecktab({
+            value : "take",
+            postId : null
+        })
+      }
+    }, [isLoading])
+    
     
 
     return (

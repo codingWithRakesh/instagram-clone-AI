@@ -16,8 +16,6 @@ const CommentSolo = ({ values, noLike }) => {
     const { pId, profile: profileParam } = useParams();
     const [control, setControl] = useControl()
 
-    console.log("values", values)
-
     const commentControl = {
         isOn : true,
         data : [

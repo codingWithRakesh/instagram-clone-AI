@@ -34,6 +34,8 @@ import { PersistGate } from 'redux-persist/integration/react'
 import persistStore from 'redux-persist/es/persistStore'
 import { AuthenticatedUserRoute, ProtectRoute } from './utils/userAuthenticated.jsx'
 import ControlContextProvider from './contexts/controlContext.jsx'
+import EditPostContextProvider from './contexts/editPostContext.jsx'
+import PostDataContextProvider from './contexts/postDataContext.jsx'
 
 const postShow = {
   path: "p/:pId",
@@ -140,27 +142,31 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ControlContextProvider>
-          <StoryStartContextProvider>
-            <NextStory2ContextProvider>
-              <SignUpContextProvider>
-                <NextStoryContextProvider>
-                  <SwitchContextProvider>
-                    <MoreContextProvider>
-                      <SearchContextProvider>
-                        <UploadContextProvider>
-                          <NotificationContextProvider>
-                            <RouterProvider router={router} />
-                          </NotificationContextProvider>
-                        </UploadContextProvider>
-                      </SearchContextProvider>
-                    </MoreContextProvider>
-                  </SwitchContextProvider>
-                </NextStoryContextProvider>
-              </SignUpContextProvider>
-            </NextStory2ContextProvider>
-          </StoryStartContextProvider>
-        </ControlContextProvider>
+        <PostDataContextProvider>
+          <EditPostContextProvider>
+            <ControlContextProvider>
+              <StoryStartContextProvider>
+                <NextStory2ContextProvider>
+                  <SignUpContextProvider>
+                    <NextStoryContextProvider>
+                      <SwitchContextProvider>
+                        <MoreContextProvider>
+                          <SearchContextProvider>
+                            <UploadContextProvider>
+                              <NotificationContextProvider>
+                                <RouterProvider router={router} />
+                              </NotificationContextProvider>
+                            </UploadContextProvider>
+                          </SearchContextProvider>
+                        </MoreContextProvider>
+                      </SwitchContextProvider>
+                    </NextStoryContextProvider>
+                  </SignUpContextProvider>
+                </NextStory2ContextProvider>
+              </StoryStartContextProvider>
+            </ControlContextProvider>
+          </EditPostContextProvider>
+        </PostDataContextProvider>
       </PersistGate>
     </Provider>
     <ToastContainer />

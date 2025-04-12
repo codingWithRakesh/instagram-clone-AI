@@ -10,6 +10,8 @@ import TimeAgo from '../components/TimeAgo.jsx';
 import NoCommentYet from '../components/NoCommentYet.jsx';
 import { postStore } from '../store/postStore.js';
 import { useControl } from '../contexts/controlContext.jsx';
+import { useUpload } from '../contexts/uploadContext.jsx';
+import { useEditPost } from '../contexts/editPostContext.jsx';
 
 const ShowPost = () => {
   // const [showPost, setShowPost] = useState("");
@@ -23,6 +25,8 @@ const ShowPost = () => {
   const fetchPosts = postStore((state) => state.fetchPosts);
   const { pId, profile } = useParams();
   const navigate = useNavigate()
+  const [checktab, setChecktab] = useEditPost()
+  const [, setIsCreatVisible] = useUpload()
 
   const [control, setControl] = useControl()
 
@@ -44,7 +48,6 @@ const ShowPost = () => {
   }
 
   const addComment = async () => {
-    console.log("comment", comment);
     if (comment === "") {
       handleError("Please add a comment");
       return;
@@ -86,7 +89,15 @@ const ShowPost = () => {
       },
       {
         name: "Edit",
-        action: () => setControl(v => !v),
+        action: async () => {
+          await setIsCreatVisible(v => !v)
+          await setControl(v => !v);
+          await navigate(-1);
+          await setChecktab({
+            value: "view",
+            postId: pId
+          })
+        },
         colorC: "000"
       },
       {
@@ -98,12 +109,12 @@ const ShowPost = () => {
   }
 
   return (
-    <div className='bg-white h-[37rem] flex items-center justify-center rounded-tr-[3px] rounded-br-[3px] overflow-hidden'>
+    <div className='bg-white h-[37rem] minWidth67 flex items-center justify-center rounded-tr-[3px] rounded-br-[3px] overflow-hidden'>
       <div className={`imgOrVideo h-full bg-[rgba(0,0,0,.05)] ${showPost?.image ? `w-[38rem]` : ""}`}>
         {showPost?.image ? (
           <img src={showPost?.image} alt="" className='h-full w-full object-contain' />
         ) : (
-          <video src={showPost?.video} className='h-full w-full object-contain' />
+          <video controls src={showPost?.video} className='h-full w-full object-contain' />
         )}
       </div>
 
@@ -128,7 +139,7 @@ const ShowPost = () => {
           <CommentSolo values={{
             _id: showPost?._id,
             content: showPost?.content,
-            createdAt: showPost?.createdAt,
+            createdAt: showPost?.updatedAt,
             commentOwner: showPost?.owner
           }} noLike={false} />
           {(showPost?.comments?.length > 0 || showPost?.content ? true : false) ? (showPost?.comments?.map((v, i) => (

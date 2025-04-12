@@ -1,22 +1,20 @@
 import React, { useState } from 'react'
 import TakePost from './TakePost'
 import EditPost from './EditPost'
+import { useEditPost } from '../contexts/editPostContext'
+import { usePostData } from '../contexts/postDataContext'
 
 const Upload = () => {
 
-    const [checktab, setChecktab] = useState("take")
+    const [checktab, setChecktab] = useEditPost()
 
-    const [postData, setPostData] = useState({
-        file : "",
-        content : "",
-        taggedUsers : []
-    })
+    const [postData, setPostData] = usePostData()
 
     console.log("postData", postData)
 
     return (
         <>
-            {checktab == "take" ? <TakePost setPostData={setPostData} setChecktab={setChecktab} loader={false}/> : checktab == "view" ? <EditPost setChecktab={setChecktab} submitContent={[postData, setPostData]}/> : checktab == "done" ? <TakePost loader={true} setChecktab={setChecktab}/> : ""}
+            {checktab.value == "take" ? <TakePost loader={false}/> : checktab.value == "view" ? <EditPost /> : checktab.value == "done" ? <TakePost loader={true} /> : ""}
         </>
     )
 }

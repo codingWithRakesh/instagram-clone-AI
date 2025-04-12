@@ -8,6 +8,7 @@ const postStore = create((set) => ({
     error: null,
     message: null,
     userPosts : null,
+    editPostValue : null,
     fetchPost: async (pId) => {
         set({ isLoading: true, error: null });
         try {
@@ -20,6 +21,56 @@ const postStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false, showPost: response.data.data[0] });
+                handleSuccess(response.data.message);
+            }
+            // console.log("fetchPost end");
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error
+        }
+    },
+    fetchPostForEdit : async (pId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/editPostData`,
+                {postId : pId},
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false, editPostValue: response.data.data[0] });
+                handleSuccess(response.data.message);
+            }
+            // console.log("fetchPost end");
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error
+        }
+    },
+    submitEditPost : async (data) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.patch(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/updatePost`,
+                data,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
                 handleSuccess(response.data.message);
             }
             // console.log("fetchPost end");
