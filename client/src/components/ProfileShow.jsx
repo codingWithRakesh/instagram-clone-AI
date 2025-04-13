@@ -19,8 +19,8 @@ const ProfileShow = () => {
         fetchUserProfile()
     }, [fetchSelectedUser, profile])
 
-    console.log("userProfile", selectedUser)
-    console.log("user", user)
+    // console.log("userProfile", selectedUser)
+    // console.log("user", user)
 
     return (
         <div className="profile_box">

@@ -54,13 +54,13 @@ const CommentSolo = ({ values, noLike }) => {
                 </Link>
                 <div className="deleteaboutLi flex flex-col">
                     <p><Link to={`/${values?.commentOwner?.[0]?.userName}`} className='font-bold'>{values?.commentOwner && values?.commentOwner[0]?.userName}</Link> {values.content}</p>
-                    <p className='flex gap-3'>
+                    <div className='flex gap-3'>
                         <p className='text-[12px] text-[#737373]'> <TimeAgo date={values.createdAt} /> </p>
                         {values.likeCount > 0 && <p className='text-[12px] text-[#737373]'>{values.likeCount} like</p>}
                         {showOption && <div onClick={()=>setControl(commentControl)} className='showControl hidden group-hover:flex cursor-pointer items-center justify-center'>
                             <HiOutlineDotsHorizontal />
                         </div>}
-                    </p>
+                    </div>
                 </div>
             </div>
             {noLike && <div className="likeButtonR cursor-pointer" onClick={commentLikeFunction}>

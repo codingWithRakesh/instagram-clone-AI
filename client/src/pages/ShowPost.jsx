@@ -67,7 +67,7 @@ const ShowPost = () => {
       like?.likeOwner?.[0]?.userName === user?.userName &&
       like?.postId === pId
   );
-  console.log("showPost", showPost);
+  // console.log("showPost", showPost)
   const checkSave = showPost?.savedPosts?.some(
     (saved) =>
       saved?.owner?.[0]?.userName === user?.userName &&
@@ -188,8 +188,19 @@ const ShowPost = () => {
             </div>
           </div>
           <div className="sjjsdhjadh leading-tight">
-            {showPost?.likes?.length > 0 ? <p>Liked by <span className='font-bold cursor-pointer'>{showPost?.likes?.[0]?.likeOwner?.[0]?.userName}</span> {showPost?.likes?.length > 1 && <> and <span className='font-bold cursor-pointer'>{showPost?.likes?.length - 1} others</span> </>}</p> : <p>Be the first to like this</p>}
-            <p className='text-[#737373] text-[14px] cursor-pointer'> <TimeAgo date={showPost?.createdAt} /> </p>
+            {showPost?.likes?.length > 0 ? (
+              <div>
+                Liked by <span className='font-bold cursor-pointer'>{showPost?.likes?.[0]?.likeOwner?.[0]?.userName}</span>
+                {showPost?.likes?.length > 1 && (
+                  <> and <span className='font-bold cursor-pointer'>{showPost?.likes?.length - 1} others</span></>
+                )}
+              </div>
+            ) : (
+              <div>Be the first to like this</div>
+            )}
+            <div className='text-[#737373] text-[14px] cursor-pointer'>
+              <TimeAgo date={showPost?.createdAt} />
+            </div>
           </div>
         </div>
 

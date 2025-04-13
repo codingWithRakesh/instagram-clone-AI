@@ -2,6 +2,7 @@ import React from 'react'
 import MessageComeUser from '../components/MessageComeUser'
 import DefaultMessageBox from '../components/DefaultMessageBox'
 import MessageBox from '../components/MessageBox'
+import { Outlet } from 'react-router-dom'
 
 const Messages = () => {
   return (
@@ -23,25 +24,24 @@ const Messages = () => {
           </div>
         </div>
         <div className="messCon2">
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-          <MessageComeUser/>
-        
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+          <MessageComeUser />
+
         </div>
 
       </div>
       <div className="message2 displayNone displayFlex">
-        {/* <DefaultMessageBox/> */}
-        <MessageBox/>
-        
+        <Outlet />
+
       </div>
     </div>
   )

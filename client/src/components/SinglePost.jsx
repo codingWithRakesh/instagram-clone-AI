@@ -3,7 +3,7 @@ import profile from "../assets/images/profile.jpeg"
 import { Link, useLocation, useParams } from 'react-router-dom'
 
 const SinglePost = ({values}) => {
-    console.log("values from savePost",values)
+    // console.log("values from savePost",values)
     const location = useLocation();
     // console.log(location)
     return (

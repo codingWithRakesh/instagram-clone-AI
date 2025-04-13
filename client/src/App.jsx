@@ -24,6 +24,7 @@ import { setAuthUser } from './redux/authSlice';
 import { useAuthStore } from './store/authStore.js';
 import ControlPost from './components/ControlPost.jsx';
 import { useControl } from './contexts/controlContext.jsx';
+import { useEditPost } from './contexts/editPostContext.jsx';
 
 function App() {
   const user = useAuthStore((state) => state.user);
@@ -36,6 +37,7 @@ function App() {
   const [control, setControl] = useControl()
   const [onlineUsers, setOnlineUsers] = useState([]);
   const dispatch = useDispatch()
+  const [checktab, setChecktab] = useEditPost()
 
   const fetchAuth = useAuthStore((state) => state.fetchAuth);
 
@@ -52,7 +54,7 @@ function App() {
 
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
-    });
+    })
 
     socket.on("online-users", (users) => {
       setOnlineUsers(users);
@@ -72,6 +74,9 @@ function App() {
       socket.disconnect();
     };
   }, [fetchAuth]);
+
+  socket.emit("make-id", user?._id);
+
   return (
     user ? <div className="mainContaner">
       <Sidebar />
@@ -80,10 +85,16 @@ function App() {
       </Suspense>
       {isSerachVisible && <Search />}
       {isNotoficationVisible && <Notification />}
-      {isCreatVisible && <BlurBox fun={() => setIsCreatVisible((v) => !v)}><Upload /></BlurBox>}
+      {isCreatVisible && <BlurBox fun={() => {
+        setChecktab({
+          value: "take",
+          postId: null
+        })
+        setIsCreatVisible((v) => !v)
+      }}><Upload /></BlurBox>}
       {more && <More />}
       {isSwitch && <BlurBox fun={() => setIsSwitch((v) => !v)}> <LoginBox /> </BlurBox>}
-      {control.isOn && <BlurBox checkCrose={true} fun={() => {} }>
+      {control.isOn && <BlurBox checkCrose={true} fun={() => { }}>
         <ControlPost />
       </BlurBox>}
       <ToastContainer />

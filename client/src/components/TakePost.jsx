@@ -13,25 +13,25 @@ const TakePost = ({ loader }) => {
     const uploadPostImg = async (e) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile) return;
-    
+
         const imageTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
         const videoTypes = ["video/mp4", "video/webm", "video/ogg"];
-    
+
         const isImage = imageTypes.includes(selectedFile.type);
         const isVideo = videoTypes.includes(selectedFile.type);
-    
+
         if (!isImage && !isVideo) {
             handleError("Only image or video files are allowed.");
             e.target.value = "";
             return;
         }
-    
+
         if (isImage && selectedFile.size > 4 * 1024 * 1024) {
             handleError("Image size must be less than 4 MB.");
             e.target.value = "";
             return;
         }
-    
+
         if (isVideo && selectedFile.size > 20 * 1024 * 1024) {
             handleError("Video size must be less than 20 MB.");
             e.target.value = "";
@@ -44,23 +44,13 @@ const TakePost = ({ loader }) => {
         }));
 
         setChecktab({
-            value : "view",
-            postId : null
+            value: "view",
+            postId: null
         })
     };
 
     const isLoading = postStore((state) => state.isLoading);
 
-    useEffect(() => {
-      if(isLoading){
-        setChecktab({
-            value : "take",
-            postId : null
-        })
-      }
-    }, [isLoading])
-    
-    
 
     return (
         <div className="upload overflow-hidden" id="postDiv">
@@ -78,7 +68,7 @@ const TakePost = ({ loader }) => {
                 :
                 <div className='h-full w-full flex items-center justify-center flex-col gap-[1rem]'>
                     {isLoading ? <img src={loaderIMG} className='h-[6rem] w-[6rem] object-cover' alt="" /> :
-                    <img src={doneUpload} className='h-[6rem] w-[6rem] object-cover' alt="" />}
+                        <img src={doneUpload} className='h-[6rem] w-[6rem] object-cover' alt="" />}
                     {!isLoading && <p className='text-2xl'>Your post has been shared.</p>}
                 </div>}
         </div>

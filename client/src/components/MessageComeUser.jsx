@@ -1,9 +1,10 @@
 import React from 'react'
 import profile from "../assets/images/profile.jpeg"
+import { Link } from 'react-router-dom'
 
 const MessageComeUser = () => {
     return (
-        <div className="messcon2_1">
+        <Link to="/direct/t/dnfsfkfjk" className="messcon2_1">
             <div className="messImg">
                 <img src={profile} alt="" />
             </div>
@@ -11,11 +12,11 @@ const MessageComeUser = () => {
                 <div className="messText_1">
                     ishan 89
                 </div>
-                <div className="messText_2">
+                {/* <div className="messText_2">
                     Active 46 m ago
-                </div>
+                </div> */}
             </div>
-        </div>
+        </Link>
     )
 }
 

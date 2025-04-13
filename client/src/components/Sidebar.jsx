@@ -24,6 +24,8 @@ const Sidebar = () => {
   useEffect(() => {
     fetchAuth()
   }, [fetchAuth])
+
+  const currentPath = location.pathname;
   
 
   const sidebarClick = (value) => {
@@ -199,7 +201,7 @@ const Sidebar = () => {
     },
     {
       fun: () => sidebarClick("messages"),
-      path: "/direct/inbox",
+      path:  "/direct/inbox" ,
       code: <svg aria-label="Direct" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
         role="img" viewBox="0 0 24 24" width="24">
         <line
@@ -209,7 +211,7 @@ const Sidebar = () => {
           strokeWidth="2"
           x1="22"
           x2="9.218"
-          y1="3"
+          y1="3" 
           y2="10.083">
         </line>
         <polygon

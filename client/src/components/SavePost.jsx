@@ -19,7 +19,7 @@ const SavePost = () => {
                 );
 
                 setUserSavedPosts(response.data.data[0]);
-                console.log("all save posts", response.data.data[0])
+                // console.log("all save posts", response.data.data[0])
             } catch (error) {
                 console.error('Error:', error.response?.data?.message || error.message);
                 handleError(error.response?.data?.message || error.message);
