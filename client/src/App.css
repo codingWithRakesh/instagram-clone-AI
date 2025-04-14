@@ -8,7 +8,7 @@
 /*-------------------------------------------------------------Login Box*/
 
 .imgBoxLo{
-    height: 95vh;
+    height: 41rem;
     width: 30rem;
     background-image: url('./assets/images/loginLayout.png');
     background-repeat: no-repeat;
