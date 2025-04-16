@@ -99,10 +99,10 @@ const SignUpMainInput = ({ inputsD }) => {
         <input type="text" className='bg-[#FAFAFA] border border-[#DBDBDB] outline-none w-[16.75rem] h-[2.375rem] forPaddingInputLogin' name="userName" placeholder='Username' required />
 
         <p className='w-[16.75rem] marginTop2 text-center text-[.9rem] leading-tight text-[#737373]'>
-          People who use our service may have uploaded your contact information to Instagram. <span className='text-[#00376B] cursor-pointer'>Learn More</span>
+          People who use our service may have uploaded your contact information to Instagram. <a href="https://www.facebook.com/help/instagram/261704639352628"target='_blank'><span className='text-[#00376B] cursor-pointer'>Learn More</span></a>
         </p>
         <p className='w-[16.75rem] text-center text-[.9rem] leading-tight text-[#737373]'>
-          By signing up, you agree to our <span className='text-[#00376B] cursor-pointer'>Terms, Privacy Policy and Cookies Policy.</span>
+        <span>By signing up, you agree to our</span> <a href="https://help.instagram.com/581066165581870/?locale=en_GB" target='_blank'>  <span className='text-[#00376B] cursor-pointer'>Terms,</span></a><a href="https://www.facebook.com/privacy/policy" target='_blank'><span className='text-[#00376B]'>Privacy Policy</span></a> and <a href="https://privacycenter.instagram.com/policies/cookies/"><span className='text-[#00376B]'>Cookies Policy.</span></a>
         </p>
 
         <button type='submit' className='itemCenterAllhild w-[16.75rem] bg-[#0095F6] hover:bg-[#006bf6] transition-all text-white cursor-pointer buttonLogin'>
