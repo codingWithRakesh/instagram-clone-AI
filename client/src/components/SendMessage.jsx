@@ -1,7 +1,7 @@
 import React from 'react'
-import profile from "../assets/images/profile.jpeg"
+import userNotPhoto from "../assets/images/profileNot.jpg"
 
-const SendMessage = ({sendUser,message}) => {
+const SendMessage = ({sendUser,message,imageP}) => {
   return (
     <>
         {
@@ -9,7 +9,7 @@ const SendMessage = ({sendUser,message}) => {
                 <div className="chatPro_1 justifyStart">
                     <div className="jbsdvjargh">
                         <div className="chatPro_1Pro">
-                            <img src={profile} alt="" />
+                            <img src={imageP ? imageP : userNotPhoto} alt="" />
                         </div>
                     </div>
                     <div className="messageChat BR_LR_S leftCh_color">

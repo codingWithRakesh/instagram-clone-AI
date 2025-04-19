@@ -306,6 +306,53 @@ const userProfile = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, user[0], "User fetched successfully"))
 })
 
+const allFollowers = asyncHandler(async (req, res) => {
+    const followers = await User.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(req.user._id) } // ✅ wrap it inside an object
+        },
+        {
+            $project: {
+                password: 0,
+                refreshToken: 0
+            }
+        },
+        {
+            $lookup: {
+                from: "followusers",
+                localField: "_id",
+                foreignField: "following",
+                as: "followersCounts",
+                pipeline: [
+                    {
+                        $lookup : {
+                            from : "users",
+                            localField : "follower",
+                            foreignField : "_id",
+                            as : "allUserFollower",
+                            pipeline : [
+                                {
+                                    $project : {
+                                        _id : 1,
+                                        userName : 1
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+    ]);
+
+    if (!followers || followers.length === 0) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, followers[0], "User fetched successfully"));
+});
+
+
 export {
     register,
     verfiyEmail,
@@ -315,5 +362,6 @@ export {
     updateProfileImage,
     deleteProfileImage,
     currentUser,
-    userProfile
+    userProfile,
+    allFollowers
 }

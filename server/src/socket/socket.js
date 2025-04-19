@@ -17,7 +17,10 @@ io.on("connection", (socket) => {
 
     socket.on("make-id", (makeId)=>{
         onlineUsers.set(socket.id, makeId);
-        socket.join(makeId);
+        const rooms = Array.from(socket.rooms);
+        if (!rooms.includes(makeId)) {
+            socket.join(makeId);
+        }
         console.log("socket join",makeId)
         io.emit("online-users", Array.from(onlineUsers.values()));
     });

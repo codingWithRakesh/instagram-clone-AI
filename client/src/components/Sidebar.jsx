@@ -21,12 +21,18 @@ const Sidebar = () => {
   const user = useAuthStore((state) => state.user);
   const fetchAuth = useAuthStore((state) => state.fetchAuth);
 
+  const currentPath = location.pathname;
+  console.log("currentPath", currentPath)
+
   useEffect(() => {
     fetchAuth()
+    if (currentPath == "/direct/inbox") {
+      setForMessage(true)
+      setIsSerachVisible(false)
+      setIsNotoficationVisible(false)
+      setIsCreatVisible(false)
+    }
   }, [fetchAuth])
-
-  const currentPath = location.pathname;
-  
 
   const sidebarClick = (value) => {
     setCheckClick(value)
@@ -201,7 +207,7 @@ const Sidebar = () => {
     },
     {
       fun: () => sidebarClick("messages"),
-      path:  "/direct/inbox" ,
+      path: "/direct/inbox",
       code: <svg aria-label="Direct" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
         role="img" viewBox="0 0 24 24" width="24">
         <line
@@ -211,7 +217,7 @@ const Sidebar = () => {
           strokeWidth="2"
           x1="22"
           x2="9.218"
-          y1="3" 
+          y1="3"
           y2="10.083">
         </line>
         <polygon
@@ -274,7 +280,7 @@ const Sidebar = () => {
       path: user.userName,
       code:
         <div className={`imgPro ${(forMessage || isNotoficationVisible || isSerachVisible) ? `marginRight ` : ""}`}>
-          {user.profilePic ? <img src={user.profilePic} /> : <img src={userNotPhoto} /> }
+          {user.profilePic ? <img src={user.profilePic} /> : <img src={userNotPhoto} />}
         </div>,
       name: "Profile",
       active: <div className={`imgPro ${(forMessage || isNotoficationVisible || isSerachVisible) ? `marginRight` : ""}`}>
@@ -324,7 +330,7 @@ const Sidebar = () => {
         </div>
         <div className="more" onClick={() => setMore((v) => !v)}>
           <div className="xyasb">
-          <IoMenu />
+            <IoMenu />
             {!(forMessage || isNotoficationVisible || isSerachVisible) && <span>More</span>}
           </div>
         </div>

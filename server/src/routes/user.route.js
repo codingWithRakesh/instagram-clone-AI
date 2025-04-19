@@ -8,7 +8,8 @@ import {
     updateProfile,
     deleteProfileImage,
     currentUser,
-    userProfile
+    userProfile,
+    allFollowers
 } from '../controllers/user.controller.js'
 import { verifyLogin } from "../middlewares/user.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
@@ -24,5 +25,6 @@ router.route("/updateProfileImage").patch(verifyLogin, upload.single("profileImg
 router.route("/deleteProfileImage").delete(verifyLogin, deleteProfileImage)
 router.route("/currentUser").get(verifyLogin, currentUser)
 router.route("/userProfile/:userName").get(verifyLogin, userProfile)
+router.route("/allFollowers").get(verifyLogin, allFollowers)
 
 export default router

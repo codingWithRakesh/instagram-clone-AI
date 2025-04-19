@@ -9,6 +9,7 @@ const useAuthStore = create((set) => ({
     message: null,
     isAuthenticated: false,
     selectedUser: null,
+    allFollowersUser : null,
 
     fetchAuth: async () => {
         try {
@@ -28,6 +29,30 @@ const useAuthStore = create((set) => ({
             }
         } catch (error) {
             set({ user: null, isAuthenticated: false });
+            handleError(error.response?.data?.message || error.message);
+            throw error;
+        }
+    },
+
+    setAllFollowersUser : async () => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/allFollowers`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ allFollowersUser: response?.data?.data?.followersCounts?.map(v => v?.allUserFollower?.[0]), isLoading: false });
+                console.log("from store", response.data.data.followersCounts.map(v => v.allUserFollower[0]));
+                handleSuccess(response.data.message);
+            } else {
+                set({ allFollowersUser: null, isLoading: false });
+            }
+        } catch (error) {
+            set({ isLoading: false });
             handleError(error.response?.data?.message || error.message);
             throw error;
         }

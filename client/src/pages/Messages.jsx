@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MessageComeUser from '../components/MessageComeUser'
 import DefaultMessageBox from '../components/DefaultMessageBox'
 import MessageBox from '../components/MessageBox'
 import { Outlet } from 'react-router-dom'
 import { useChatList } from '../contexts/chatListContext'
+import { messageStore } from '../store/messageStore.js'
 
 const Messages = () => {
   const [chatList, setChatList] = useChatList()
+  const getAllMessageUsers = messageStore((state) => state.getAllMessageUsers);
+  useEffect(() => {
+    getAllMessageUsers(setChatList)
+  }, [])
+  
   return (
     <div className="messContaner Contaner">
       <div className="message1 displayFlex displayNone">
@@ -29,17 +35,6 @@ const Messages = () => {
           {chatList.map((v,i) => (
             <MessageComeUser value={v} key={i} />
           ))}
-          {/* <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser />
-          <MessageComeUser /> */}
 
         </div>
 

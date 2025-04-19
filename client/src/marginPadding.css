@@ -154,6 +154,10 @@ textarea {
     padding: 0 1rem;
 }
 
+.paddingAll{
+    padding: 1rem;
+}
+
 .boxShadowAI {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
@@ -208,7 +212,7 @@ textarea {
     fill: none
 }
 
-.st10 {}
+/* .st10 {} */
 
 #cloud1 {
     animation: cloud003 15s linear infinite;
@@ -355,4 +359,24 @@ textarea {
     100% {
         transform: translateX(-2px);
     }
+}
+
+.paddingForSerchUser{
+    padding: 0 .5rem;
+}
+
+/* .suggasonUL{
+    padding: .5rem 0;
+} */
+
+.suggasonUL li{
+    padding: .7rem 1rem;
+}
+
+.paddingInTagusre{
+    padding: .3rem .5rem;
+}
+
+.marginBottomLL{
+    margin-bottom: .8rem;
 }
