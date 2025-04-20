@@ -7,7 +7,7 @@ const MessageComeUser = ({value}) => {
     const {id} = useParams()
     const onlineUsers = messageStore((state) => state.onlineUsers);
     const isOnline = onlineUsers.includes(value._id);
-    console.log(value)
+    // console.log(value)
     return (
         <Link to={`/direct/t/${value._id}`} className={`messcon2_1 ${id == value._id ? `bg-[#EFEFEF]` : ""}`}>
             <div className="messImg relative">

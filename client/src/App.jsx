@@ -80,7 +80,7 @@ function App() {
     if (user?._id && socketRef.current && !isUserJoined) {
       setIsUserJoined(true)
       socketRef.current.emit('make-id', user._id);
-      console.log("calling...")
+      // console.log("calling...")
     }
   }, [user])
 

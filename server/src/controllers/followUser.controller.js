@@ -21,6 +21,7 @@ const followUnfollow = asyncHandler(async (req, res) => {
             follower : req.user._id,
             following : userId
         })
+        console.log("following you",userId)
         return res.status(200).json(new ApiResponse(200, followDoc, "Followed successfully"));
     }else{
         const deleteValue = await FollowUser.deleteOne({

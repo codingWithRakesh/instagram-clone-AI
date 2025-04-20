@@ -75,9 +75,8 @@ const messageStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                console.log("getAllMessageUsers",response.data.data || [])
                 setChatList((prv) => {
-                    const existingIds = new Set(prv.map((item) => item._id)); // assuming _id is the unique identifier
+                    const existingIds = new Set(prv.map((item) => item._id)); 
                     const newItems = response.data.data.filter(
                         (item) => !existingIds.has(item._id)
                     );

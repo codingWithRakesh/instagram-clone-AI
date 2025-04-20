@@ -3,6 +3,7 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { ApiError } from "../utils/apiError.js";
 import mongoose from "mongoose";
 import { Comment } from "../models/comment.model.js";
+import { Post } from "../models/post.model.js";
 
 const addCommentPost = asyncHandler(async (req, res) => {
     const { content, postId } = req.body;
@@ -23,6 +24,11 @@ const addCommentPost = asyncHandler(async (req, res) => {
     if (!postComment) {
         throw new ApiError(500, "Internal Server Error")
     }
+
+    const {owner} = await Post.findById(postId)
+    
+
+    console.log("postOwner", owner, req.user._id)
 
     return res.status(200).json(new ApiResponse(200, postComment, "comment successfully"))
 });
@@ -79,6 +85,9 @@ const deleteComment = asyncHandler(async (req, res) => {
     if(!deleteComment){
         throw new ApiError(500, "internal server error")
     }
+
+    const {owner} = await Post.findById(deleteComment.postId)
+    console.log(" COmment owner",owner)
 
     return res.status(200).json(new ApiResponse(200, {}, "delete successfully"))
 })

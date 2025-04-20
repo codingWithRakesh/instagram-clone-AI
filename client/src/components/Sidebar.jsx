@@ -22,7 +22,7 @@ const Sidebar = () => {
   const fetchAuth = useAuthStore((state) => state.fetchAuth);
 
   const currentPath = location.pathname;
-  console.log("currentPath", currentPath)
+  // console.log("currentPath", currentPath)
 
   useEffect(() => {
     fetchAuth()

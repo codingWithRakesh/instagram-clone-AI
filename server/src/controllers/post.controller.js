@@ -609,12 +609,12 @@ const allTagUsers = asyncHandler(async (req, res) => {
                 ]
             }
         },
-        {
-            $unwind: {
-                path: "$taggedPosts",
-                preserveNullAndEmptyArrays: true
-            }
-        },
+        // {
+        //     $unwind: {
+        //         path: "$taggedPosts",
+        //         preserveNullAndEmptyArrays: true
+        //     }
+        // },
         {
             $lookup: {
                 from: "users",

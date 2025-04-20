@@ -6,6 +6,7 @@ import { Post } from "../models/post.model.js";
 import mongoose from "mongoose";
 import { Story } from "../models/story.model.js";
 import { Comment } from "../models/comment.model.js";
+import { io } from "../socket/socket.js"
 
 const toggleLikePost = asyncHandler(async (req, res) => {
     const { postId } = req.body;
@@ -18,6 +19,8 @@ const toggleLikePost = asyncHandler(async (req, res) => {
     if (!post) {
         throw new ApiError(404, "Post not found");
     }
+
+    console.log("postOwner",post.owner,req.user._id)
 
     const existingLike = await Like.findOne({ postId, likeOwner: req.user._id });
 
@@ -51,6 +54,8 @@ const toggleLikeStory = asyncHandler(async (req, res) =>{
         throw new ApiError(400, "Invalid story ID");
     }
 
+    console.log("storyOwner",story.owner,req.user._id)
+
     const existingLike = await Like.findOne({ storyId, likeOwner: req.user._id });
 
     if (existingLike) {
@@ -80,6 +85,7 @@ const toggleLikeComment = asyncHandler(async (req, res) => {
     if (!comment) {
         throw new ApiError(404, "Post not found");
     }
+    console.log("commentOwner",comment.commentOwner, req.user._id)
 
     const existingLike = await Like.findOne({ commentId, likeOwner: req.user._id });
 

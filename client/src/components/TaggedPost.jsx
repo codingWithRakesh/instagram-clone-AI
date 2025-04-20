@@ -33,8 +33,8 @@ const TaggedPost = () => {
     // console.log("userTaggedPosts", userTaggedPosts?.taggedPosts)
     return (
         <div id="postContentId" className=" displayFlex">
-            {userTaggedPosts?.taggedUsersDetails?.length ? (userTaggedPosts?.taggedUsersDetails?.map((v, i) => (
-                <SinglePost key={i} values={userTaggedPosts?.taggedPosts} />
+            {userTaggedPosts?.taggedPosts?.length ? (userTaggedPosts?.taggedPosts?.map((v, i) => (
+                <SinglePost key={i} values={v} />
             )))
             :
             <DefaultBoxProfile name="tagged" />
