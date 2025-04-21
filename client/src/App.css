@@ -1119,8 +1119,9 @@
 .this2Details {
     width: 65%;
     height: 100%;
-    /*	border: 1px solid;*/
-    padding: 0 5px;
+    	/* border: 1px solid; */
+    padding-right: 1rem;
+    padding-left: .5rem;
 }
 
 .this2Details p {
