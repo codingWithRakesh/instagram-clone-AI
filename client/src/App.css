@@ -1124,12 +1124,16 @@
     padding-left: .5rem;
 }
 
-.this2Details p {
+/* .this2Details p {
     font-size: 1rem;
 }
 
 .this2Details p span {
     font-weight: 600;
+} */
+
+.marginleftR{
+    margin: 0 5px;
 }
 
 .followBtn {
