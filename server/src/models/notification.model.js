@@ -20,6 +20,10 @@ const notificationSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Story',
     },
+    comment: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+    },
     sender: {
         type: Schema.Types.ObjectId,
         ref: 'User',

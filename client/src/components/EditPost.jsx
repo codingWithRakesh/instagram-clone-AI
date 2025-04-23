@@ -210,12 +210,12 @@ const EditPost = () => {
                             })}
                         </div>
 
-                        <textarea
+                        {/* <textarea
                             value={JSON.stringify(localTaggedUsers, null, 2)}
                             readOnly
                             className="mt-2 resize-none w-full h-[5rem] outline-none text-xs text-gray-500 bg-gray-100 p-2 rounded-md"
                             placeholder="Tagged user IDs"
-                        />
+                        /> */}
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ const MessageComeUser = ({value}) => {
     const isOnline = onlineUsers.includes(value._id);
     // console.log(value)
     return (
-        <Link to={`/direct/t/${value._id}`} className={`messcon2_1 ${id == value._id ? `bg-[#EFEFEF]` : ""}`}>
+        <Link to={`/direct/t/${value._id}`} className={`messcon2_1 relative ${id == value._id ? `bg-[#EFEFEF]` : ""}`}>
             <div className="messImg relative">
                 <img src={value.profilePic ? value.profilePic : userNotPhoto} alt="" />
                 {isOnline && <div className='showOnlineuser absolute h-[1.15rem] w-[1.15rem] bg-white bottom-[0rem] right-[0rem] rounded-full flex items-center justify-center'>
@@ -23,6 +23,9 @@ const MessageComeUser = ({value}) => {
                 {/* <div className="messText_2">
                     Active 46 m ago
                 </div> */}
+            </div>
+            <div className=' h-full w-[1rem] absolute right-8 top-0 flex items-center justify-center'>
+                <div className='bg-[#0095f6] h-[8px] w-[8px] rounded-full'></div>
             </div>
         </Link>
     )

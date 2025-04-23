@@ -48,6 +48,7 @@ const MessageBox = () => {
         }
 
         const handleNewMessage = (newMessage) => {
+            // console.log("newMessage from socket", newMessage)
             setMessagesChat(prev => {
                 if (currentMessageId && newMessage.tempId === currentMessageId) {
                     return prev;
@@ -69,6 +70,7 @@ const MessageBox = () => {
     }, [currentMessageId]);
 
     const [filteredParticipants] = allMessage?.participantsInfo?.filter((v) => v?._id === id) || []
+    
 
     return (
         <div id="secMessage" className=" ">

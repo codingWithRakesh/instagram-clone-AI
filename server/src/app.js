@@ -20,6 +20,7 @@ import commentRouter from "./routes/comment.route.js"
 import followUserRouter from "./routes/followUser.route.js"
 import savedPostRouter from "./routes/savedPost.route.js"
 import messageRouter from "./routes/message.route.js"
+import notificationRouter from "./routes/notification.route.js"
 
 app.use("/api/v1/user", userRouter)
 app.use("/api/v1/post", postRouter)
@@ -29,6 +30,7 @@ app.use("/api/v1/comment", commentRouter)
 app.use("/api/v1/followUser", followUserRouter)
 app.use("/api/v1/savedPost", savedPostRouter)
 app.use("/api/v1/message", messageRouter)
+app.use("/api/v1/notification", notificationRouter)
 
 app.get("/", (_, res) => {
     res.send("working")

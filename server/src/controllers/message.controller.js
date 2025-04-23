@@ -35,7 +35,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     await Promise.all([conversation.save({ validateBeforeSave: false }), newMessage.save({ validateBeforeSave: false })])
 
     io.to(receiverId).emit('newMessage', newMessage)
-    console.log("message send successfully from server", newMessage, receiverId)
+    // console.log("message send successfully from server", newMessage, receiverId)
 
     return res.status(200).json(new ApiResponse(200, newMessage, "new message"))
 })

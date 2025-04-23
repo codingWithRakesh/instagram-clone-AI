@@ -309,7 +309,7 @@ const userProfile = asyncHandler(async (req, res) => {
 const allFollowers = asyncHandler(async (req, res) => {
     const followers = await User.aggregate([
         {
-            $match: { _id: new mongoose.Types.ObjectId(req.user._id) } // ✅ wrap it inside an object
+            $match: { _id: new mongoose.Types.ObjectId(req.user._id) } 
         },
         {
             $project: {

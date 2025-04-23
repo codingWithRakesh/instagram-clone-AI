@@ -199,7 +199,7 @@ const ShowPost = () => {
               <div>Be the first to like this</div>
             )}
             <div className='text-[#737373] text-[14px] cursor-pointer'>
-              <TimeAgo date={showPost?.createdAt} />
+              <TimeAgo date={showPost?.createdAt} /> ago
             </div>
           </div>
         </div>

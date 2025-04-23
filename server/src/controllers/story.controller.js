@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { deleteFromCloudinary, getPublicId, uploadOnCloudinary } from '../utils/cloudinary.js'
 import { User } from "../models/user.model.js";
 import { Story } from "../models/story.model.js";
-import mongoose, { trusted } from "mongoose";
+import mongoose from "mongoose";
 
 const createStory = asyncHandler(async (req, res) => {
     const { text } = req.body
