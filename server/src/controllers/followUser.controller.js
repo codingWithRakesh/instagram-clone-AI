@@ -63,6 +63,14 @@ const followUnfollow = asyncHandler(async (req, res) => {
                                 password: 0,
                                 refreshToken: 0
                             }
+                        },
+                        {
+                            $lookup : {
+                                from: "followusers",
+                                localField: "_id",
+                                foreignField: "following",
+                                as: "followingCounts",
+                            }
                         }
                     ]
                 }

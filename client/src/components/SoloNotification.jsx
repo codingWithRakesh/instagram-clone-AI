@@ -1,13 +1,29 @@
 import React from 'react'
 import profile from "../assets/images/profile.jpeg"
 import TimeAgo from './TimeAgo'
+import { useAuthStore } from '../store/authStore.js';
+import userNotPhoto from "../assets/images/profileNot.jpg"
+import { notificationStore } from '../store/notificationStore.js';
 
-const SoloNotification = ({ value }) => {
-    console.log("value", value)
+const SoloNotification = ({ value, setNotificationAll }) => {
+    const followUnFollow = useAuthStore((state) => state.followUnFollow);
+    const fetchAllNotification = notificationStore((state) => state.fetchAllNotification);
+    const user = useAuthStore((state) => state.user);
+    // console.log("user", user._id)
+    // console.log("value followUnFollow", value)
+    const followUser = async () => {
+        await followUnFollow(value?.postSender?.[0]?._id);
+        await fetchAllNotification(setNotificationAll)
+    };
+
+    const isFollowing = value?.postSender?.[0]?.followingCounts?.some(
+        (v) => v?.follower === user?._id
+    );
+    // console.log("isFollowing", isFollowing)
     return (
         <div className="thisW2">
             <div className="this2Img">
-                <img src={value?.postSender?.[0]?.profilePic} />
+                <img src={value?.postSender?.[0]?.profilePic || userNotPhoto} />
             </div>
             <div className="this2Details">
                 <div className='flex gap-2'>
@@ -25,8 +41,12 @@ const SoloNotification = ({ value }) => {
                 }
             </div>
                 :
-            <div className="h-[2rem] w-[6.313rem] flex items-center justify-center bg-[#EFEFEF] rounded-[10px]">
-                <button>Following</button>
+            !isFollowing ? <div onClick={followUser} className="h-[2rem] bg-[#3797F0] w-[6.313rem] flex items-center justify-center text-white rounded-[10px] cursor-pointer">
+                <button className='cursor-pointer'>Follow</button>
+            </div> 
+            :
+            <div className="h-[2rem] bg-[#EFEFEF] w-[6.313rem] flex items-center justify-center rounded-[10px] cursor-pointer">
+                <button className='cursor-pointer'>Following</button>
             </div>}
         </div>
     )

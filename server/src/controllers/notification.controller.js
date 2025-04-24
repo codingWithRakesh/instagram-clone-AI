@@ -39,7 +39,7 @@ const allNotification = asyncHandler(async (req, res) => {
                                         profilePic: 1,
                                         _id : 1
                                     }
-                                }
+                                },
                             ]
                         }
                     },
@@ -49,12 +49,19 @@ const allNotification = asyncHandler(async (req, res) => {
                             localField: "sender",
                             foreignField: "_id",
                             as: "postSender",
-                            pipeline : [
+                            pipeline: [
                                 {
                                     $project: {
-                                        userName: 1,
-                                        profilePic: 1,
-                                        _id : 1
+                                        password: 0,
+                                        refreshToken: 0
+                                    }
+                                },
+                                {
+                                    $lookup : {
+                                        from: "followusers",
+                                        localField: "_id",
+                                        foreignField: "following",
+                                        as: "followingCounts",
                                     }
                                 }
                             ]
