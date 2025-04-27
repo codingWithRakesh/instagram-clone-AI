@@ -8,8 +8,6 @@ const Upload = () => {
 
     const [checktab, setChecktab] = useEditPost()
 
-    const [postData, setPostData] = usePostData()
-
     return (
         <>
             {checktab.value == "take" ? <TakePost loader={false}/> : checktab.value == "view" ? <EditPost /> : checktab.value == "done" ? <TakePost loader={true} /> : ""}
