@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import TakePost from './TakePost'
 import EditPost from './EditPost'
 import { useEditPost } from '../contexts/editPostContext'
-import { usePostData } from '../contexts/postDataContext'
 
 const Upload = () => {
 
