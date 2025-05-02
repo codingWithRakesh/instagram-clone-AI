@@ -5,6 +5,7 @@ import { useAuthStore } from '../store/authStore.js'
 import { postStore } from '../store/postStore.js'
 import { Link, useParams } from 'react-router-dom'
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import userNotPhoto from "../assets/images/profileNot.jpg"
 import { useControl } from '../contexts/controlContext.jsx'
 
 const CommentSolo = ({ values, noLike }) => {
@@ -50,7 +51,7 @@ const CommentSolo = ({ values, noLike }) => {
         <div className="commentDiV group w-full h-[3.438rem] flex items-center justify-between marginBottom">
             <div className="firstDetels flex items-center gap-4">
                 <Link to={`/${values?.commentOwner?.[0]?.userName}`} className="imgPage h-8 w-8 rounded-full overflow-hidden">
-                    <img src={values?.commentOwner && values?.commentOwner[0]?.profilePic} alt="" className='h-full w-full object-cover' />
+                    <img src={values?.commentOwner && values?.commentOwner[0]?.profilePic || userNotPhoto} alt="" className='h-full w-full object-cover' />
                 </Link>
                 <div className="deleteaboutLi flex flex-col">
                     <p><Link to={`/${values?.commentOwner?.[0]?.userName}`} className='font-bold'>{values?.commentOwner && values?.commentOwner[0]?.userName}</Link> {values.content}</p>

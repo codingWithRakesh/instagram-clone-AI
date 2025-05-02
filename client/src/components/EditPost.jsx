@@ -10,7 +10,7 @@ import { RxCross2 } from "react-icons/rx";
 import { useAuthStore } from '../store/authStore.js';
 
 const EditPost = () => {
-    const [postData, setPostData] = usePostData();
+    const [postData] = usePostData();
     const [showfile, setShowfile] = useState(null);
     const [localContent, setLocalContent] = useState('');
     const [localTaggedUsers, setLocalTaggedUsers] = useState([]); // Array of user IDs
@@ -21,10 +21,11 @@ const EditPost = () => {
 
     const uploadPost = postStore((state) => state.uploadPost);
     const fetchPostForEdit = postStore((state) => state.fetchPostForEdit);
-    const editPostValue = postStore((state) => state.editPostValue);
+    // const editPostValue = postStore((state) => state.editPostValue);
     const submitEditPost = postStore((state) => state.submitEditPost);
     const [checktab, setChecktab] = useEditPost();
     const [text, setText] = useState('');
+    const [editPostValue, setEditPostValue] = useState(null)
 
     console.log("allFollowersUser",allFollowersUser)
     const allUsers = allFollowersUser || [];
@@ -47,7 +48,7 @@ const EditPost = () => {
     useEffect(() => {
         setAllFollowersUser();
         if (checktab.postId) {
-            fetchPostForEdit(checktab.postId);
+            fetchPostForEdit(checktab.postId, setEditPostValue);
         } else {
             setLocalContent(postData.content || '');
             setLocalTaggedUsers(postData.taggedUsers || []);

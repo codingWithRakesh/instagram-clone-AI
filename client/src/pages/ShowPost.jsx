@@ -12,6 +12,7 @@ import { postStore } from '../store/postStore.js';
 import { useControl } from '../contexts/controlContext.jsx';
 import { useUpload } from '../contexts/uploadContext.jsx';
 import { useEditPost } from '../contexts/editPostContext.jsx';
+import userNotPhoto from "../assets/images/profileNot.jpg"
 
 const ShowPost = () => {
   // const [showPost, setShowPost] = useState("");
@@ -123,7 +124,7 @@ const ShowPost = () => {
           <div className="imageSIde flex items-center justify-center gap-3">
             <div className="imgjdhks h-8 w-8 rounded-full overflow-hidden">
               <img
-                src={showPost?.owner?.[0]?.profilePic}
+                src={showPost?.owner?.[0]?.profilePic || userNotPhoto}
                 className='h-full w-full object-cover'
                 alt=""
               />

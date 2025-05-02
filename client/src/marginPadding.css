@@ -380,3 +380,8 @@ textarea {
 .marginBottomLL{
     margin-bottom: .8rem;
 }
+
+.uploadFile.border-blue-500 {
+    background-color: #f0f8ff;
+    transition: background-color 0.3s ease;
+}

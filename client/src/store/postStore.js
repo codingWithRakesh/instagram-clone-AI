@@ -30,7 +30,7 @@ const postStore = create((set) => ({
             throw error
         }
     },
-    fetchPostForEdit : async (pId) => {
+    fetchPostForEdit : async (pId, setEditPostValue) => {
         set({ isLoading: true, error: null });
         try {
             const response = await axios.post(
@@ -46,6 +46,7 @@ const postStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false, editPostValue: response.data.data[0] });
+                setEditPostValue(response.data.data[0])
                 handleSuccess(response.data.message);
             }
             // console.log("fetchPost end");
