@@ -267,6 +267,40 @@ const postStore = create((set) => ({
             set({ isLoading: false, error: error.message });
             throw error;
         }
+    },
+
+    fetchAllPostSExplore: async (setExploreValues) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/allPostExplore`,
+                {
+                    withCredentials: true,
+                }
+            );
+    
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+    
+                const allPosts = response.data.data;
+    
+                // Split the array into chunks of 5
+                const chunkedPosts = [];
+                for (let i = 0; i < allPosts.length; i += 5) {
+                    chunkedPosts.push(allPosts.slice(i, i + 5));
+                }
+    
+                // Set the chunked array to state
+                setExploreValues(chunkedPosts);
+    
+                // console.log("Chunked posts:", chunkedPosts);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
     }
 
 }));

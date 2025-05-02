@@ -1,27 +1,37 @@
 import React from 'react'
 import ExplorePost from './ExplorePost'
 
-const Explore5Divs = ({ side }) => {
+const Explore5Divs = ({ side, values }) => {
+    // console.log("inThe Explore5Divs", side, values)
+
+    const [first, second, third, fourth, fifth] = values
+    // console.log("values", first, second, third, fourth, fifth)
     return (
-        <div className="parent">
-            {side == "right" ? (
-                <>
-                    <ExplorePost classNameH="RightDiv1" typeValue="image" />
-                    <ExplorePost classNameH="RightDiv3" typeValue="image" />
-                    <ExplorePost classNameH="RightDiv4" typeValue="image" />
-                    <ExplorePost classNameH="RightDiv5" typeValue="image" />
-                    <ExplorePost classNameH="RightDiv2" typeValue="video" />
-                </>)
+        <>
+            {side === "right" ? <div className="parent">
+                <div className='someMore'>
+                    <ExplorePost classNameH="singleExplore" valuesData={first} typeValue={first?.image ? "image" : "video"} />
+                    <ExplorePost classNameH="singleExplore" valuesData={second} typeValue={second?.image ? "image" : "video"} />
+                    <ExplorePost classNameH="singleExplore" valuesData={third} typeValue={third?.image ? "image" : "video"} />
+                    <ExplorePost classNameH="singleExplore" valuesData={fourth} typeValue={fourth?.image ? "image" : "video"} />
+                </div>
+                <div className='bigOne'>
+                    <ExplorePost classNameH="insideBig" valuesData={fifth} typeValue={fifth?.image ? "image" : "video"} />
+                </div>
+            </div>
                 :
-                (<>
-                    <ExplorePost classNameH="LeftDiv1" typeValue="image" />
-                    <ExplorePost classNameH="LeftDiv2" typeValue="image" />
-                    <ExplorePost classNameH="LeftDiv3" typeValue="image" />
-                    <ExplorePost classNameH="LeftDiv4" typeValue="image" />
-                    <ExplorePost classNameH="LeftDiv5" typeValue="image" />
-                </>)
-            }
-        </div>
+            <div className="parent gap5PX">
+                <div className='bigOne'>
+                    <ExplorePost classNameH="insideBig" valuesData={fifth} typeValue={fifth?.image ? "image" : "video"} />
+                </div>
+                <div className='someMore'>
+                    <ExplorePost classNameH="singleExplore" valuesData={first} typeValue={first?.image ? "image" : "video"} />
+                    <ExplorePost classNameH="singleExplore" valuesData={second} typeValue={second?.image ? "image" : "video"} />
+                    <ExplorePost classNameH="singleExplore" valuesData={third} typeValue={third?.image ? "image" : "video"} />
+                    <ExplorePost classNameH="singleExplore" valuesData={fourth} typeValue={fourth?.image ? "image" : "video"} />
+                </div>
+            </div>}
+        </>
     )
 }
 

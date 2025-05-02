@@ -352,6 +352,53 @@ const allFollowers = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, followers[0], "User fetched successfully"));
 });
 
+const searchUser = asyncHandler(async (req, res) => {
+    const { searchValue } = req.body;
+    const loggedInUserId = req.user._id;
+    const regex = new RegExp(`.*${searchValue}.*`, 'i');
+
+    const data = await User.aggregate([
+        {
+            $match: {
+                _id: { $ne: loggedInUserId }, 
+                $or: [
+                    { userName: { $regex: regex } },
+                    { fullName: { $regex: regex } }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "followusers",
+                localField: "_id",
+                foreignField: "following",
+                as: "followersCounts"
+            }
+        },
+        {
+            $addFields: {
+                followersCount: { $size: "$followersCounts" }
+            }
+        },
+        {
+            $project: {
+                password: 0,
+                refreshToken: 0,
+                followersCounts: 0 
+            }
+        },
+        {
+            $sort: { followersCount: -1 } 
+        }
+    ]);
+
+    if (!data || data.length === 0) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, data, "User fetched successfully"));
+})
+
 
 export {
     register,
@@ -363,5 +410,6 @@ export {
     deleteProfileImage,
     currentUser,
     userProfile,
-    allFollowers
+    allFollowers,
+    searchUser
 }

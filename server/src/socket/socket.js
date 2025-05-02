@@ -25,12 +25,6 @@ io.on("connection", (socket) => {
         io.emit("online-users", Array.from(onlineUsers.values()));
     });
 
-    // socket.on("message", ({message, clickUserId, userName})=>{
-    //     const receiverId = userName
-    //     // socket.to(clickUserId).emit("reciveMessage",{message, receiverId})
-    //     console.log({message, clickUserId, userName})
-    // });
-
     socket.on("connect_error", (err) => {
         console.error("Socket connection error:", err.message);
     });

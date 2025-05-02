@@ -642,6 +642,71 @@ const allTagUsers = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, users, "All tagged users"));
 });
 
+const allPostExplore = asyncHandler(async (req, res) => {
+    const posts = await Post.aggregate([
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            "_id": 1
+                        }
+                    }
+                ]
+            },
+        },
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "postId",
+                as: "likes",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "likeOwner",
+                            foreignField: "_id",
+                            as: "likeOwner",
+                            pipeline: [{
+                                $project: {
+                                    "_id": 1,
+                                    "userName": 1,
+                                    "profilePic": 1
+                                }
+                            }]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "comments",
+                localField: "_id",
+                foreignField: "postId",
+                as: "comments"
+            }
+        },
+        {
+            $addFields: {
+                commentCount: {
+                    $size: "$comments"
+                }
+            }
+        }
+    ])
+    if (!posts) {
+        throw new ApiError(404, "not found")
+    }
+
+    return res.status(200).json(new ApiResponse(200, posts, "all posts"))
+})
+
 
 export {
     createPost,
@@ -653,5 +718,6 @@ export {
     savePost,
     allReels,
     allTagUsers,
-    editPostData
+    editPostData,
+    allPostExplore
 }

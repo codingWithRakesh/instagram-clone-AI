@@ -9,7 +9,8 @@ import {
     savePost,
     allReels,
     allTagUsers,
-    editPostData
+    editPostData,
+    allPostExplore
 } from '../controllers/post.controller.js'
 import { verifyLogin } from "../middlewares/user.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
@@ -26,5 +27,6 @@ router.route("/editPostData").post(verifyLogin, editPostData)
 router.route("/savePosts").get(verifyLogin, savePost)
 router.route("/reels/:userName").get(verifyLogin, allReels)
 router.route("/tagged/:userName").get(verifyLogin, allTagUsers)
+router.route("/allPostExplore").get(verifyLogin, allPostExplore)
 
 export default router;
