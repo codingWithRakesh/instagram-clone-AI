@@ -1751,11 +1751,11 @@
     cursor: pointer;
 }
 
-.likeContern:hover {
+.newForHover:hover {
     color: #737373;
 }
 
-.likeContern svg:hover {
+.newForHover svg:hover {
     color: #737373;
 }
 
