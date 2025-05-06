@@ -385,3 +385,45 @@ textarea {
     background-color: #f0f8ff;
     transition: background-color 0.3s ease;
 }
+
+.padding75point{
+    padding: 1rem 0;
+}
+
+.paddingTopBottom{
+    padding: 1rem 1.8rem;
+}
+
+.marginTop25{
+    margin-top: .25rem;
+}
+
+.marginLeft1rem{
+    margin-left: 1rem;
+}
+
+.paddingTop5Left1{
+    padding: .8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px solid #e3e3e3; */
+}
+
+.marBottomInComment{
+    margin-bottom: .75rem;
+}
+
+.paddinInInputBox{
+    padding: .2rem;
+    padding-right: .5rem;
+}
+
+.boxShadowCommentBox{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.marginTop1rem{
+    margin-top: .6rem;
+    cursor: pointer;
+}
