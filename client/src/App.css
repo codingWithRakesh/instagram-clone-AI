@@ -442,8 +442,9 @@
 }
 
 .slider-wrapper .image-list {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     font-size: 0;
     list-style: none;
     /*  margin-bottom: 30px;*/
@@ -496,6 +497,17 @@
 
 .wri {
     font-size: 12px;
+}
+
+.overWriteFont{
+    font-size: 1rem;
+}
+
+.imageCenter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .statuscon {
@@ -2792,3 +2804,6 @@
 
 
 /*created by tarapada garai*/
+
+
+
