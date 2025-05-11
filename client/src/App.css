@@ -478,8 +478,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     border-radius: 50%;
     cursor: pointer;
+    
+}
+
+.backgroundLikeInsta { 
     background:
         radial-gradient(rgba(0, 0, 0, 0.15) 60%, transparent 0),
         radial-gradient(white 65%, transparent 0),
