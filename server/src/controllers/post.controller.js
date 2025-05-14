@@ -81,7 +81,7 @@ const deletePost = asyncHandler(async (req, res) => {
     }
 
     await Post.findByIdAndDelete(postId);
-    await SavedPost.deleteOne({postId : postId})
+    await SavedPost.deleteOne({ postId: postId })
 
     res.status(200).json(new ApiResponse(200, {}, "Post deleted successfully"));
 })
@@ -143,7 +143,7 @@ const editPostData = asyncHandler(async (req, res) => {
         },
     ])
 
-    if(!post){
+    if (!post) {
         throw new ApiError(500, "something went wrong")
     }
 
@@ -243,23 +243,23 @@ const viewPost = asyncHandler(async (req, res) => {
                         }
                     },
                     {
-                        $lookup : {
-                            from : "likes",
-                            localField : "_id",
-                            foreignField : "commentId",
-                            as : "likes",
-                            pipeline : [
+                        $lookup: {
+                            from: "likes",
+                            localField: "_id",
+                            foreignField: "commentId",
+                            as: "likes",
+                            pipeline: [
                                 {
-                                    $lookup : {
-                                        from : "users",
-                                        localField : "likeOwner",
-                                        foreignField : "_id",
-                                        as : "likeOwner",
-                                        pipeline : [{
-                                            $project : {
-                                                "_id" : 1,
-                                                "userName" : 1,
-                                                "profilePic" : 1
+                                    $lookup: {
+                                        from: "users",
+                                        localField: "likeOwner",
+                                        foreignField: "_id",
+                                        as: "likeOwner",
+                                        pipeline: [{
+                                            $project: {
+                                                "_id": 1,
+                                                "userName": 1,
+                                                "profilePic": 1
                                             }
                                         }]
                                     }
@@ -360,9 +360,9 @@ const allPosts = asyncHandler(async (req, res) => {
         },
         {
             $project: {
-                "password": 0,
-                "refreshToken": 0,
-                "__v": 0
+                "fullName": 1,
+                "userName": 1,
+                "_id": 1
             }
         },
         {
@@ -372,6 +372,23 @@ const allPosts = asyncHandler(async (req, res) => {
                 foreignField: "owner",
                 as: "posts",
                 pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owner",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        "_id": 1,
+                                        "userName": 1,
+                                        "profilePic": 1
+                                    }
+                                }
+                            ]
+                        }
+                    },
                     {
                         $lookup: {
                             from: "likes",
@@ -406,6 +423,31 @@ const allPosts = asyncHandler(async (req, res) => {
                         }
                     },
                     {
+                        $lookup: {
+                            from: "savedposts",
+                            localField: "_id",
+                            foreignField: "postId",
+                            as: "savedPosts",
+                            pipeline: [
+                                {
+                                    $lookup: {
+                                        from: "users",
+                                        localField: "owner",
+                                        foreignField: "_id",
+                                        as: "owner",
+                                        pipeline: [{
+                                            $project: {
+                                                "_id": 1,
+                                                "userName": 1,
+                                                "profilePic": 1
+                                            }
+                                        }]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
                         $addFields: {
                             commentCount: {
                                 $size: "$comments"
@@ -424,55 +466,120 @@ const allPosts = asyncHandler(async (req, res) => {
                 pipeline: [
                     {
                         $lookup: {
-                            from: "posts",
-                            localField: "_id",
-                            foreignField: "owner",
-                            as: "posts",
+                            from: "users",
+                            localField: "following",
+                            foreignField: "_id",
+                            as: "user",
                             pipeline: [
                                 {
+                                    $project: {
+                                        "_id": 1,
+                                        "userName": 1,
+                                        "profilePic": 1
+                                    }
+                                },
+                                {
                                     $lookup: {
-                                        from: "likes",
+                                        from: "posts",
                                         localField: "_id",
-                                        foreignField: "postId",
-                                        as: "likes",
+                                        foreignField: "owner",
+                                        as: "posts",
                                         pipeline: [
                                             {
                                                 $lookup: {
                                                     from: "users",
-                                                    localField: "likeOwner",
+                                                    localField: "owner",
                                                     foreignField: "_id",
-                                                    as: "likeOwner",
-                                                    pipeline: [{
-                                                        $project: {
-                                                            "_id": 1,
-                                                            "userName": 1,
-                                                            "profilePic": 1
+                                                    as: "owner",
+                                                    pipeline: [
+                                                        {
+                                                            $project: {
+                                                                "_id": 1,
+                                                                "userName": 1,
+                                                                "profilePic": 1
+                                                            }
                                                         }
-                                                    }]
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                $lookup: {
+                                                    from: "likes",
+                                                    localField: "_id",
+                                                    foreignField: "postId",
+                                                    as: "likes",
+                                                    pipeline: [
+                                                        {
+                                                            $lookup: {
+                                                                from: "users",
+                                                                localField: "likeOwner",
+                                                                foreignField: "_id",
+                                                                as: "likeOwner",
+                                                                pipeline: [{
+                                                                    $project: {
+                                                                        "_id": 1,
+                                                                        "userName": 1,
+                                                                        "profilePic": 1
+                                                                    }
+                                                                }]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                $lookup: {
+                                                    from: "comments",
+                                                    localField: "_id",
+                                                    foreignField: "postId",
+                                                    as: "comments"
+                                                }
+                                            },
+                                            {
+                                                $lookup: {
+                                                    from: "savedposts",
+                                                    localField: "_id",
+                                                    foreignField: "postId",
+                                                    as: "savedPosts",
+                                                    pipeline: [
+                                                        {
+                                                            $lookup: {
+                                                                from: "users",
+                                                                localField: "owner",
+                                                                foreignField: "_id",
+                                                                as: "owner",
+                                                                pipeline: [{
+                                                                    $project: {
+                                                                        "_id": 1,
+                                                                        "userName": 1,
+                                                                        "profilePic": 1
+                                                                    }
+                                                                }]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                $addFields: {
+                                                    commentCount: {
+                                                        $size: "$comments"
+                                                    }
                                                 }
                                             }
                                         ]
                                     }
-                                },
-                                {
-                                    $lookup: {
-                                        from: "comments",
-                                        localField: "_id",
-                                        foreignField: "postId",
-                                        as: "comments"
-                                    }
-                                },
-                                {
-                                    $addFields: {
-                                        commentCount: {
-                                            $size: "$comments"
-                                        }
-                                    }
                                 }
                             ]
                         }
-                    }
+                    },
                 ]
+            }
+        },
+        {
+            $project: {
+                "posts": 1,
+                "followusers.user": 1
             }
         }
     ])
@@ -556,12 +663,12 @@ const allReels = asyncHandler(async (req, res) => {
             }
         },
         {
-            $lookup : {
-                from : "posts",
-                localField : "_id",
-                foreignField : "owner",
-                as : "posts",
-                pipeline : [
+            $lookup: {
+                from: "posts",
+                localField: "_id",
+                foreignField: "owner",
+                as: "posts",
+                pipeline: [
                     {
                         $match: {
                             video: { $ne: "" }
@@ -571,8 +678,8 @@ const allReels = asyncHandler(async (req, res) => {
             }
         }
     ])
-    if(!userReels){
-        throw new ApiError(404,"not found")
+    if (!userReels) {
+        throw new ApiError(404, "not found")
     }
     return res.status(200).json(new ApiResponse(200, userReels, "all Reels"))
 })
@@ -582,7 +689,7 @@ const allTagUsers = asyncHandler(async (req, res) => {
 
     const users = await User.aggregate([
         {
-            $match: { userName: userName } 
+            $match: { userName: userName }
         },
         {
             $lookup: {
@@ -707,6 +814,201 @@ const allPostExplore = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, posts, "all posts"))
 })
 
+const allReelsPage = asyncHandler(async (req, res) => {
+    const reels = await Post.aggregate([
+        {
+            $match: {
+                video: { $ne: "" }
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            "_id": 1,
+                            "userName": 1,
+                            "profilePic": 1
+                        }
+                    }
+                ]
+            },
+        }
+    ])
+    if (!reels) {
+        throw new ApiError(404, "not found")
+    }
+
+    return res.status(200).json(new ApiResponse(200, reels, "all reels"))
+})
+
+const reelSavePost = asyncHandler(async (req, res) => {
+    const { postId } = req.params
+    if (!mongoose.isValidObjectId(postId)) {
+        throw new ApiError(400, "Invalid post id");
+    }
+
+    const post = await Post.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(postId) }
+        },
+        {
+            $lookup: {
+                from: "savedposts",
+                localField: "_id",
+                foreignField: "postId",
+                as: "savedPosts",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owner",
+                            pipeline: [{
+                                $project: {
+                                    "_id": 1,
+                                    "userName": 1,
+                                    "profilePic": 1
+                                }
+                            }]
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+
+    if (!post) {
+        throw new ApiError(404, "Post not found");
+    }
+
+    res.status(200).json(new ApiResponse(200, post, "all savePost like"))
+})
+
+const reelPostLike = asyncHandler(async (req, res) => {
+    const { postId } = req.params
+    if (!mongoose.isValidObjectId(postId)) {
+        throw new ApiError(400, "Invalid post id");
+    }
+
+    const post = await Post.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(postId) }
+        },
+        {
+            $lookup: {
+                from: "likes",
+                localField: "_id",
+                foreignField: "postId",
+                as: "likes",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "likeOwner",
+                            foreignField: "_id",
+                            as: "likeOwner",
+                            pipeline: [{
+                                $project: {
+                                    "_id": 1,
+                                    "userName": 1,
+                                    "profilePic": 1
+                                }
+                            }]
+                        }
+                    }
+                ]
+            }
+        },
+    ])
+
+    if (!post) {
+        throw new ApiError(404, "Post not found");
+    }
+
+    res.status(200).json(new ApiResponse(200, post, "all reels like"))
+})
+
+const commentOnReel = asyncHandler(async (req, res) => {
+    const { postId } = req.params
+    if (!mongoose.isValidObjectId(postId)) {
+        throw new ApiError(400, "Invalid post id");
+    }
+
+    const post = await Post.aggregate([
+        {
+            $match: { _id: new mongoose.Types.ObjectId(postId) }
+        },
+        {
+            $lookup: {
+                from: "comments",
+                localField: "_id",
+                foreignField: "postId",
+                as: "comments",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "commentOwner",
+                            foreignField: "_id",
+                            as: "commentOwner",
+                            pipeline: [{
+                                $project: {
+                                    "_id": 1,
+                                    "userName": 1,
+                                    "profilePic": 1
+                                }
+                            }]
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "likes",
+                            localField: "_id",
+                            foreignField: "commentId",
+                            as: "likes",
+                            pipeline: [
+                                {
+                                    $lookup: {
+                                        from: "users",
+                                        localField: "likeOwner",
+                                        foreignField: "_id",
+                                        as: "likeOwner",
+                                        pipeline: [{
+                                            $project: {
+                                                "_id": 1,
+                                                "userName": 1,
+                                                "profilePic": 1
+                                            }
+                                        }]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $addFields: {
+                commentCount: {
+                    $size: "$comments"
+                }
+            }
+        }
+    ])
+
+    if (!post) {
+        throw new ApiError(404, "Post not found");
+    }
+    return res.status(200).json(new ApiResponse(200, post, "all reels"))
+})
+
 
 export {
     createPost,
@@ -719,5 +1021,9 @@ export {
     allReels,
     allTagUsers,
     editPostData,
-    allPostExplore
+    allPostExplore,
+    allReelsPage,
+    commentOnReel,
+    reelPostLike,
+    reelSavePost
 }

@@ -6,6 +6,7 @@ import { options } from '../constants.js'
 import { deleteFromCloudinary, getPublicId, uploadOnCloudinary } from '../utils/cloudinary.js'
 import mongoose from 'mongoose'
 import { sendVerificationEmail, sendWelcomeEmail } from '../utils/emailSend.js'
+import { FollowUser } from '../models/followUser.model.js'
 
 const accessAndRefreshTokenGenrator = async (userId) => {
     try {
@@ -309,7 +310,7 @@ const userProfile = asyncHandler(async (req, res) => {
 const allFollowers = asyncHandler(async (req, res) => {
     const followers = await User.aggregate([
         {
-            $match: { _id: new mongoose.Types.ObjectId(req.user._id) } 
+            $match: { _id: new mongoose.Types.ObjectId(req.user._id) }
         },
         {
             $project: {
@@ -325,16 +326,16 @@ const allFollowers = asyncHandler(async (req, res) => {
                 as: "followersCounts",
                 pipeline: [
                     {
-                        $lookup : {
-                            from : "users",
-                            localField : "follower",
-                            foreignField : "_id",
-                            as : "allUserFollower",
-                            pipeline : [
+                        $lookup: {
+                            from: "users",
+                            localField: "follower",
+                            foreignField: "_id",
+                            as: "allUserFollower",
+                            pipeline: [
                                 {
-                                    $project : {
-                                        _id : 1,
-                                        userName : 1
+                                    $project: {
+                                        _id: 1,
+                                        userName: 1
                                     }
                                 }
                             ]
@@ -360,7 +361,7 @@ const searchUser = asyncHandler(async (req, res) => {
     const data = await User.aggregate([
         {
             $match: {
-                _id: { $ne: loggedInUserId }, 
+                _id: { $ne: loggedInUserId },
                 $or: [
                     { userName: { $regex: regex } },
                     { fullName: { $regex: regex } }
@@ -384,11 +385,11 @@ const searchUser = asyncHandler(async (req, res) => {
             $project: {
                 password: 0,
                 refreshToken: 0,
-                followersCounts: 0 
+                followersCounts: 0
             }
         },
         {
-            $sort: { followersCount: -1 } 
+            $sort: { followersCount: -1 }
         }
     ]);
 
@@ -398,6 +399,141 @@ const searchUser = asyncHandler(async (req, res) => {
 
     return res.status(200).json(new ApiResponse(200, data, "User fetched successfully"));
 })
+
+const isNotFollowed = (followData, userId) => {
+    for (const i of followData) {
+
+        if (i.following.toString() == userId.toString()) {
+            return false
+        }
+        // if("67f029b0411f4d938830e6db" == userId.toString()) {
+        //     console.log("i, userId.toString()", i.following.toString(), userId.toString())
+        // }
+    }
+    return true
+}
+
+const suggestedUsers = asyncHandler(async (req, res) => {
+    const loggedInUserId = req.user._id;
+    const allFollowData = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(loggedInUserId)
+            }
+        },
+        {
+            $lookup: {
+                from: "followusers",
+                localField: "_id",
+                foreignField: "follower",
+                as: "followData1"
+            }
+        }
+    ])
+
+    // console.log("allFollowData", allFollowData)
+
+    const followData1 = allFollowData[0].followData1;
+
+    const suggestedUsers = [];
+    let detailsUser = [];
+    let level2Users = [];
+    for (const v1 of followData1) {
+        // console.log("v1", v1)
+        const followData2 = await FollowUser.aggregate([
+            {
+                $match: {
+                    follower: v1.following
+                }
+            }
+        ])
+        level2Users = [...level2Users, ...followData2]
+    }
+    for (const v2 of level2Users) {
+        // console.log("v2", v2)
+        // console.log("isNotFollowed 1", isNotFollowed(followData1, v2.following))
+        // console.log("suggestedUsers", suggestedUsers)
+        if (isNotFollowed(followData1, v2.following) && v2.following.toString() !== loggedInUserId.toString() && !suggestedUsers.includes(v2.following.toString())) {
+            suggestedUsers.push(v2.following.toString());
+            // if(v2.following.toString() == "67f029b0411f4d938830e6db"){
+            //     console.log("isNotFollowed", isNotFollowed(followData1, v2.following))
+            //     console.log("followData1, v2", followData1, v2)
+            // }
+            const user = await User.findById(new mongoose.Types.ObjectId(v2.following.toString())).select("-password -refreshToken");
+            detailsUser.push(user);
+            if (detailsUser.length >= 5) {
+                break;
+            }
+        }
+        const followData = await FollowUser.aggregate([
+            {
+                $match: {
+                    follower: v2.following
+                }
+            }
+        ])
+        level2Users = [...level2Users, ...followData]
+    }
+    if (detailsUser.length < 5) {
+        const suggestedUserObjectIds = suggestedUsers.map(id => new mongoose.Types.ObjectId(id));
+        const limitNum = 5 - detailsUser.length;
+        const mostFollowedUsers = await FollowUser.aggregate([
+            {
+                $group: {
+                    _id: "$following",
+                    followerCount: { $sum: 1 }
+                }
+            },
+            {
+                $lookup : {
+                    from : "followusers",
+                    localField : "_id",
+                    foreignField : "following",
+                    as: "followData",
+                    pipeline : [
+                        {
+                            $match : {
+                                follower : loggedInUserId
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                $match : {
+                    followData : { $eq : [] },
+                    _id: { $ne: loggedInUserId, $nin: suggestedUserObjectIds }
+                }
+            },
+            {
+                $sort: { followerCount: -1 }
+            },
+            { $limit: limitNum },
+            {
+                $lookup : {
+                    from : "users",
+                    localField : "_id",
+                    foreignField : "_id",
+                    as: "user"
+                }
+            },
+            {
+                $project : {
+                    user : { $arrayElemAt: ["$user", 0] }
+                }
+            }
+        ])
+        detailsUser = [...detailsUser, ...mostFollowedUsers.map(u => u.user)]
+    }
+
+    // console.log("suggestedUsers 2", suggestedUsers)
+
+    // console.log("suggestedUsers 3", detailsUser)
+
+    return res.status(200).json(new ApiResponse(200, detailsUser, "Suggested users fetched successfully"));
+
+})
+
 
 
 export {
@@ -411,5 +547,6 @@ export {
     currentUser,
     userProfile,
     allFollowers,
-    searchUser
+    searchUser,
+    suggestedUsers
 }

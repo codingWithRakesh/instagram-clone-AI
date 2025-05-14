@@ -8,7 +8,7 @@ const Explore5Divs = ({ side, values }) => {
     // console.log("values", first, second, third, fourth, fifth)
     return (
         <>
-            {side === "right" ? <div className="parent">
+            {side === "right" && (first != undefined && second != undefined && third != undefined && fourth != undefined && fifth != undefined) ? <div className="parent">
                 <div className='someMore'>
                     <ExplorePost classNameH="singleExplore" valuesData={first} typeValue={first?.image ? "image" : "video"} />
                     <ExplorePost classNameH="singleExplore" valuesData={second} typeValue={second?.image ? "image" : "video"} />
@@ -20,7 +20,7 @@ const Explore5Divs = ({ side, values }) => {
                 </div>
             </div>
                 :
-            <div className="parent gap5PX">
+            (first != undefined && second != undefined && third != undefined && fourth != undefined && fifth != undefined) && <div className="parent gap5PX">
                 <div className='bigOne'>
                     <ExplorePost classNameH="insideBig" valuesData={fifth} typeValue={fifth?.image ? "image" : "video"} />
                 </div>

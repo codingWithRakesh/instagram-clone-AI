@@ -109,9 +109,10 @@ const showStory = asyncHandler(async (req, res) => {
         },
         {
             $project: {
-                "password": 0,
-                "refreshToken": 0,
-                "__v": 0
+                "userName": 1,
+                "fullName": 1,
+                "profilePic": 1,
+                "_id": 1
             }
         },
         {
@@ -123,6 +124,24 @@ const showStory = asyncHandler(async (req, res) => {
                 pipeline: [
                     {
                         $match: { createdAt: { $gt: twentyFourHoursAgo } }
+                    },
+                    {
+                        $addFields: {
+                            url: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "$video",
+                                    "$image"
+                                ]
+                            },
+                            type: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "video",
+                                    "image"
+                                ]
+                            }
+                        }
                     }
                 ]
             }
@@ -146,9 +165,9 @@ const allStories = asyncHandler(async (req, res) => {
         },
         {
             $project: {
-                "password": 0,
-                "refreshToken": 0,
-                "__v": 0
+                "profilePic": 1,
+                "fullName": 1,
+                "_id": 1
             }
         },
         {
@@ -159,21 +178,53 @@ const allStories = asyncHandler(async (req, res) => {
                 as: "followusers",
                 pipeline: [
                     {
+                        $lookup: {
+                            from: "users",
+                            localField: "following",
+                            foreignField: "_id",
+                            as: "followingUser"
+                        }
+                    },
+                    {
+                        $unwind: "$followingUser"
+                    },
+                    {
                         $project: {
-                            "password": 0,
-                            "refreshToken": 0,
-                            "__v": 0
+                            "following": "$followingUser._id",
+                            "profilePic": "$followingUser.profilePic",
+                            "fullName": "$followingUser.fullName",
+                            "userName": "$followingUser.userName",
+                            "createdAt": "$followingUser.createdAt",
+                            "updatedAt": "$followingUser.updatedAt"
                         }
                     },
                     {
                         $lookup: {
                             from: "stories",
-                            localField: "_id",
+                            localField: "following",
                             foreignField: "owner",
                             as: "stories",
                             pipeline: [
                                 {
                                     $match: { createdAt: { $gt: twentyFourHoursAgo } }
+                                },
+                                {
+                                    $addFields: {
+                                        url: {
+                                            $cond: [
+                                                { $ne: ["$video", ""] },
+                                                "$video",
+                                                "$image"
+                                            ]
+                                        },
+                                        type: {
+                                            $cond: [
+                                                { $ne: ["$video", ""] },
+                                                "video",
+                                                "image"
+                                            ]
+                                        }
+                                    }
                                 }
                             ]
                         }
@@ -206,18 +257,18 @@ const storyViewers = asyncHandler(async (req, res) => {
         }
 
         if (!story.viewers.includes(userId)) {
-            story.viewers.push(userId); 
+            story.viewers.push(userId);
             await story.save({ validateBeforeSave: false });
         }
 
-        res.status(200).json(new ApiResponse(200, {viewers: story.viewers}, "all viewers"));
+        res.status(200).json(new ApiResponse(200, { viewers: story.viewers }, "all viewers"));
     } catch (error) {
         throw new ApiError(500, "Internal Server Error")
     }
 })
 
 const storyViewClient = asyncHandler(async (req, res) => {
-    const {storyId} = req.params
+    const { storyId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(storyId)) {
         throw new ApiError(400, "Invalid Story ID");
@@ -228,11 +279,11 @@ const storyViewClient = asyncHandler(async (req, res) => {
         if (!userExists) {
             throw new ApiError(404, "User not found");
         }
-        
+
         const story = await User.aggregate([
             {
-                $match : {
-                    _id : new mongoose.Types.ObjectId(req.user._id)
+                $match: {
+                    _id: new mongoose.Types.ObjectId(req.user._id)
                 }
             },
             {
@@ -243,29 +294,29 @@ const storyViewClient = asyncHandler(async (req, res) => {
                 }
             },
             {
-                $lookup : {
-                    from : "stories",
-                    localField : "_id",
-                    foreignField : "owner",
-                    as : "stories",
-                    pipeline : [
+                $lookup: {
+                    from: "stories",
+                    localField: "_id",
+                    foreignField: "owner",
+                    as: "stories",
+                    pipeline: [
                         {
-                            $match : {
-                                _id : new mongoose.Types.ObjectId(storyId)
+                            $match: {
+                                _id: new mongoose.Types.ObjectId(storyId)
                             }
                         },
                         {
-                            $project : {
-                                "__v" : 0
+                            $project: {
+                                "__v": 0
                             }
                         },
                         {
-                            $lookup : {
-                                from : "users",
-                                localField : "viewers",
-                                foreignField : "_id",
-                                as : "views",
-                                pipeline : [
+                            $lookup: {
+                                from: "users",
+                                localField: "viewers",
+                                foreignField: "_id",
+                                as: "views",
+                                pipeline: [
                                     {
                                         $project: {
                                             "password": 0,
@@ -277,22 +328,22 @@ const storyViewClient = asyncHandler(async (req, res) => {
                             }
                         },
                         {
-                            $lookup :{
-                                from : "likes",
-                                localField : "_id",
-                                foreignField : "storyId",
-                                as : "likes",
-                                pipeline : [
+                            $lookup: {
+                                from: "likes",
+                                localField: "_id",
+                                foreignField: "storyId",
+                                as: "likes",
+                                pipeline: [
                                     {
-                                        $lookup : {
-                                            from : "users",
-                                            localField : "likeOwner",
-                                            foreignField : "_id",
-                                            as : "usersLikes",
+                                        $lookup: {
+                                            from: "users",
+                                            localField: "likeOwner",
+                                            foreignField: "_id",
+                                            as: "usersLikes",
                                         }
                                     },
                                     {
-                                        $addFields : {
+                                        $addFields: {
                                             profilePic: { $arrayElemAt: ["$usersLikes.profilePic", 0] },
                                             userName: { $arrayElemAt: ["$usersLikes.userName", 0] },
                                             _id: { $arrayElemAt: ["$usersLikes._id", 0] }
@@ -309,22 +360,22 @@ const storyViewClient = asyncHandler(async (req, res) => {
                             }
                         },
                         {
-                            $lookup : {
-                                from : "comments",
-                                localField : "_id",
-                                foreignField : "storyId",
-                                as : "comments",
-                                pipeline : [
+                            $lookup: {
+                                from: "comments",
+                                localField: "_id",
+                                foreignField: "storyId",
+                                as: "comments",
+                                pipeline: [
                                     {
-                                        $lookup : {
-                                            from : "users",
-                                            localField : "commentOwner",
-                                            foreignField : "_id",
-                                            as : "userComments",
+                                        $lookup: {
+                                            from: "users",
+                                            localField: "commentOwner",
+                                            foreignField: "_id",
+                                            as: "userComments",
                                         }
                                     },
                                     {
-                                        $addFields : {
+                                        $addFields: {
                                             profilePic: { $arrayElemAt: ["$userComments.profilePic", 0] },
                                             userName: { $arrayElemAt: ["$userComments.userName", 0] },
                                             _id: { $arrayElemAt: ["$userComments._id", 0] }
@@ -335,23 +386,23 @@ const storyViewClient = asyncHandler(async (req, res) => {
                                             "profilePic": 1,
                                             "userName": 1,
                                             "_id": 1,
-                                            "likeCount" : 1,
-                                            "content" : 1
+                                            "likeCount": 1,
+                                            "content": 1
                                         }
                                     }
                                 ]
                             }
                         },
                         {
-                            $addFields : {
+                            $addFields: {
                                 likeCount: {
-                                    $size : "$likes"
+                                    $size: "$likes"
                                 },
-                                commentCount : {
-                                    $size : "$comments"
+                                commentCount: {
+                                    $size: "$comments"
                                 },
-                                viewsCount : {
-                                    $size : "$views"
+                                viewsCount: {
+                                    $size: "$views"
                                 }
                             }
                         }
@@ -359,7 +410,7 @@ const storyViewClient = asyncHandler(async (req, res) => {
                 }
             }
         ])
-        if(!story){
+        if (!story) {
             throw new ApiError(500, "Internal Server Error")
         }
 

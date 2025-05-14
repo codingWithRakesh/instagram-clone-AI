@@ -1,22 +1,62 @@
 import React from 'react'
 import profile from "../assets/images/profile.jpeg"
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useStoryOrPost } from '../contexts/storyOrPostContext';
+import { useUpload } from '../contexts/uploadContext';
+import noProfile from "../assets/images/profileNot.jpg"
+import {shortenText} from "../constants/constant.js"
+import { useNextStory2 } from '../contexts/nextStory2Context.jsx';
+import { useStoryUser } from '../contexts/storyUserContext.jsx';
+import { useAuthStore } from '../store/authStore.js';
+import { useStoryUserCheck } from '../contexts/userStoryCheckContext.jsx';
 
-const Story = ({ isClick }) => {
+const Story = ({ isClick, isUser, value, index }) => {
+    // console.log("value", value != undefined && value)
+    const [currentIndex, setCurrentIndex] = useNextStory2()
+    const location = useLocation();
+    const [, setIsCreatVisible] = useUpload();
+    const [isStoryOrPost, setIsStoryOrPost] = useStoryOrPost();
+    const [userStoriesAll, setUserStoriesAll] = useStoryUser();
+    const [userStoryCheck, setUserStoryCheck] = useStoryUserCheck();
+    const user = useAuthStore((state) => state.user);
+    const navigate = useNavigate();
+    const navigateByLink = () => {
+        setCurrentIndex(index);
+        navigate(`/stories/${value?.userName}/${value != undefined && value?.stories?.[0]?._id}`);
+    }
+
+    const navigateUserLink = () => {
+        setCurrentIndex(0);
+        navigate(`/stories/${user?.userName}/${userStoriesAll?.[0]?.stories?.[0]?._id}`);
+        setUserStoryCheck(true);
+    }
+
+    const uploadStory = () => {
+        setIsCreatVisible((v) => !v);
+        setIsStoryOrPost("story");
+    }
+
+    // console.log("value from story", value != undefined && value?.stories?.[0]?._id)
     return (
-        isClick ? <NavLink to="stories/tarapada_90/adfjahfbdkajd" className="image-item">
-            <div className="sta">
-                <img src={profile} alt="status" />
+        isClick ? <div className="image-item">
+            <div className={`sta ${value || userStoriesAll?.[0]?.stories?.length ? `backgroundLikeInsta` : ""}`}>
+                <img src={value?.profilePic || noProfile} alt="status" onClick={isUser ? navigateUserLink : navigateByLink} />
+                {isUser && <div onClick={uploadStory} className='absolute bottom-0 right-1 h-[1.3rem] w-[1.3rem] bg-white rounded-full  border border-white flex items-center justify-center'>
+                    <svg aria-label="Plus icon" class="x1lliihq x1n2onr6 x173jzuc text-blue-500" fill="currentColor" height="16" role="img" viewBox="0 0 24 24" width="16"><title>Plus icon</title><path d="M12.001.504a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm5 12.5h-4v4a1 1 0 0 1-2 0v-4h-4a1 1 0 1 1 0-2h4v-4a1 1 0 1 1 2 0v4h4a1 1 0 0 1 0 2Z"></path></svg>
+                </div>}
             </div>
-            <div className="wri">tarapada_90</div>
-        </NavLink> 
-        :
-        <div to="stories/tarapada_90/adfjahfbdkajd" className="image-item">
-            <div className="sta">
-                <img src={profile} alt="status" />
-            </div>
-            <div className="wri">tarapada_90</div>
+            <div className="wri">{!isUser ? (value?.userName ? shortenText(value?.userName) : `tarapada_90`) : "Your story"}</div>
         </div>
+            :
+            <div className={`imageCenter ${location.pathname === "/" ? `h-[5rem] w-[5rem]` : ""}`}>
+                <div className={`sta ${!isUser ? `backgroundLikeInsta` : ""}`}>
+                    <img src={value?.profilePic || noProfile} alt="status" onClick={isUser ? uploadStory : ""} />
+                    {isUser && <div onClick={uploadStory} className='absolute bottom-0 right-1 h-[1.3rem] w-[1.3rem] bg-white rounded-full  border border-white flex items-center justify-center'>
+                        <svg aria-label="Plus icon" class="x1lliihq x1n2onr6 x173jzuc text-blue-500" fill="currentColor" height="16" role="img" viewBox="0 0 24 24" width="16"><title>Plus icon</title><path d="M12.001.504a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm5 12.5h-4v4a1 1 0 0 1-2 0v-4h-4a1 1 0 1 1 0-2h4v-4a1 1 0 1 1 2 0v4h4a1 1 0 0 1 0 2Z"></path></svg>
+                    </div>}
+                </div>
+                <div className={`wri ${location.pathname !== "/" ? "overWriteFont text-white" : ""}`}>{!isUser ? (value?.userName ? shortenText(value?.userName) : `tarapada_90`) : "Your story"}</div>
+            </div>
     )
 }
 

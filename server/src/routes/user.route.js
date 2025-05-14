@@ -10,7 +10,8 @@ import {
     currentUser,
     userProfile,
     allFollowers,
-    searchUser
+    searchUser,
+    suggestedUsers
 } from '../controllers/user.controller.js'
 import { verifyLogin } from "../middlewares/user.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
@@ -28,5 +29,6 @@ router.route("/currentUser").get(verifyLogin, currentUser)
 router.route("/userProfile/:userName").get(verifyLogin, userProfile)
 router.route("/allFollowers").get(verifyLogin, allFollowers)
 router.route("/searchUser").post(verifyLogin, searchUser)
+router.route("/suggestedUsers").get(verifyLogin, suggestedUsers)
 
 export default router

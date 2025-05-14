@@ -23,11 +23,11 @@ const MessageBox = () => {
         if (messageValue.trim() === '') return;
         const tempId = Date.now();
         setCurrentMessageId(tempId);
-        setMessagesChat((pre) => [...pre, { 
-            message: messageValue, 
-            receiverId: id, 
+        setMessagesChat((pre) => [...pre, {
+            message: messageValue,
+            receiverId: id,
             senderId: user?._id,
-            tempId 
+            tempId
         }]);
         await setNewMessage(id, messageValue);
         setMessageValue('');
@@ -48,29 +48,33 @@ const MessageBox = () => {
         }
 
         const handleNewMessage = (newMessage) => {
-            // console.log("newMessage from socket", newMessage)
-            setMessagesChat(prev => {
-                if (currentMessageId && newMessage.tempId === currentMessageId) {
-                    return prev;
-                }
+            console.log("newMessage.senderId", newMessage.senderId, id)
+            if (id === newMessage.senderId) {
+                // console.log("newMessage from socket", newMessage)
+                setMessagesChat(prev => {
+                    if (currentMessageId && newMessage.tempId === currentMessageId) {
+                        return prev;
+                    }
 
-                const messageExists = prev.some(msg => 
-                    msg._id === newMessage._id || 
-                    (msg.tempId && msg.tempId === newMessage.tempId)
-                );
-                return messageExists ? prev : [...prev, newMessage];
-            });
+                    const messageExists = prev.some(msg =>
+                        msg._id === newMessage._id ||
+                        (msg.tempId && msg.tempId === newMessage.tempId)
+                    );
+                    return messageExists ? prev : [...prev, newMessage];
+                });
+            }
         };
 
         socket.on("newMessage", handleNewMessage);
 
+
         return () => {
             socket.off("newMessage", handleNewMessage);
         };
-    }, [currentMessageId]);
+    }, [currentMessageId, id]);
 
     const [filteredParticipants] = allMessage?.participantsInfo?.filter((v) => v?._id === id) || []
-    
+
 
     return (
         <div id="secMessage" className=" ">

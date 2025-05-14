@@ -13,6 +13,7 @@ import { useControl } from '../contexts/controlContext.jsx';
 import { useUpload } from '../contexts/uploadContext.jsx';
 import { useEditPost } from '../contexts/editPostContext.jsx';
 import userNotPhoto from "../assets/images/profileNot.jpg"
+import { useStoryOrPost } from '../contexts/storyOrPostContext.jsx';
 
 const ShowPost = () => {
   // const [showPost, setShowPost] = useState("");
@@ -28,6 +29,7 @@ const ShowPost = () => {
   const navigate = useNavigate()
   const [checktab, setChecktab] = useEditPost()
   const [, setIsCreatVisible] = useUpload()
+  const [isStoryOrPost, setIsStoryOrPost] = useStoryOrPost()
 
   const [control, setControl] = useControl()
 
@@ -49,7 +51,7 @@ const ShowPost = () => {
   }
 
   const addComment = async () => {
-    if (comment === "") {
+    if (comment.trim() === "") {
       handleError("Please add a comment");
       return;
     }
@@ -91,6 +93,7 @@ const ShowPost = () => {
       {
         name: "Edit",
         action: async () => {
+          await setIsStoryOrPost("post")
           await setIsCreatVisible(v => !v)
           await setControl(v => !v);
           await navigate(-1);

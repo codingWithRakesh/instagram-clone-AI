@@ -10,6 +10,7 @@ import { NavLink } from 'react-router-dom'
 import userNotPhoto from "../assets/images/profileNot.jpg"
 import axios from 'axios'
 import { handleError } from '../components/ErrorMessage'
+import { useAuthStore } from '../store/authStore'
 
 const Home = () => {
   const [, setIsSwitch] = useSwitch()
@@ -32,7 +33,7 @@ const Home = () => {
     }
   }
   useEffect(() => {
-    fetchAuth()
+    fetchAuth();
   }, []);
   return (
     <div className="second Contaner">

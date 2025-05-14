@@ -8,6 +8,9 @@ import { BsStars } from "react-icons/bs";
 import Tesseract from 'tesseract.js';
 import { RxCross2 } from "react-icons/rx";
 import { useAuthStore } from '../store/authStore.js';
+import { useStoryOrPost } from '../contexts/storyOrPostContext.jsx';
+import storyStore from '../store/storyStore.js';
+import noProfile from "../assets/images/profileNot.jpg"
 
 const EditPost = () => {
     const [postData] = usePostData();
@@ -18,16 +21,19 @@ const EditPost = () => {
     const [isInitialized, setIsInitialized] = useState(false);
     const setAllFollowersUser = useAuthStore((state) => state.setAllFollowersUser);
     const allFollowersUser = useAuthStore((state) => state.allFollowersUser);
+    const [isStoryOrPost, setIsStoryOrPost] = useStoryOrPost();
+    const user = useAuthStore((state) => state.user);
 
     const uploadPost = postStore((state) => state.uploadPost);
     const fetchPostForEdit = postStore((state) => state.fetchPostForEdit);
     // const editPostValue = postStore((state) => state.editPostValue);
     const submitEditPost = postStore((state) => state.submitEditPost);
+    const uploadStory = storyStore((state) => state.uploadStory);
     const [checktab, setChecktab] = useEditPost();
     const [text, setText] = useState('');
     const [editPostValue, setEditPostValue] = useState(null)
 
-    console.log("allFollowersUser",allFollowersUser)
+    // console.log("allFollowersUser",allFollowersUser)
     const allUsers = allFollowersUser || [];
 
     const filteredUserOptions = allUsers.filter(
@@ -99,12 +105,22 @@ const EditPost = () => {
         formData.append('content', localContent);
         formData.append('taggedUsers', JSON.stringify(localTaggedUsers)); // Array of strings
         formData.append('file', postData.file);
-        console.log(localTaggedUsers);
+        // console.log(localTaggedUsers);
         uploadPost(formData);
         setTimeout(() => {
             setChecktab({ value: "done", postId: null });
         }, 500);
     };
+
+    const submitStoryData = async () => {
+        const formData = new FormData();
+        formData.append('text', localContent);
+        formData.append('file', postData.file);
+        uploadStory(formData);
+        setTimeout(() => {
+            setChecktab({ value: "done", postId: null });
+        }, 500);
+    }
 
     const editPostData = async () => {
         const data = {
@@ -128,10 +144,10 @@ const EditPost = () => {
                 <div className="iconBack cursor-pointer">
                     <FaArrowLeft />
                 </div>
-                <p className='font-bold'>Create new post</p>
+                <p className='font-bold'>Create new {isStoryOrPost}</p>
                 <button
                     className='text-[#0095F6] cursor-pointer'
-                    onClick={checktab.postId ? editPostData : submitPostData}
+                    onClick={isStoryOrPost === "post" ? (checktab.postId ? editPostData : submitPostData) : submitStoryData}
                 >
                     Share
                 </button>
@@ -151,9 +167,9 @@ const EditPost = () => {
                 <div className="controlPostEdit w-[21.188rem] h-full border-l border-[#ECF3FF]">
                     <div className="profileBox w-full h-[3rem] marginTop1rem flex items-center justify-start">
                         <div className='h-[1.75rem] w-[1.75rem] rounded-full overflow-hidden marginLeftRight1rem'>
-                            <img src={profile} className='h-full w-full object-cover' alt="" />
+                            <img src={user?.profilePic || noProfile} className='h-full w-full object-cover' alt="" />
                         </div>
-                        <p className='font-bold'>tarapada_389</p>
+                        <p className='font-bold'>{user?.userName || "Unknown"}</p>
                     </div>
 
                     <div className="inputBox w-full h-[10.5rem] border-b border-[#ECF3FF] relative">
@@ -161,14 +177,14 @@ const EditPost = () => {
                             onChange={(e) => setLocalContent(e.target.value)}
                             value={localContent}
                             className="resize-none w-full h-full outline-none paddingleftRight"
-                            placeholder="Enter Post Title"
+                            placeholder={`Enter ${isStoryOrPost.charAt(0).toUpperCase() + isStoryOrPost.slice(1)} Title`}
                         />
                         <div onClick={fetchImageTitle} className='absolute boxShadowAI top-0 bg-white right-[1rem] w-[2rem] h-[2rem] flex items-center justify-center rounded-full cursor-pointer'>
                             <BsStars />
                         </div>
                     </div>
 
-                    <div className="inputBox paddingAll w-full h-[13.5rem] flex flex-col border-b border-[#ECF3FF] outline-none relative px-2 pt-2">
+                    {isStoryOrPost === "post" && <div className="inputBox paddingAll w-full h-[13.5rem] flex flex-col border-b border-[#ECF3FF] outline-none relative px-2 pt-2">
                         <div className='w-full h-[2rem] flex gap-2 marginBottomLL'>
                             <p>Tag: </p>
                             <input
@@ -217,7 +233,7 @@ const EditPost = () => {
                             className="mt-2 resize-none w-full h-[5rem] outline-none text-xs text-gray-500 bg-gray-100 p-2 rounded-md"
                             placeholder="Tagged user IDs"
                         /> */}
-                    </div>
+                    </div>}
                 </div>
             </div>
         </div>

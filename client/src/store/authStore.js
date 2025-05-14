@@ -411,6 +411,31 @@ const useAuthStore = create((set) => ({
             set({ isLoading: false, error: error.message });
             throw error;
         }
+    },
+    allSuggestedUser : [],
+    setAllSuggestedUser : async () => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/suggestedUsers`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false, allSuggestedUser: response.data.data });
+                console.log("from store allSuggestedUser", response.data.data);
+                handleSuccess(response.data.message);
+            } else {
+                set({ isLoading: false });
+            }
+
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
     }
 }));
 

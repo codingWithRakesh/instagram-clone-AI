@@ -302,7 +302,136 @@ const postStore = create((set) => ({
             set({ isLoading: false, error: error.message });
             throw error;
         }
+    },
+    allReelsPage : [],
+    setAllReelsPage : async () => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/allReelsPage`,
+                {
+                    withCredentials: true,
+                }
+            );
+    
+            if (response.status === 200) {
+                set({ isLoading: false });
+                // console.log("allReelsPage",response.data.data)
+                set({ allReelsPage: response.data.data });
+                handleSuccess(response.data.message);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+
+    allReelComment : async (rId, setReelComments) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/commentOnReel/${rId}`,
+                {
+                    withCredentials: true,
+                }
+            );
+    
+            if (response.status === 200) {
+                set({ isLoading: false });
+                // console.log("allReelComment",response.data.data)
+                setReelComments(response.data.data)
+                handleSuccess(response.data.message);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+
+    allReelLike : async (rId, setAllReelsLikeArray) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/reelPostLike/${rId}`,
+                {
+                    withCredentials: true,
+                }
+            );
+    
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+                // console.log("allReelLike",response.data.data?.[0])
+                setAllReelsLikeArray(response.data.data?.[0])
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+
+    allReelSave : async (rId, setIsSaveReel) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/reelSavePost/${rId}`,
+                {
+                    withCredentials: true,
+                }
+            );
+    
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+                // console.log("allReelSave",response.data.data?.[0]?.savedPosts)
+                setIsSaveReel(response.data.data?.[0]?.savedPosts)
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+
+    allPostsHome: async (setAllPosts) => {
+    set({ isLoading: true, error: null });
+    try {
+        const response = await axios.get(
+            `${import.meta.env.VITE_CORS_ORIGIN_SERVER_POST}/allPosts`,
+            {
+                withCredentials: true,
+            }
+        );
+
+        if (response.status === 200) {
+            set({ isLoading: false });
+            
+            // Extract the main posts array
+            const mainPosts = response.data.data[0].posts || [];
+            
+            // Extract posts from followusers
+            const followUsersPosts = response.data.data[0].followusers.flatMap(followUser => {
+                // Each followUser has a user array with one object
+                const user = followUser.user[0];
+                return user.posts || []; // Return posts if they exist, otherwise empty array
+            });
+            
+            // Combine all posts
+            const allPosts = [...mainPosts, ...followUsersPosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            setAllPosts(allPosts);
+            handleSuccess(response.data.message);
+            console.log("Combined posts:", allPosts);
+        }
+    } catch (error) {
+        handleError(error.response?.data?.message || error.message);
+        set({ isLoading: false, error: error.message });
+        throw error;
     }
+},
 
 }));
 

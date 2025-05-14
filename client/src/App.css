@@ -605,12 +605,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: rgba(0,0,0,.05);
 }
 
 .post2 img{
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+}
+
+.post2 video{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .post3 {
@@ -633,12 +640,12 @@
     margin: 0 5px;
 }
 
-.three svg:hover {
+.three .svgClass:hover {
     color: #737373;
     cursor: pointer;
 }
 
-.one svg:hover {
+.one .svgClass:hover {
     color: #737373;
     cursor: pointer;
 }

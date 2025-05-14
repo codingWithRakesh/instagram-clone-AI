@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import profile from "../assets/images/profile.jpeg"
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useParams } from 'react-router-dom'
 import { useSearch } from '../contexts/searchContext'
 import { useNotification } from '../contexts/notificationContext'
 import { useUpload } from '../contexts/uploadContext'
@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import userNotPhoto from "../assets/images/profileNot.jpg"
 import { useAuthStore } from '../store/authStore.js'
 import { IoMenu } from "react-icons/io5";
+import { useStoryOrPost } from '../contexts/storyOrPostContext.jsx'
 
 const Sidebar = () => {
   const [isSerachVisible, setIsSerachVisible] = useSearch()
@@ -20,6 +21,9 @@ const Sidebar = () => {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const fetchAuth = useAuthStore((state) => state.fetchAuth);
+  const {id} = useParams()
+  const [isStoryOrPost, setIsStoryOrPost] = useStoryOrPost()
+  // console.log("check", id)
 
   const currentPath = location.pathname;
   // console.log("currentPath", currentPath)
@@ -67,6 +71,7 @@ const Sidebar = () => {
       setIsCreatVisible(false)
       setForMessage((v) => v == true ? true : false)
     } else if (value == "create") {
+      setIsStoryOrPost("post")
       setIsCreatVisible((v) => !v)
       setIsNotoficationVisible(false)
       setIsSerachVisible(false)
@@ -154,7 +159,7 @@ const Sidebar = () => {
     },
     {
       fun: () => sidebarClick("reels"),
-      path: "/reels",
+      path: `/reels/${id}`,
       code: <svg aria-label="Reels" className="_ab6-" color="rgb(0, 0, 0)" fill="rgb(0, 0, 0)" height="24"
         role="img" viewBox="0 0 24 24" width="24">
         <line
