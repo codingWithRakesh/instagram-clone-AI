@@ -427,3 +427,16 @@ textarea {
     margin-top: .6rem;
     cursor: pointer;
 }
+
+.custom-button {
+  padding: 5px 16px; /* p-2 = 2 * 4px */
+
+}
+
+.paddingInStoryUser{
+    padding: 1rem 1.3rem;
+}
+
+.singleLike{
+    margin-bottom: .8rem;
+}
