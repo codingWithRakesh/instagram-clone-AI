@@ -424,7 +424,7 @@ const postStore = create((set) => ({
             
             setAllPosts(allPosts);
             handleSuccess(response.data.message);
-            console.log("Combined posts:", allPosts);
+            // console.log("Combined posts:", allPosts);
         }
     } catch (error) {
         handleError(error.response?.data?.message || error.message);

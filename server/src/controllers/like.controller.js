@@ -127,6 +127,12 @@ const toggleLikeStory = asyncHandler(async (req, res) => {
 
     if (existingLike) {
         await Like.deleteOne({ _id: existingLike._id });
+        await Notification.deleteOne({
+            user: story.owner,
+            type: "like_story",
+            story: storyId,
+            sender: req.user._id
+        })
         return res.status(200).json(new ApiResponse(200, {}, "Unliked successfully"));
     } else {
         const like = await Like.create({
@@ -135,6 +141,68 @@ const toggleLikeStory = asyncHandler(async (req, res) => {
         });
         if (!like) {
             throw new ApiError(404, "not found")
+        }
+        if (story.owner.toString() !== req.user._id.toString()) {
+            const notification = await Notification.create({
+                user: story.owner,
+                type: "like_story",
+                story: storyId,
+                sender: req.user._id
+            })
+
+            const newNotiFication = await Notification.aggregate([
+                {
+                    $match: {
+                        _id: notification._id
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "user",
+                        foreignField: "_id",
+                        as: "postOwner",
+                        pipeline: [
+                            {
+                                $project: {
+                                    password: 0,
+                                    refreshToken: 0
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "sender",
+                        foreignField: "_id",
+                        as: "postSender",
+                        pipeline: [
+                            {
+                                $project: {
+                                    password: 0,
+                                    refreshToken: 0
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "stories",
+                        localField: "story",
+                        foreignField: "_id",
+                        as: "stories"
+                    }
+                }
+            ])
+
+            if (!newNotiFication || newNotiFication.length === 0) {
+                throw new ApiError(500, "Something went wrong")
+            }
+
+            io.to(story.owner.toString()).emit('newNotification', newNotiFication)
         }
 
         return res.status(200).json(new ApiResponse(200, like, "Liked successfully"));

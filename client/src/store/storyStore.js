@@ -43,7 +43,7 @@ const storyStore = create((set) => ({
             if (response.status === 200) {
                 set({ isLoading: false, allStorys: response.data.data[0].followusers });
                 setStoriesAll(response.data.data[0].followusers);
-                console.log("response.data.storys", response.data.data[0].followusers);
+                // console.log("response.data.storys", response.data.data[0].followusers);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);
@@ -65,7 +65,7 @@ const storyStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                console.log("userStory : ", response.data.data);
+                // console.log("userStory : ", response.data.data);
                 setUserStoriesAll(response.data.data);
             }
         } catch (error) {
@@ -89,7 +89,76 @@ const storyStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                console.log("userStory view : ", response.data.data);
+                // console.log("userStory view : ", response.data.data);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+    showStory : null,
+    setShowStory : async (storyId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_STORY}/storyViewClient/${storyId}`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false, showStory: response.data.data[0].stories[0] });
+                // console.log("userStory view show : ", response.data.data[0].stories[0]);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    deleteStory: async (storyId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.delete(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_STORY}/deleteStory/${storyId}`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
+            }
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    likeStory : async (storyId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_LIKE}/toggleLikeStory/${storyId}`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false });
+                handleSuccess(response.data.message);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);

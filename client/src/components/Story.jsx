@@ -39,8 +39,8 @@ const Story = ({ isClick, isUser, value, index }) => {
     // console.log("value from story", value != undefined && value?.stories?.[0]?._id)
     return (
         isClick ? <div className="image-item">
-            <div className={`sta ${value || userStoriesAll?.[0]?.stories?.length ? `backgroundLikeInsta` : ""}`}>
-                <img src={value?.profilePic || noProfile} alt="status" onClick={isUser ? navigateUserLink : navigateByLink} />
+            <div className={`sta ${value ? `backgroundLikeInsta` : ""}`}>
+                <img src={isUser ? user?.profilePic || noProfile : value?.profilePic || noProfile} alt="status" onClick={isUser ? userStoriesAll?.[0]?.stories?.length ? navigateUserLink : ()=>{} : navigateByLink} />
                 {isUser && <div onClick={uploadStory} className='absolute bottom-0 right-1 h-[1.3rem] w-[1.3rem] bg-white rounded-full  border border-white flex items-center justify-center'>
                     <svg aria-label="Plus icon" class="x1lliihq x1n2onr6 x173jzuc text-blue-500" fill="currentColor" height="16" role="img" viewBox="0 0 24 24" width="16"><title>Plus icon</title><path d="M12.001.504a11.5 11.5 0 1 0 11.5 11.5 11.513 11.513 0 0 0-11.5-11.5Zm5 12.5h-4v4a1 1 0 0 1-2 0v-4h-4a1 1 0 1 1 0-2h4v-4a1 1 0 1 1 2 0v4h4a1 1 0 0 1 0 2Z"></path></svg>
                 </div>}

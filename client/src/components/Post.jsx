@@ -28,7 +28,7 @@ const Post = ({ value }) => {
             like?.likeOwner?.[0]?.userName === user?.userName &&
             like?.postId === value._id
     );
-    console.log("value from post", value, likedByUser);
+    // console.log("value from post", value, likedByUser);
     const [isLike, setisLike] = useState(likedByUser);
 
     const checkSave = value?.savedPosts?.some(

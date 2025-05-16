@@ -16,28 +16,28 @@ const allNotification = asyncHandler(async (req, res) => {
             $project: {
                 userName: 1,
                 profilePic: 1,
-                _id : 1
+                _id: 1
             }
         },
         {
-            $lookup : {
-                from : "notifications",
-                localField : "_id",
-                foreignField : "user",
-                as : "notifications",
-                pipeline : [
+            $lookup: {
+                from: "notifications",
+                localField: "_id",
+                foreignField: "user",
+                as: "notifications",
+                pipeline: [
                     {
                         $lookup: {
                             from: "users",
                             localField: "user",
                             foreignField: "_id",
                             as: "postOwner",
-                            pipeline : [
+                            pipeline: [
                                 {
                                     $project: {
                                         userName: 1,
                                         profilePic: 1,
-                                        _id : 1
+                                        _id: 1
                                     }
                                 },
                             ]
@@ -57,7 +57,7 @@ const allNotification = asyncHandler(async (req, res) => {
                                     }
                                 },
                                 {
-                                    $lookup : {
+                                    $lookup: {
                                         from: "followusers",
                                         localField: "_id",
                                         foreignField: "following",
@@ -77,15 +77,23 @@ const allNotification = asyncHandler(async (req, res) => {
                     },
                     {
                         $lookup: {
+                            from: "stories",
+                            localField: "story",
+                            foreignField: "_id",
+                            as: "stories"
+                        }
+                    },
+                    {
+                        $lookup: {
                             from: "comments",
                             localField: "comment",
                             foreignField: "_id",
                             as: "comment",
-                            pipeline : [
+                            pipeline: [
                                 {
-                                    $project : {
-                                        _id : 1,
-                                        content : 1
+                                    $project: {
+                                        _id: 1,
+                                        content: 1
                                     }
                                 }
                             ]
@@ -95,11 +103,11 @@ const allNotification = asyncHandler(async (req, res) => {
             }
         }
     ])
-    if(!notification){
+    if (!notification) {
         throw new ApiError(500, "Internal server Error")
     }
 
-    return res.status(200).json(new ApiResponse(200,notification,"all notification"))
+    return res.status(200).json(new ApiResponse(200, notification, "all notification"))
 })
 
 export {

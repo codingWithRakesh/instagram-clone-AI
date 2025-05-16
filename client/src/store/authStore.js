@@ -425,7 +425,7 @@ const useAuthStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false, allSuggestedUser: response.data.data });
-                console.log("from store allSuggestedUser", response.data.data);
+                // console.log("from store allSuggestedUser", response.data.data);
                 handleSuccess(response.data.message);
             } else {
                 set({ isLoading: false });

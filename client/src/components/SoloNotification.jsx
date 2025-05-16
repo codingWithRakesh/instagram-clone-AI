@@ -29,15 +29,15 @@ const SoloNotification = ({ value, setNotificationAll }) => {
                 <div className='flex gap-2'>
                     <div className='flex flex-wrap leading-tight flex-1 items-center'>
                         <p className=' marginleftR font-bold'>{value?.postSender?.[0]?.userName}</p>
-                        {value?.type == "like_post" ? `like your post.` : value?.type == "like_comment" ? `like your comment : ${value?.comment?.[0]?.content}` : value?.type == "comment_post" ? `commented on your post` : value?.type == "follow" ? `started following you` : ""}
+                        {value?.type == "like_post" ? `like your post.` : value?.type == "like_comment" ? `like your comment : ${value?.comment?.[0]?.content}` : value?.type == "comment_post" ? `commented on your post` : value?.type == "follow" ? `started following you` : value?.type == "like_story" ? `like your story` : value?.type == "story_view" ? `viewed your story` : value?.type == "unfollow" ? `unfollowed you` : ""}
                         <p className='marginleftR text-[#737373] text-[12px]'><TimeAgo date={value?.createdAt} /></p>
                     </div>
                 </div>
             </div>
-            {value?.type == "like_post" || value?.type == "like_comment" || value?.type == "comment_post" ? <div className='h-[3rem] w-[3rem] rounded-[10px] overflow-hidden'>
-                {value?.post?.[0]?.image ? <img src={value?.post?.[0]?.image} className='w-full h-full object-cover' alt="" />
+            {value?.type == "like_post" || value?.type == "like_comment" || value?.type == "comment_post" || value?.type == "like_story" ||  value?.type == "story_view" ? <div className='h-[3rem] w-[3rem] rounded-[10px] overflow-hidden'>
+                {value?.post?.[0]?.image || value?.stories?.[0]?.image ? <img src={value?.post?.[0]?.image || value?.stories?.[0]?.image} className='w-full h-full object-cover' alt="" />
                     :
-                    <video src={value?.post?.[0]?.video} className='w-full h-full object-cover'></video>
+                    <video src={value?.post?.[0]?.video || value?.stories?.[0]?.video} className='w-full h-full object-cover'></video>
                 }
             </div>
                 :

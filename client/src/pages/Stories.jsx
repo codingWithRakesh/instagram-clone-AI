@@ -42,7 +42,7 @@ export default function Stories() {
     }
   };
 
-  console.log("currentIndex", currentIndex)
+  // console.log("currentIndex", currentIndex)
 
   return (
     <div className="h-screen w-full flex justify-center items-center bg-gray-800 fixed left-0 top-0 overflow-hidden">

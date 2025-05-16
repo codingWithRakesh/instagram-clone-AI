@@ -485,23 +485,23 @@ const suggestedUsers = asyncHandler(async (req, res) => {
                 }
             },
             {
-                $lookup : {
-                    from : "followusers",
-                    localField : "_id",
-                    foreignField : "following",
+                $lookup: {
+                    from: "followusers",
+                    localField: "_id",
+                    foreignField: "following",
                     as: "followData",
-                    pipeline : [
+                    pipeline: [
                         {
-                            $match : {
-                                follower : loggedInUserId
+                            $match: {
+                                follower: loggedInUserId
                             }
                         }
                     ]
                 }
             },
             {
-                $match : {
-                    followData : { $eq : [] },
+                $match: {
+                    followData: { $eq: [] },
                     _id: { $ne: loggedInUserId, $nin: suggestedUserObjectIds }
                 }
             },
@@ -510,16 +510,16 @@ const suggestedUsers = asyncHandler(async (req, res) => {
             },
             { $limit: limitNum },
             {
-                $lookup : {
-                    from : "users",
-                    localField : "_id",
-                    foreignField : "_id",
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
                     as: "user"
                 }
             },
             {
-                $project : {
-                    user : { $arrayElemAt: ["$user", 0] }
+                $project: {
+                    user: { $arrayElemAt: ["$user", 0] }
                 }
             }
         ])

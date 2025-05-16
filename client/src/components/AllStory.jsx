@@ -55,7 +55,7 @@ const AllStory = () => {
     }
   }
 
-  // console.log('Story Array:', storyArray.length);
+  // console.log('userStoriesAll?.[0]', userStoriesAll);
   return (
     <div className="statusDiv">
       <div className="slider-wrapper">
@@ -66,7 +66,7 @@ const AllStory = () => {
             scrollBehavior: 'smooth'
           }}>
           
-          <Story value={userStoriesAll?.[0]} isClick={true} isUser={true} />
+          <Story value={userStoriesAll?.[0]?.stories?.length} isClick={true} isUser={true} />
           {storyArray.map((v, i) => (
             <Story key={i} index={i} isClick={true} value={v} isUser={false} />
           ))}
