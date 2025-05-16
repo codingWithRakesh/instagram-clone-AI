@@ -20,7 +20,15 @@ const storySchema = new Schema({
     viewers : [{
         type : Schema.Types.ObjectId,
         ref : "User"
-    }]
+    }],
+    highLighted : {
+        type : Boolean,
+        default : false
+    },
+    highLightedTitle : {
+        type : String,
+        default : ""
+    },
 },{timestamps : true})
 
 storySchema.plugin(mongooseAggregatePaginate)

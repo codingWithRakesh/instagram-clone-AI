@@ -5,6 +5,8 @@ import { deleteFromCloudinary, getPublicId, uploadOnCloudinary } from '../utils/
 import { User } from "../models/user.model.js";
 import { Story } from "../models/story.model.js";
 import mongoose from "mongoose";
+import { Notification } from "../models/notification.model.js";
+import { io } from "../socket/socket.js";
 
 const createStory = asyncHandler(async (req, res) => {
     const { text } = req.body
@@ -225,6 +227,32 @@ const allStories = asyncHandler(async (req, res) => {
                                             ]
                                         }
                                     }
+                                },
+                                {
+                                    $lookup: {
+                                        from: "likes",
+                                        foreignField: "storyId",
+                                        localField: "_id",
+                                        as: "likes",
+                                        pipeline: [
+                                            {
+                                                $match: {
+                                                    likeOwner: new mongoose.Types.ObjectId(req.user._id)
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    $addFields: {
+                                        isLiked: {
+                                            $cond: {
+                                                if: { $gt: [{ $size: "$likes" }, 0] },
+                                                then: true,
+                                                else: false
+                                            }
+                                        }
+                                    }
                                 }
                             ]
                         }
@@ -248,6 +276,9 @@ const allStories = asyncHandler(async (req, res) => {
 const storyViewers = asyncHandler(async (req, res) => {
     const { storyId } = req.params;
     const userId = req.user._id;
+    if (!mongoose.isValidObjectId(storyId)) {
+        throw new ApiError(400, "Invalid post ID");
+    }
 
     try {
         const story = await Story.findById(storyId);
@@ -259,6 +290,69 @@ const storyViewers = asyncHandler(async (req, res) => {
         if (!story.viewers.includes(userId)) {
             story.viewers.push(userId);
             await story.save({ validateBeforeSave: false });
+
+            if (story.owner.toString() !== req.user._id.toString()) {
+                const notification = await Notification.create({
+                    user: story.owner,
+                    type: "story_view",
+                    story: storyId,
+                    sender: req.user._id
+                })
+
+                const newNotiFication = await Notification.aggregate([
+                    {
+                        $match: {
+                            _id: notification._id
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "user",
+                            foreignField: "_id",
+                            as: "postOwner",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        password: 0,
+                                        refreshToken: 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "sender",
+                            foreignField: "_id",
+                            as: "postSender",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        password: 0,
+                                        refreshToken: 0
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "stories",
+                            localField: "story",
+                            foreignField: "_id",
+                            as: "stories"
+                        }
+                    }
+                ])
+
+                if (!newNotiFication || newNotiFication.length === 0) {
+                    throw new ApiError(500, "Something went wrong")
+                }
+
+                io.to(story.owner.toString()).emit('newNotification', newNotiFication)
+            }
         }
 
         res.status(200).json(new ApiResponse(200, { viewers: story.viewers }, "all viewers"));
@@ -288,9 +382,10 @@ const storyViewClient = asyncHandler(async (req, res) => {
             },
             {
                 $project: {
-                    "password": 0,
-                    "refreshToken": 0,
-                    "__v": 0
+                    "userName": 1,
+                    "fullName": 1,
+                    "_id": 1,
+                    "profilePic": 1,
                 }
             },
             {
@@ -318,10 +413,38 @@ const storyViewClient = asyncHandler(async (req, res) => {
                                 as: "views",
                                 pipeline: [
                                     {
+                                        $lookup: {
+                                            from: "likes",
+                                            localField: "_id",
+                                            foreignField: "likeOwner",
+                                            as: "likes",
+                                            pipeline: [
+                                                {
+                                                    $match: {
+                                                        storyId: new mongoose.Types.ObjectId(storyId)
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        $addFields: {
+                                            isLiked: {
+                                                $cond: {
+                                                    if: { $gt: [{ $size: "$likes" }, 0] },
+                                                    then: true,
+                                                    else: false
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
                                         $project: {
-                                            "password": 0,
-                                            "refreshToken": 0,
-                                            "__v": 0
+                                            "userName": 1,
+                                            "fullName": 1,
+                                            "_id": 1,
+                                            "profilePic": 1,
+                                            "isLiked": 1,
                                         }
                                     },
                                 ]
@@ -351,9 +474,10 @@ const storyViewClient = asyncHandler(async (req, res) => {
                                     },
                                     {
                                         $project: {
-                                            "profilePic": 1,
                                             "userName": 1,
-                                            "_id": 1
+                                            "fullName": 1,
+                                            "_id": 1,
+                                            "profilePic": 1,
                                         }
                                     }
                                 ]
@@ -418,6 +542,201 @@ const storyViewClient = asyncHandler(async (req, res) => {
     } catch (error) {
         throw new ApiError(500, "Internal Server Error")
     }
+})
+
+const allArchiveStory = asyncHandler(async (req, res) => {
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const story = await User.aggregate([
+        {
+            $match: { userName: req.user.userName }
+        },
+        {
+            $project: {
+                "userName": 1,
+                "fullName": 1,
+                "profilePic": 1,
+                "_id": 1
+            }
+        },
+        {
+            $lookup: {
+                from: "stories",
+                localField: "_id",
+                foreignField: "owner",
+                as: "stories",
+                pipeline: [
+                    {
+                        $match: { createdAt: { $lt: twentyFourHoursAgo } }
+                    },
+                    {
+                        $addFields: {
+                            url: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "$video",
+                                    "$image"
+                                ]
+                            },
+                            type: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "video",
+                                    "image"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]);
+
+    if (!story || story.length === 0) {
+        throw new ApiError(404, "not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, story, "userStory"));
+})
+
+const allHighLightedStory = asyncHandler(async (req, res) => {
+    const {userName} = req.params
+    if (!userName) {
+        throw new ApiError(400, "bad request")
+    }
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const story = await User.aggregate([
+        {
+            $match: { userName: userName }
+        },
+        {
+            $project: {
+                "userName": 1,
+                "fullName": 1,
+                "profilePic": 1,
+                "_id": 1
+            }
+        },
+        {
+            $lookup: {
+                from: "stories",
+                localField: "_id",
+                foreignField: "owner",
+                as: "stories",
+                pipeline: [
+                    {
+                        $match: {
+                            createdAt: { $lt: twentyFourHoursAgo },
+                            isHighLight: true
+                        }
+                    },
+                    {
+                        $addFields: {
+                            url: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "$video",
+                                    "$image"
+                                ]
+                            },
+                            type: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "video",
+                                    "image"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]);
+
+    if (!story || story.length === 0) {
+        throw new ApiError(404, "not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, story, "userStory"));
+})
+
+const allUnHighLightedStory = asyncHandler(async (req, res) => {
+    const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const story = await User.aggregate([
+        {
+            $match: { userName: req.user.userName }
+        },
+        {
+            $project: {
+                "userName": 1,
+                "fullName": 1,
+                "profilePic": 1,
+                "_id": 1
+            }
+        },
+        {
+            $lookup: {
+                from: "stories",
+                localField: "_id",
+                foreignField: "owner",
+                as: "stories",
+                pipeline: [
+                    {
+                        $match: {
+                            createdAt: { $lt: twentyFourHoursAgo },
+                            isHighLight: false
+                        }
+                    },
+                    {
+                        $addFields: {
+                            url: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "$video",
+                                    "$image"
+                                ]
+                            },
+                            type: {
+                                $cond: [
+                                    { $ne: ["$video", ""] },
+                                    "video",
+                                    "image"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]);
+
+    if (!story || story.length === 0) {
+        throw new ApiError(404, "not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, story, "userStory"));
+})
+
+const doHighLightStory = asyncHandler(async (req, res) => {
+    const { storyId } = req.params
+    const {title} = req.body
+    if (!title) {
+        throw new ApiError(400, "title is required")
+    }
+    if (!storyId) {
+        throw new ApiError(400, "bad request")
+    }
+    const story = await Story.findById(storyId)
+    if (!story) {
+        throw new ApiError(404, "not found")
+    }
+
+    story.isHighLight = true;
+    story.highLightedTitle = title;
+    await story.save({ validateBeforeSave: false })
+    return res.status(200).json(new ApiResponse(200, story, "story highlight successfully"))
 })
 
 export {
