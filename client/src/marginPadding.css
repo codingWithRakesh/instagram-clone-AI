@@ -154,7 +154,7 @@ textarea {
     padding: 0 1rem;
 }
 
-.paddingAll{
+.paddingAll {
     padding: 1rem;
 }
 
@@ -361,7 +361,7 @@ textarea {
     }
 }
 
-.paddingForSerchUser{
+.paddingForSerchUser {
     padding: 0 .5rem;
 }
 
@@ -369,15 +369,15 @@ textarea {
     padding: .5rem 0;
 } */
 
-.suggasonUL li{
+.suggasonUL li {
     padding: .7rem 1rem;
 }
 
-.paddingInTagusre{
+.paddingInTagusre {
     padding: .3rem .5rem;
 }
 
-.marginBottomLL{
+.marginBottomLL {
     margin-bottom: .8rem;
 }
 
@@ -386,23 +386,23 @@ textarea {
     transition: background-color 0.3s ease;
 }
 
-.padding75point{
+.padding75point {
     padding: 1rem 0;
 }
 
-.paddingTopBottom{
+.paddingTopBottom {
     padding: 1rem 1.8rem;
 }
 
-.marginTop25{
+.marginTop25 {
     margin-top: .25rem;
 }
 
-.marginLeft1rem{
+.marginLeft1rem {
     margin-left: 1rem;
 }
 
-.paddingTop5Left1{
+.paddingTop5Left1 {
     padding: .8rem 1.5rem;
     display: flex;
     align-items: center;
@@ -410,33 +410,66 @@ textarea {
     /* border: 1px solid #e3e3e3; */
 }
 
-.marBottomInComment{
+.marBottomInComment {
     margin-bottom: .75rem;
 }
 
-.paddinInInputBox{
+.paddinInInputBox {
     padding: .2rem;
     padding-right: .5rem;
 }
 
-.boxShadowCommentBox{
+.boxShadowCommentBox {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.marginTop1rem{
+.marginTop1rem {
     margin-top: .6rem;
     cursor: pointer;
 }
 
 .custom-button {
-  padding: 5px 16px; /* p-2 = 2 * 4px */
+    padding: 5px 16px;
+    /* p-2 = 2 * 4px */
 
 }
 
-.paddingInStoryUser{
+.paddingInStoryUser {
     padding: 1rem 1.3rem;
 }
 
-.singleLike{
+.singleLike {
     margin-bottom: .8rem;
+}
+
+.paddingInTheArchive {
+    padding: 2rem 5rem;
+}
+
+.showStoriesContainer {
+    min-height: 70vh;
+}
+
+.paddingTimeZone {
+    padding: .2rem;
+}
+
+.margin20Px {
+    margin: 20px;
+}
+
+.padding4px12px {
+    padding: 4px 12px;
+}
+
+.selectStoryArchive {
+    min-height: 0;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    padding: .75rem;
+}
+
+.selectStoryArchive::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari */
 }
