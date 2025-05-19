@@ -8,6 +8,8 @@ import noProfile from "../assets/images/profileNot.jpg"
 import { useAuthStore } from '../store/authStore.js'
 import Spinner from './Spinner.jsx'
 import { MdDelete, MdDeleteOutline } from "react-icons/md";
+import { BsStars } from 'react-icons/bs'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const EditProfileBox = () => {
 
@@ -79,6 +81,45 @@ const EditProfileBox = () => {
         await fetchAuth();
     }
 
+    const fetchImageTitle = async () => {
+        try {
+            const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API);
+            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+            const prompt = `
+                    You are a social media expert. Randomly pick one style from the list below and generate only one Instagram bio in that style. Output only the bio — no extra text, no style name, no follow-up.
+                    Styles:
+                    1. Attitude  
+                    2. Cute  
+                    3. Motivational  
+                    4. Funny  
+                    5. Aesthetic  
+                    6. Savage  
+                    7. Professional  
+                    8. Romantic  
+                    9. Traveler  
+                    10. Gamer/Techie
+    
+                    The bio must:
+                    - Be under 150 characters
+                    - Match the chosen style
+                    - Be creative and original
+                    - Use emojis only if they enhance the tone
+    
+                    IMPORTANT: Only output the bio text. Do not mention the style or anything else.
+                `;
+            const result = await model.generateContent(prompt);
+            // console.log("AI response:", result.response.text());
+            setUpdateProfile((prev) => ({ ...prev, bio: result.response.text() }));
+            // setTitle(result.response.text());
+        } catch (error) {
+            console.error("Error generating AI response:", error);
+            handleError("Failed to get a response.");
+            // setTitle("Failed to get a response.");
+        }
+
+    };
+
     return (
         <div className="navListDivEdit w-[70%] min-h-screen bg-white absolute right-0 top-0">
             <div className="headingTitleEdit text-2xl font-bold">
@@ -112,7 +153,12 @@ const EditProfileBox = () => {
 
                 <div className="websitesjdh w-full h-[8rem]">
                     <div className="nameTitleWeb font-bold text-[1.2rem]">Bio</div>
-                    <textarea name='bio' value={updateProfile.bio} onChange={handleChange} type="text" className='border border-[#dbdbdb] w-full h-[4.5rem] outline-none rounded-[10px] resize-none' ></textarea>
+                    <div className='relative'>
+                        <textarea name='bio' value={updateProfile.bio} onChange={handleChange} type="text" className='border border-[#dbdbdb] w-full h-[4.5rem] outline-none rounded-[10px] resize-none' ></textarea>
+                        <div onClick={fetchImageTitle} className='absolute boxShadowAI top-[.4rem] bg-white right-[.5rem] w-[2rem] h-[2rem] flex items-center justify-center rounded-full cursor-pointer'>
+                            <BsStars />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="websitesjdh w-full h-[6rem]">

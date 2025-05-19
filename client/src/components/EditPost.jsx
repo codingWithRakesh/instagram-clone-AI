@@ -11,6 +11,8 @@ import { useAuthStore } from '../store/authStore.js';
 import { useStoryOrPost } from '../contexts/storyOrPostContext.jsx';
 import storyStore from '../store/storyStore.js';
 import noProfile from "../assets/images/profileNot.jpg"
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { handleError } from './ErrorMessage.jsx';
 
 const EditPost = () => {
     const [postData] = usePostData();
@@ -97,7 +99,42 @@ const EditPost = () => {
     }, [postData.file]);
 
     const fetchImageTitle = async () => {
-        // Gemini AI integration placeholder
+       try {
+            const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API);
+            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+            const prompt = `
+                You are a social media expert. Randomly pick one style from the list below and generate only one Instagram bio in that style. Output only the bio — no extra text, no style name, no follow-up.
+                Styles:
+                1. Attitude  
+                2. Cute  
+                3. Motivational  
+                4. Funny  
+                5. Aesthetic  
+                6. Savage  
+                7. Professional  
+                8. Romantic  
+                9. Traveler  
+                10. Gamer/Techie
+
+                The bio must:
+                - Be under 150 characters
+                - Match the chosen style
+                - Be creative and original
+                - Use emojis only if they enhance the tone
+
+                IMPORTANT: Only output the bio text. Do not mention the style or anything else.
+            `;
+            const result = await model.generateContent(prompt);
+            // console.log("AI response:", result.response.text());
+            setLocalContent(result.response.text());
+            // setTitle(result.response.text());
+        } catch (error) {
+            console.error("Error generating AI response:", error);
+            handleError("Failed to get a response.");
+            // setTitle("Failed to get a response.");
+        }
+
     };
 
     const submitPostData = async () => {
