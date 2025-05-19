@@ -9,6 +9,7 @@ import { useNextStory2 } from '../contexts/nextStory2Context.jsx';
 import { useStoryUser } from '../contexts/storyUserContext.jsx';
 import { useAuthStore } from '../store/authStore.js';
 import { useStoryUserCheck } from '../contexts/userStoryCheckContext.jsx';
+import storyStore from '../store/storyStore.js';
 
 const Story = ({ isClick, isUser, value, index }) => {
     // console.log("value", value != undefined && value)
@@ -19,16 +20,20 @@ const Story = ({ isClick, isUser, value, index }) => {
     const [userStoriesAll, setUserStoriesAll] = useStoryUser();
     const [userStoryCheck, setUserStoryCheck] = useStoryUserCheck();
     const user = useAuthStore((state) => state.user);
+    const userStorys = storyStore((state) => state.userStorys);
+
     const navigate = useNavigate();
     const navigateByLink = () => {
         setCurrentIndex(index);
         navigate(`/stories/${value?.userName}/${value != undefined && value?.stories?.[0]?._id}`);
+        setUserStoryCheck("friendStories");
     }
 
     const navigateUserLink = () => {
+        userStorys(user.userName,setUserStoriesAll);
         setCurrentIndex(0);
         navigate(`/stories/${user?.userName}/${userStoriesAll?.[0]?.stories?.[0]?._id}`);
-        setUserStoryCheck(true);
+        setUserStoryCheck("userStories");
     }
 
     const uploadStory = () => {

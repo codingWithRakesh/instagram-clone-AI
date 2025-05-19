@@ -23,7 +23,7 @@ const ProfileButtons = ({ selectedUser }) => {
 
     const sendMessage = () => {
         const { fullName, profilePic, userName, _id } = selectedUser;
-        console.log("profile", { fullName, profilePic, userName, _id });
+        // console.log("profile", { fullName, profilePic, userName, _id });
     
         setChatList((prevChatList) => {
             const alreadyInChat = prevChatList.some(user => user._id === _id);
@@ -40,7 +40,7 @@ const ProfileButtons = ({ selectedUser }) => {
         return (
             <>
                 <NavLink to="/accounts/edit" className="esitPro">Edit Profile</NavLink>
-                <button className="viewArch">View Archive</button>
+                <NavLink to="/archive/stories" className="esitPro">View Archive</NavLink>
             </>
         );
     }

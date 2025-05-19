@@ -38,7 +38,7 @@ const CommentSReel = ({ setIsCrose }) => {
       content: commentInput,
     };
 
-    console.log("data", data);
+    // console.log("data", data);
 
     await uploadComment(data)
     await allReelComment(id, setReelComments)

@@ -41,14 +41,14 @@ const MessageBox = () => {
 
     useEffect(() => {
         if (!socket) {
-            handleError("socket is not connected");
+            // handleError("socket is not connected");
             return;
         } else {
-            handleSuccess("socket is connected");
+            // handleSuccess("socket is connected");
         }
 
         const handleNewMessage = (newMessage) => {
-            console.log("newMessage.senderId", newMessage.senderId, id)
+            // console.log("newMessage.senderId", newMessage.senderId, id)
             if (id === newMessage.senderId) {
                 // console.log("newMessage from socket", newMessage)
                 setMessagesChat(prev => {

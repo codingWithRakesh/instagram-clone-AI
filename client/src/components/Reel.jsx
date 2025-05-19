@@ -39,7 +39,7 @@ const Reel = ({ id, isActive, valueReel }) => {
             if (videoRef.current) {
                 // Restore playback position from ref
                 videoRef.current.currentTime = playbackPositionRef.current;
-                videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+                videoRef.current.play().catch(e => console.error("Autoplay prevented:", e));
             }
         } else {
             if (videoRef.current) {
@@ -54,7 +54,7 @@ const Reel = ({ id, isActive, valueReel }) => {
     const videoPlayPause = () => {
         if (videoRef.current) {
             if (videoRef.current.paused) {
-                videoRef.current.play().catch(e => console.log("Autoplay prevented:", e));
+                videoRef.current.play().catch(e => console.error("Autoplay prevented:", e));
                 setIsVideoPlay(true);
             } else {
                 playbackPositionRef.current = videoRef.current.currentTime;
@@ -90,7 +90,7 @@ const Reel = ({ id, isActive, valueReel }) => {
     function changeBorderNav() {
         if (window.scrollY >= 100) {
             setIsCrose(false)
-            console.log("this is for scroll")
+            // console.log("this is for scroll")
         }
     }
 

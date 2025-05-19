@@ -94,10 +94,10 @@ const LoginBox = () => {
                         fields="name,email,birthday,picture.width(500).height(500),gender"
                         scope="public_profile,email,user_birthday,user_gender"
                         onSuccess={(response) => {
-                            console.log('Login Success!', response);
+                            handleSuccess('Login Success!', response);
                         }}
                         onFail={(error) => {
-                            console.log('Login Failed!', error);
+                            handleError('Login Failed!', error);
                         }}
                         onProfileSuccess={loginWithFacebook}
                         className=" cursor-pointer"

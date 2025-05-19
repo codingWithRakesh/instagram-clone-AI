@@ -270,7 +270,7 @@ const allStories = asyncHandler(async (req, res) => {
         throw new ApiError(500, "something went wrong")
     }
 
-    return res.status(200).json(new ApiResponse(200, stories, "all stories"))
+    return res.status(200).json(new ApiResponse(200, stories, "all stories")) 
 })
 
 const storyViewers = asyncHandler(async (req, res) => {
@@ -628,7 +628,7 @@ const allHighLightedStory = asyncHandler(async (req, res) => {
                     {
                         $match: {
                             createdAt: { $lt: twentyFourHoursAgo },
-                            isHighLight: true
+                            highLighted: true
                         }
                     },
                     {
@@ -686,7 +686,7 @@ const allUnHighLightedStory = asyncHandler(async (req, res) => {
                     {
                         $match: {
                             createdAt: { $lt: twentyFourHoursAgo },
-                            isHighLight: false
+                            highLighted: false
                         }
                     },
                     {
@@ -733,10 +733,24 @@ const doHighLightStory = asyncHandler(async (req, res) => {
         throw new ApiError(404, "not found")
     }
 
-    story.isHighLight = true;
+    story.highLighted = true;
     story.highLightedTitle = title;
     await story.save({ validateBeforeSave: false })
     return res.status(200).json(new ApiResponse(200, story, "story highlight successfully"))
+})
+
+const doUnHighLightStory = asyncHandler(async (req, res) => {
+    const { storyId } = req.params
+    if (!storyId) {
+        throw new ApiError(400, "bad request")
+    }
+    const story = await Story.findById(storyId)
+    if (!story) {
+        throw new ApiError(404, "not found")
+    }
+    story.highLighted = false;
+    await story.save({ validateBeforeSave: false })
+    return res.status(200).json(new ApiResponse(200, story, "story unhighlight successfully"))
 })
 
 export {
@@ -746,5 +760,11 @@ export {
     showStory,
     allStories,
     storyViewers,
-    storyViewClient
+    storyViewClient,
+
+    allArchiveStory,
+    allHighLightedStory,
+    allUnHighLightedStory,
+    doHighLightStory,
+    doUnHighLightStory
 }

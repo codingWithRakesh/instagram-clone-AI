@@ -6,7 +6,13 @@ import {
     showStory,
     allStories,
     storyViewers,
-    storyViewClient
+    storyViewClient,
+
+    allArchiveStory,
+    allHighLightedStory,
+    allUnHighLightedStory,
+    doHighLightStory,
+    doUnHighLightStory
 } from '../controllers/story.controller.js'
 import { verifyLogin } from "../middlewares/user.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
@@ -21,5 +27,10 @@ router.route("/allStories").get(verifyLogin, allStories)
 router.route("/storyViewers/:storyId").get(verifyLogin, storyViewers)
 router.route("/storyViewClient/:storyId").get(verifyLogin, storyViewClient)
 
+router.route("/allArchiveStory").get(verifyLogin, allArchiveStory)
+router.route("/allHighLightedStory/:userName").get(verifyLogin, allHighLightedStory)
+router.route("/allUnHighLightedStory").get(verifyLogin, allUnHighLightedStory)
+router.route("/doHighLightStory/:storyId").patch(verifyLogin, doHighLightStory)
+router.route("/doUnHighLightStory/:storyId").patch(verifyLogin, doUnHighLightStory)
 
 export default router;

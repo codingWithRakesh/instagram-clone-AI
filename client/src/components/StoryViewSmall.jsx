@@ -13,7 +13,7 @@ const StoryViewSmall = ({ opacity, isEmpty, userIndex, data }) => {
     setCurrentIndex(userIndex)
     setStartingIndex(0)
   }
-  console.log("data?.stories?.[0]", data?.stories?.[0].type)
+  // console.log("data?.stories?.[0]", data?.stories?.[0].type)
   return (
     !isEmpty ? <div onClick={clickUser} className={`h-[22.25rem] w-[12.5rem] relative flex items-center justify-center text-white rounded-[10px] overflow-hidden`}>
       {data?.stories?.[0].type === "video" ? <video src={data?.stories?.[0].url} style={{opacity : `${opacity - 5}%` }} className='w-full h-full object-cover'></video> : <img src={data?.stories?.[0].url} style={{opacity : `${opacity - 5}%` }} className='w-full h-full object-cover' />}

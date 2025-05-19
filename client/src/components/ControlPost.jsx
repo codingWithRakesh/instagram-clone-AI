@@ -3,7 +3,7 @@ import { useControl } from '../contexts/controlContext'
 
 const ControlPost = () => {
     const [control, setControl] = useControl()
-    console.log("control", control.data)
+    // console.log("control", control.data)
   return (
     <div className='w-[24rem] overflow-hidden bg-white rounded-2xl flex flex-col items-start justify-start'>
         {

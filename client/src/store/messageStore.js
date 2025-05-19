@@ -32,7 +32,7 @@ const messageStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false, newMessage: response.data });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
             // console.log("fetchPost end");
         } catch (error) {
@@ -54,7 +54,7 @@ const messageStore = create((set) => ({
             if (response.status === 200) {
                 set({ isLoading: false, allMessage: response.data.data[0] });
                 setMessagesChat((response.data?.data?.[0]?.messages || []).slice().reverse());
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
             // console.log("fetchPost end");
         } catch (error) {
@@ -82,7 +82,7 @@ const messageStore = create((set) => ({
                     );
                     return [...prv, ...newItems];
                 });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
             // console.log("fetchPost end");
         } catch (error) {

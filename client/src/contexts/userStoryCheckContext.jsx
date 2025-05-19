@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from 'react'
 export const UserStoryCheckContext = createContext()
 
 const UserStoryCheckContextProvider = ({ children }) => {
-    const [userStoryCheck, setUserStoryCheck] = useState(false)
+    const [userStoryCheck, setUserStoryCheck] = useState("userStories")
     return (
         <UserStoryCheckContext.Provider value={[userStoryCheck, setUserStoryCheck]}>
             {children}

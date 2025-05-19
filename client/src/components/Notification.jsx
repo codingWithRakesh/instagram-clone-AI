@@ -16,14 +16,14 @@ const Notification = () => {
 
     useEffect(() => {
         if (!socket) {
-            handleError("socket is not connected");
+            // handleError("socket is not connected");
             return;
         } else {
-            handleSuccess("socket is connected");
+            // handleSuccess("socket is connected");
         }
 
         const handleNewMessage = (newMessage) => {
-            console.log("socket message", newMessage?.[0])
+            // console.log("socket message", newMessage?.[0])
             setNotificationAll((prev) => [newMessage?.[0], ...prev])
         };
 

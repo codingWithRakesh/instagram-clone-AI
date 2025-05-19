@@ -21,7 +21,7 @@ const postStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false, showPost: response.data.data[0] });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
             // console.log("fetchPost end");
         } catch (error) {
@@ -47,7 +47,7 @@ const postStore = create((set) => ({
             if (response.status === 200) {
                 set({ isLoading: false, editPostValue: response.data.data[0] });
                 setEditPostValue(response.data.data[0])
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
             // console.log("fetchPost end");
         } catch (error) {
@@ -120,7 +120,7 @@ const postStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);
@@ -144,7 +144,7 @@ const postStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);
@@ -168,7 +168,7 @@ const postStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);
@@ -192,7 +192,7 @@ const postStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ isLoading: false });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);
@@ -260,7 +260,7 @@ const postStore = create((set) => ({
         
             if (response.status === 200) {
                 set({ isLoading: false, userPosts: response.data.data[0] });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
             // console.log("all posts",response.data.data[0])
         } catch (error) {
@@ -282,7 +282,7 @@ const postStore = create((set) => ({
     
             if (response.status === 200) {
                 set({ isLoading: false });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
     
                 const allPosts = response.data.data;
     
@@ -318,7 +318,7 @@ const postStore = create((set) => ({
                 set({ isLoading: false });
                 // console.log("allReelsPage",response.data.data)
                 set({ allReelsPage: response.data.data });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);
@@ -341,7 +341,7 @@ const postStore = create((set) => ({
                 set({ isLoading: false });
                 // console.log("allReelComment",response.data.data)
                 setReelComments(response.data.data)
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
         } catch (error) {
             handleError(error.response?.data?.message || error.message);
@@ -362,7 +362,7 @@ const postStore = create((set) => ({
     
             if (response.status === 200) {
                 set({ isLoading: false });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
                 // console.log("allReelLike",response.data.data?.[0])
                 setAllReelsLikeArray(response.data.data?.[0])
             }
@@ -385,7 +385,7 @@ const postStore = create((set) => ({
     
             if (response.status === 200) {
                 set({ isLoading: false });
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
                 // console.log("allReelSave",response.data.data?.[0]?.savedPosts)
                 setIsSaveReel(response.data.data?.[0]?.savedPosts)
             }
@@ -423,7 +423,7 @@ const postStore = create((set) => ({
             const allPosts = [...mainPosts, ...followUsersPosts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             
             setAllPosts(allPosts);
-            handleSuccess(response.data.message);
+            // handleSuccess(response.data.message);
             // console.log("Combined posts:", allPosts);
         }
     } catch (error) {

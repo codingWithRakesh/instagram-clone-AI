@@ -29,7 +29,7 @@ const storySchema = new Schema({
         type : String,
         default : ""
     },
-},{timestamps : true})
+},{timestamps : true}) 
 
 storySchema.plugin(mongooseAggregatePaginate)
 export const Story = model("Story",storySchema)

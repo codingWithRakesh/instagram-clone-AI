@@ -46,6 +46,8 @@ import StoryOrPostContextProvider from './contexts/storyOrPostContext.jsx'
 import StoryContextProvider from './contexts/storyContext.jsx'
 import StoryUserContextProvider from './contexts/storyUserContext.jsx'
 import UserStoryCheckContextProvider from './contexts/userStoryCheckContext.jsx'
+import Archive from './pages/Archive.jsx'
+import HighLightContextProvider from './contexts/highLightContext.jsx'
 
 const postShow = {
   path: "p/:pId",
@@ -139,6 +141,14 @@ const router = createBrowserRouter([
         )
       },
       {
+        path: '/archive/stories',
+        element: (
+          <ProtectRoute>
+            <Archive />
+          </ProtectRoute>
+        )
+      },
+      {
         path: '/stories/:userId/:storyId',
         element: (
           <ProtectRoute>
@@ -172,47 +182,49 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <UserStoryCheckContextProvider>
-          <StoryUserContextProvider>
-            <StoryContextProvider>
-              <StoryOrPostContextProvider>
-                <CroseRCContextProvider>
-                  <MuteContextProvider>
-                    <MessagesContextProvider>
-                      <ChatListContextProvider>
-                        <PostDataContextProvider>
-                          <EditPostContextProvider>
-                            <ControlContextProvider>
-                              <StoryStartContextProvider>
-                                <NextStory2ContextProvider>
-                                  <SignUpContextProvider>
-                                    <NextStoryContextProvider>
-                                      <SwitchContextProvider>
-                                        <MoreContextProvider>
-                                          <SearchContextProvider>
-                                            <UploadContextProvider>
-                                              <NotificationContextProvider>
-                                                <RouterProvider router={router} />
-                                              </NotificationContextProvider>
-                                            </UploadContextProvider>
-                                          </SearchContextProvider>
-                                        </MoreContextProvider>
-                                      </SwitchContextProvider>
-                                    </NextStoryContextProvider>
-                                  </SignUpContextProvider>
-                                </NextStory2ContextProvider>
-                              </StoryStartContextProvider>
-                            </ControlContextProvider>
-                          </EditPostContextProvider>
-                        </PostDataContextProvider>
-                      </ChatListContextProvider>
-                    </MessagesContextProvider>
-                  </MuteContextProvider>
-                </CroseRCContextProvider>
-              </StoryOrPostContextProvider>
-            </StoryContextProvider>
-          </StoryUserContextProvider>
-        </UserStoryCheckContextProvider>
+        <HighLightContextProvider>
+          <UserStoryCheckContextProvider>
+            <StoryUserContextProvider>
+              <StoryContextProvider>
+                <StoryOrPostContextProvider>
+                  <CroseRCContextProvider>
+                    <MuteContextProvider>
+                      <MessagesContextProvider>
+                        <ChatListContextProvider>
+                          <PostDataContextProvider>
+                            <EditPostContextProvider>
+                              <ControlContextProvider>
+                                <StoryStartContextProvider>
+                                  <NextStory2ContextProvider>
+                                    <SignUpContextProvider>
+                                      <NextStoryContextProvider>
+                                        <SwitchContextProvider>
+                                          <MoreContextProvider>
+                                            <SearchContextProvider>
+                                              <UploadContextProvider>
+                                                <NotificationContextProvider>
+                                                  <RouterProvider router={router} />
+                                                </NotificationContextProvider>
+                                              </UploadContextProvider>
+                                            </SearchContextProvider>
+                                          </MoreContextProvider>
+                                        </SwitchContextProvider>
+                                      </NextStoryContextProvider>
+                                    </SignUpContextProvider>
+                                  </NextStory2ContextProvider>
+                                </StoryStartContextProvider>
+                              </ControlContextProvider>
+                            </EditPostContextProvider>
+                          </PostDataContextProvider>
+                        </ChatListContextProvider>
+                      </MessagesContextProvider>
+                    </MuteContextProvider>
+                  </CroseRCContextProvider>
+                </StoryOrPostContextProvider>
+              </StoryContextProvider>
+            </StoryUserContextProvider>
+          </UserStoryCheckContextProvider>
+        </HighLightContextProvider>
       </PersistGate>
     </Provider>
     <ToastContainer />

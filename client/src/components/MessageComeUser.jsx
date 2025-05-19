@@ -16,14 +16,14 @@ const MessageComeUser = ({ value }) => {
 
     useEffect(() => {
         if (!socket) {
-            handleError("socket is not connected");
+            // handleError("socket is not connected");
             return;
         } else {
-            handleSuccess("socket is connected");
+            // handleSuccess("socket is connected");
         }
 
         const handleNewMessage = (newMessage) => {
-            console.log("newMessage.senderId", newMessage.senderId, id)
+            // console.log("newMessage.senderId", newMessage.senderId, id)
             if (id !== newMessage.senderId && value._id === newMessage.senderId) {
                 setIsNewMessage(true);
                 // console.log("newMessage from socket", newMessage)

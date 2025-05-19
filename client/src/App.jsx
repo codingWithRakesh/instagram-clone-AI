@@ -25,6 +25,8 @@ import ControlPost from './components/ControlPost.jsx';
 import { useControl } from './contexts/controlContext.jsx';
 import { useEditPost } from './contexts/editPostContext.jsx';
 import { messageStore } from './store/messageStore.js';
+import { useHighLight } from './contexts/highLightContext.jsx';
+import UploadHighLight from './components/UploadHighLight.jsx';
 
 function App() {
   const user = useAuthStore((state) => state.user);
@@ -42,6 +44,7 @@ function App() {
 
   const [isUserJoined, setIsUserJoined] = useState(false)
   const fetchAuth = useAuthStore((state) => state.fetchAuth);
+  const [isHighLight, setIsHighLight] = useHighLight()
 
   const socketRef = useRef(null);
 
@@ -55,7 +58,7 @@ function App() {
     setSocket(socket);
 
     socket.on('connect', () => {
-      console.log('Socket connected:', socket.id);
+      // console.log('Socket connected:', socket.id);
     });
 
     socket.on('online-users', (users) => {
@@ -67,7 +70,7 @@ function App() {
     });
 
     socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id);
+      // console.log('User disconnected:', socket.id);
     });
 
 
@@ -104,6 +107,7 @@ function App() {
       {control.isOn && <BlurBox checkCrose={true} fun={() => { }}>
         <ControlPost />
       </BlurBox>}
+      {isHighLight && <BlurBox fun={() => setIsHighLight("")}> <UploadHighLight /> </BlurBox>}
       <ToastContainer />
     </div>
       :

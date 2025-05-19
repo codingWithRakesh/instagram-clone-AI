@@ -79,10 +79,10 @@ const SignUpMainInput = ({ inputsD }) => {
           fields="name,email,birthday,picture,gender"
           scope="public_profile,email,user_birthday,user_gender"
           onSuccess={(response) => {
-            console.log('Login Success!', response);
+            handleSuccess('Login Success!', response);
           }}
           onFail={(error) => {
-            console.log('Login Failed!', error);
+            handleError('Login Failed!', error);
           }}
           onProfileSuccess={loginWithFacebook}
           className=" cursor-pointer"

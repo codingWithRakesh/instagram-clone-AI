@@ -1,4 +1,5 @@
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import { handleSuccess } from './ErrorMessage';
 
 const GenerateBirthBox = forwardRef(({ inputsD }, ref) => {
     const [signUpDetails, setSignUpDetails] = inputsD;
@@ -22,7 +23,7 @@ const GenerateBirthBox = forwardRef(({ inputsD }, ref) => {
     useImperativeHandle(ref, () => ({
         logBirthDate: () => {
           if (!selectedMonth || !selectedDate || !selectedYear) {
-            console.log('Please select all fields');
+            handleSuccess('Please select all fields');
             return null;
           }
       

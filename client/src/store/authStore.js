@@ -23,7 +23,7 @@ const useAuthStore = create((set) => ({
             if (response.status === 200) {
                 set({ user: response.data.data, isAuthenticated: true });
                 // console.log("from store", response.data.data);
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             } else {
                 set({ user: null, isAuthenticated: false });
             }
@@ -46,8 +46,8 @@ const useAuthStore = create((set) => ({
 
             if (response.status === 200) {
                 set({ allFollowersUser: response?.data?.data?.followersCounts?.map(v => v?.allUserFollower?.[0]), isLoading: false });
-                console.log("from store", response.data.data.followersCounts.map(v => v.allUserFollower[0]));
-                handleSuccess(response.data.message);
+                // console.log("from store", response.data.data.followersCounts.map(v => v.allUserFollower[0]));
+                // handleSuccess(response.data.message);
             } else {
                 set({ allFollowersUser: null, isLoading: false });
             }
@@ -257,7 +257,7 @@ const useAuthStore = create((set) => ({
                 });
 
                 // console.log("from store", response.data.data);
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             } else {
                 set({ selectedUser: null, isLoading: false });
             }
@@ -329,7 +329,7 @@ const useAuthStore = create((set) => ({
             set({ isLoading: false, error: error.message });
             throw error;
         }
-        console.log(updateProfile)
+        // console.log(updateProfile)
     },
 
     deleteProfileImage: async () => {
@@ -401,13 +401,13 @@ const useAuthStore = create((set) => ({
                 set({ isLoading: false });
                 setShowSearch(response.data.data)
                 // console.log("from store", response.data.data);
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             } else {
                 set({ isLoading: false });
             }
 
         } catch (error) {
-            handleError(error.response?.data?.message || error.message);
+            // handleError(error.response?.data?.message || error.message);
             set({ isLoading: false, error: error.message });
             throw error;
         }
@@ -426,7 +426,7 @@ const useAuthStore = create((set) => ({
             if (response.status === 200) {
                 set({ isLoading: false, allSuggestedUser: response.data.data });
                 // console.log("from store allSuggestedUser", response.data.data);
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             } else {
                 set({ isLoading: false });
             }

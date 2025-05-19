@@ -8,6 +8,7 @@ import { useStoryStartContext } from '../contexts/storyStartContext';
 import { useStory } from '../contexts/storyContext';
 import { useStoryUser } from '../contexts/storyUserContext';
 import { useStoryUserCheck } from '../contexts/userStoryCheckContext';
+import storyStore from '../store/storyStore';
 
 export default function Stories() {
   const [currentIndex, setCurrentIndex] = useNextStory2();
@@ -17,7 +18,9 @@ export default function Stories() {
   const [storiesAll, setStoriesAll] = useStory();
   const [userStoriesAll, setUserStoriesAll] = useStoryUser();
   const [userStoryCheck, setUserStoryCheck] = useStoryUserCheck();
-  const stories = userStoryCheck ? [...userStoriesAll] || [] : [...storiesAll] || [];
+  const allArchiveStory = storyStore((state) => state.allArchiveStory);
+  const allHighLightedStory = storyStore((state) => state.allHighLightedStory);
+  const stories = userStoryCheck == "userStories" ? [...userStoriesAll] || [] : userStoryCheck == "friendStories" ? [...storiesAll] || [] : userStoryCheck == "userArchive" ? [...allArchiveStory] || [] : userStoryCheck == "friendArchive" ? [...allHighLightedStory] || [] : [];
 
   const [isNextStory] = useNextStory(0)
   const [startingIndex, setStartingIndex] = useStoryStartContext()
@@ -42,7 +45,7 @@ export default function Stories() {
     }
   };
 
-  // console.log("currentIndex", currentIndex)
+  // console.log("storiesAll", allArchiveStory)
 
   return (
     <div className="h-screen w-full flex justify-center items-center bg-gray-800 fixed left-0 top-0 overflow-hidden">

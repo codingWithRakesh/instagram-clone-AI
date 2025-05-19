@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PostsProfile from '../components/PostsProfile'
 import SavePost from '../components/SavePost'
 import TaggedPost from '../components/TaggedPost'
@@ -6,19 +6,36 @@ import { NavLink, useParams } from 'react-router-dom'
 import ProfileShow from '../components/ProfileShow'
 import ArchiveStorySelected from '../components/ArchiveStorySelected'
 import { useAuthStore } from '../store/authStore.js'
+import storyStore from '../store/storyStore.js'
 
 const Profile = () => {
   const [tags, setTags] = useState("post")
   const { profile } = useParams();
   const user = useAuthStore((state) => state.user);
+  const tempArray = [1,2,3,4,5,6]
+  const setAllHighLightedStory = storyStore((state) => state.setAllHighLightedStory);
+  const allHighLightedStory = storyStore((state) => state.allHighLightedStory);
+  useEffect(() => {
+    setAllHighLightedStory(profile);
+
+  }, [profile])
+  
+
   return (
     <div className="second Contaner">
       <div className="profileContaner">
         <ProfileShow/>
 
-        <div className="profile_box1">
-          <ArchiveStorySelected/>
-        </div>
+        {(allHighLightedStory?.length > 0 || user.userName == profile) && <div className="profile_box1">
+          {user.userName == profile && <ArchiveStorySelected isUser={true}/>}
+
+          {
+            allHighLightedStory?.map((item, index) => (
+              <ArchiveStorySelected index={index} key={index} item={item} isUser={false}/>
+            ))
+          }
+
+        </div>}
         
         <div className="ImagePro">
           <div className="imaProNavigate">

@@ -20,7 +20,7 @@ const notificationStore = create((set) => ({
             if (response.status === 200) {
                 set({ isLoading: false, allNotification: response.data.data[0] });
                 setNotificationAll(response.data.data[0]?.notifications)
-                handleSuccess(response.data.message);
+                // handleSuccess(response.data.message);
             }
             // console.log("all posts",response.data.data[0])
         } catch (error) {
