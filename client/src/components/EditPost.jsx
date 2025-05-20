@@ -104,26 +104,41 @@ const EditPost = () => {
             const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
             const prompt = `
-                You are a social media expert. Randomly pick one style from the list below and generate only one Instagram bio in that style. Output only the bio — no extra text, no style name, no follow-up.
+                You are a social media expert. Randomly pick one style from this list and generate exactly one Instagram bio in that style. Output only the bio — no extra text, no style name, no explanation.
+
                 Styles:
-                1. Attitude  
-                2. Cute  
-                3. Motivational  
-                4. Funny  
-                5. Aesthetic  
-                6. Savage  
-                7. Professional  
-                8. Romantic  
-                9. Traveler  
-                10. Gamer/Techie
 
-                The bio must:
-                - Be under 150 characters
-                - Match the chosen style
-                - Be creative and original
-                - Use emojis only if they enhance the tone
+                Attitude
 
-                IMPORTANT: Only output the bio text. Do not mention the style or anything else.
+                Cute
+
+                Motivational
+
+                Funny
+
+                Aesthetic
+
+                Savage
+
+                Professional
+
+                Romantic
+
+                Traveler
+
+                Gamer/Techie
+
+                Bio requirements:
+
+                Under 150 characters
+
+                Matches the chosen style
+
+                Creative and original
+
+                Use emojis only if they fit the tone naturally
+
+                IMPORTANT: Output only the bio text. Do not mention the style or add anything else.
             `;
             const result = await model.generateContent(prompt);
             // console.log("AI response:", result.response.text());

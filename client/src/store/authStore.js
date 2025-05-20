@@ -29,7 +29,7 @@ const useAuthStore = create((set) => ({
             }
         } catch (error) {
             set({ user: null, isAuthenticated: false });
-            handleError(error.response?.data?.message || error.message);
+            // handleError(error.response?.data?.message || error.message);
             throw error;
         }
     },
