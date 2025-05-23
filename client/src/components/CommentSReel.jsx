@@ -6,6 +6,8 @@ import { postStore } from "../store/postStore.js";
 import { useParams } from "react-router-dom";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import CommentSoloReel from "./CommentSoloReel.jsx";
+import noProfile from "../assets/images/profileNot.jpg"
+
 
 const CommentSReel = ({ setIsCrose }) => {
   const [reelComments, setReelComments] = useState(null);
@@ -74,7 +76,7 @@ const CommentSReel = ({ setIsCrose }) => {
       <form className="flex items-center rounded-b-xl px-4 py-2 paddingTop5Left1 space-x-3" onSubmit={(e) => e.preventDefault()}>
         <div className="flex items-center bg-[#F5F5F5] w-full gap-2 border rounded-[20px] paddinInInputBox border-gray-200 ">
           <img
-            src={user?.profilePic}
+            src={user?.profilePic || noProfile}
             alt="Your profile"
             className="w-8 h-8 rounded-full object-cover"
           />
