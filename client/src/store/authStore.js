@@ -156,7 +156,7 @@ const useAuthStore = create((set) => ({
                     isLoading: false
                 });
 
-                // console.log("from store", response.data.data);
+                // console.log("from store", response.data.data)
                 handleSuccess(response.data.message);
                 navigate("/");
             } else {
