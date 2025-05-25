@@ -400,6 +400,38 @@ const searchUser = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(200, data, "User fetched successfully"));
 })
 
+const checkGenerateImage = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id).select("-password -refreshToken");
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const today = new Date().getDate().toString();
+
+    if(user.lastGeneratedImg == null || user.lastGeneratedImg != today) {
+        user.lastGeneratedImg = new Date().getDate().toString();
+        await user.save({ validateBeforeSave: false });
+        return res.status(200).json(new ApiResponse(200, { canGenerate: true }, "User fetched successfully"));
+    }else{
+        return res.status(200).json(new ApiResponse(200, { canGenerate: false }, "User fetched successfully"));
+    }
+});
+
+const checkForUserIsGeneratedImage = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id).select("-password -refreshToken");
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const today = new Date().getDate().toString();
+
+    if(user.lastGeneratedImg == null || user.lastGeneratedImg != today) {
+        return res.status(200).json(new ApiResponse(200, { canGenerate: true }, "User fetched successfully"));
+    }else{
+        return res.status(200).json(new ApiResponse(200, { canGenerate: false }, "User fetched successfully"));
+    }
+})
+
 const isNotFollowed = (followData, userId) => {
     for (const i of followData) {
 
@@ -548,5 +580,7 @@ export {
     userProfile,
     allFollowers,
     searchUser,
+    checkGenerateImage,
+    checkForUserIsGeneratedImage,
     suggestedUsers
 }

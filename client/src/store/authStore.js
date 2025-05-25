@@ -412,6 +412,58 @@ const useAuthStore = create((set) => ({
             throw error;
         }
     },
+    userCanGenerate : null,
+    setUserCanGenerate : async (setIsCanGenerate) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.patch(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/checkGenerateImage`,
+                {},
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false, userCanGenerate: response.data.data.canGenerate });
+                // console.log("from store userCanGenerate", response.data.data.canGenerate);
+                setIsCanGenerate(response.data.data.canGenerate);
+                // handleSuccess(response.data.message);
+            } else {
+                set({ isLoading: false });
+            }
+
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
+    checkForUserIsGeneratedImage : async (setIsCanGenerate) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.get(
+                `${import.meta.env.VITE_CORS_ORIGIN_SERVER_USER}/checkForUserIsGeneratedImage`,
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (response.status === 200) {
+                set({ isLoading: false, userCanGenerate: response.data.data.canGenerate });
+                // console.log("from store userCanGenerate", response.data.data.canGenerate);
+                setIsCanGenerate(response.data.data.canGenerate);
+                // handleSuccess(response.data.message);
+            } else {
+                set({ isLoading: false });
+            }
+
+        } catch (error) {
+            handleError(error.response?.data?.message || error.message);
+            set({ isLoading: false, error: error.message });
+            throw error;
+        }
+    },
     allSuggestedUser : [],
     setAllSuggestedUser : async () => {
         set({ isLoading: true, error: null });
