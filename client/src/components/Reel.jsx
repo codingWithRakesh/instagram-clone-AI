@@ -102,7 +102,7 @@ const Reel = ({ id, isActive, valueReel }) => {
     }, []);
 
     const handleCopy = (e) => {
-        const textToCopy = `http://localhost:5173/${valueReel?.owner?.[0]?.userName}/p/${id}`; // Get the text of the clicked button
+        const textToCopy = `https://instagramcloneai.vercel.app/${valueReel?.owner?.[0]?.userName}/p/${id}`; // Get the text of the clicked button
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
                 handleSuccess(`Copied`);

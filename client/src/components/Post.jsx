@@ -1,5 +1,5 @@
 import React from 'react'
-import profile from "../assets/images/profile.jpeg"
+import noProfile from "../assets/images/profileNot.jpg"
 import TimeAgo from './TimeAgo'
 import { useAuthStore } from '../store/authStore.js'
 import { useControl } from '../contexts/controlContext.jsx'
@@ -92,7 +92,7 @@ const Post = ({ value }) => {
             handleError('Data is missing');
             return;
         }
-        const textToCopy = `http://localhost:5173/${value.owner[0].userName}/p/${value._id}`;
+        const textToCopy = `https://instagramcloneai.vercel.app/${value.owner[0].userName}/p/${value._id}`;
 
         navigator.clipboard.writeText(textToCopy)
             .then(() => {
@@ -114,7 +114,7 @@ const Post = ({ value }) => {
             <div className="post1">
                 <NavLink to={`/${value?.owner?.[0]?.userName}`} style={{ display: "flex", alignItems: "center", justifyContent: "flex-start" }}>
                     <div className="profilePost">
-                        <img src={value?.owner?.[0]?.profilePic || profile} alt="" />
+                        <img src={value?.owner?.[0]?.profilePic || noProfile} alt="" />
                     </div>
                     <div className="wirteProPost">
                         <p>
