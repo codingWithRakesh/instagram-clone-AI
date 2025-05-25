@@ -63,6 +63,10 @@ const userSchema = new Schema({
     },
     refreshToken: {
         type: String,
+    },
+    lastGeneratedImg: {
+        type: String,
+        default: null
     }
 }, { timestamps: true })
 
