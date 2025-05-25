@@ -9,7 +9,7 @@ const Upload = () => {
 
     return (
         <>
-            {checktab.value == "take" ? <TakePost loader={false}/> : checktab.value == "view" ? <EditPost /> : checktab.value == "done" ? <TakePost loader={true} /> : ""}
+            {checktab.value == "take" ? <TakePost loader="take"/> : checktab.value == "AI" ? <TakePost loader="AI"/> : checktab.value == "view" ? <EditPost /> : checktab.value == "done" ? <TakePost loader="done" /> : ""}
         </>
     )
 }
