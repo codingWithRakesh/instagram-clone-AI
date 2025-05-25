@@ -474,12 +474,59 @@ textarea {
     /* Chrome, Safari */
 }
 
-.deleteaboutLi{
+.deleteaboutLi {
     width: 90%;
 }
 
-.firstDetels{
+.firstDetels {
     margin-top: .5rem;
     line-height: 1.3rem;
     width: 100%;
 }
+
+.uploadFileDiv {
+    padding: 1rem;
+}
+
+.paddingShow {
+    padding: 1rem;
+}
+
+.marginTopLittle {
+    margin-top: .3rem;
+}
+
+.custom-button {
+    color: #1f2937;
+    /* text-gray-900 */
+    background-color: #ffffff;
+    /* bg-white */
+    border: 1px solid #d1d5db;
+    /* border border-gray-300 */
+    outline: none;
+    /* focus:outline-none */
+    font-weight: 500;
+    /* font-medium */
+    border-radius: 0.5rem;
+    /* rounded-lg */
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 1.25rem;
+    /* py-2.5 px-5 */
+    margin-right: 0.5rem;
+    /* me-2 (margin-inline-end) */
+    margin-bottom: 0.5rem;
+    /* mb-2 */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    /* cursor-pointer */
+}
+
+/* Hover */
+.custom-button:hover {
+    background-color: #f3f4f6;
+    /* hover:bg-gray-100 */
+}
+
+
+/* Dark Mode */

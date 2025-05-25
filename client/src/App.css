@@ -1331,6 +1331,22 @@
     background: blue;
 }
 
+.uploadSelect button {
+    height: 80%;
+    width: 45%;
+    background: #0095F6;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.uploadSelect button:hover {
+    background: blue;
+}
+
 /*more div*/
 .moreBtn {
     height: 27rem;
