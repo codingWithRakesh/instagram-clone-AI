@@ -193,7 +193,7 @@ const EditPost = () => {
     return (
         <div className='w-[60rem] h-[42rem] bg-white flex flex-col items-center justify-center rounded-2xl overflow-hidden'>
             <div className="navTopEdit w-full h-[2.6rem] flex items-center justify-between paddingLeftRight border-b border-[#ECF3FF]">
-                <div className="iconBack cursor-pointer">
+                <div className="iconBack cursor-pointer" onClick={() => setChecktab({ value: "take", postId: null })}>
                     <FaArrowLeft />
                 </div>
                 <p className='font-bold'>Create new {isStoryOrPost}</p>
