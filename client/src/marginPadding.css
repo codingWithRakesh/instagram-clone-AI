@@ -530,3 +530,9 @@ textarea {
 
 
 /* Dark Mode */
+
+
+.marginLeftAUto{
+    margin-left: auto;
+    margin-top: 3px;
+}

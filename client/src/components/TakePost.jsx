@@ -207,7 +207,7 @@ const TakePost = ({ loader }) => {
                         </div>
                         <div className="inputShowPage w-full h-[9rem] rounded-2xl">
                             <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} className='w-full outline-none rounded-2xl h-[9rem] resize-none border border-[#dbdbdb] bg-[#F5F5F5]' placeholder='Write your prompt here...' name="aiPrompt" id=""></textarea>
-                            <button type="button" onClick={generateImage} className='itemCenterAllhild w-[15.813rem] cursor-pointer text-white rounded-[10px] h-[2.75rem] bg-[#0095f6] hover:bg-[#0062f6]'>
+                            <button type="button" onClick={generateImage} className='itemCenterAllhild marginLeftAUto w-[15.813rem] cursor-pointer text-white rounded-[10px] h-[2.75rem] bg-[#0095f6] hover:bg-[#0062f6]'>
                                 {loadingImg ? <Spinner /> : <>Generate<BsStars /></>}
                             </button>
                         </div>
