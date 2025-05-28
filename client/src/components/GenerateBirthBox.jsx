@@ -62,7 +62,7 @@ const GenerateBirthBox = forwardRef(({ inputsD }, ref) => {
                 </select>
                 <select name="year" className='w-[4.5rem] h-full rounded-[3px] border border-[#DBDBDB] paddingLeftRightIn text-[#737373]' onChange={(e) => setSelectedYear(e.target.value)}>
                     <option value="">Year</option>
-                    {years.map((year) => (
+                    {[...years].reverse().map((year) => (
                         <option key={year} value={year}>{year}</option>
                     ))}
                 </select>

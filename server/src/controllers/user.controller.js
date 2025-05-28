@@ -48,7 +48,7 @@ const register = asyncHandler(async (req, res) => {
         DOB,
         password,
         OTP,
-        OTPExpire: Date.now() + 24 * 60 * 60 * 1000
+        OTPExpire: Date.now() + 10 * 60 * 1000
     })
 
     if (!user) {
