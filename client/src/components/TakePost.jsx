@@ -19,9 +19,10 @@ const TakePost = ({ loader }) => {
     const checkForUserIsGeneratedImage = useAuthStore((state) => state.checkForUserIsGeneratedImage);
     const [isCanGenerate, setIsCanGenerate] = useState(true);
     useEffect(() => {
-      checkForUserIsGeneratedImage(setIsCanGenerate);
+        //   checkForUserIsGeneratedImage(setIsCanGenerate); // Uncomment this line if you want to check if the user has generated an image before
+        setIsCanGenerate(false); //if want to disable AI image generation, set it to false
     }, [userCanGenerate]);
-    
+
 
     const [checktab, setChecktab] = useEditPost();
     const [, setPostData] = usePostData();
@@ -93,7 +94,8 @@ const TakePost = ({ loader }) => {
 
     const createFromAI = async () => {
         if (!isCanGenerate) {
-            handleError("You have reached your daily limit for AI image generation.");
+            // handleError("You have reached your daily limit for AI image generation.");
+            handleError("AI image generation is currently disabled.");
             return;
         }
         setChecktab({
@@ -104,7 +106,8 @@ const TakePost = ({ loader }) => {
 
     const generateImage = async () => {
         if (!isCanGenerate) {
-            handleError("You have reached your daily limit for AI image generation.");
+            // handleError("You have reached your daily limit for AI image generation.");
+            handleError("AI image generation is currently disabled.");
             return;
         }
         if (!prompt.trim()) {
