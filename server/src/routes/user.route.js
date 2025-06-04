@@ -21,7 +21,7 @@ import { upload } from "../middlewares/multer.middleware.js"
 const router = Router()
 
 router.route("/register").post(register);
-router.route("/verfiyEmail").post(verfiyEmail)
+router.route("/verfiyEmail").post(verfiyEmail);
 router.route("/login").post(login)
 router.route("/logout").get(verifyLogin, logout)
 router.route("/updateProfile").patch(verifyLogin, updateProfile)
