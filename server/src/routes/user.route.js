@@ -26,7 +26,7 @@ router.route("/login").post(login);
 router.route("/logout").get(verifyLogin, logout);
 router.route("/updateProfile").patch(verifyLogin, updateProfile);
 router.route("/updateProfileImage").patch(verifyLogin, upload.single("profileImg"), updateProfileImage);
-router.route("/deleteProfileImage").delete(verifyLogin, deleteProfileImage)
+router.route("/deleteProfileImage").delete(verifyLogin, deleteProfileImage);
 router.route("/currentUser").get(verifyLogin, currentUser)
 router.route("/userProfile/:userName").get(verifyLogin, userProfile)
 router.route("/allFollowers").get(verifyLogin, allFollowers)
