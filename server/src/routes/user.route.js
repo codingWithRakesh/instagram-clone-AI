@@ -29,7 +29,7 @@ router.route("/updateProfileImage").patch(verifyLogin, upload.single("profileImg
 router.route("/deleteProfileImage").delete(verifyLogin, deleteProfileImage);
 router.route("/currentUser").get(verifyLogin, currentUser);
 router.route("/userProfile/:userName").get(verifyLogin, userProfile);
-router.route("/allFollowers").get(verifyLogin, allFollowers)
+router.route("/allFollowers").get(verifyLogin, allFollowers);
 router.route("/searchUser").post(verifyLogin, searchUser)
 router.route("/checkGenerateImage").patch(verifyLogin, checkGenerateImage)
 router.route("/checkForUserIsGeneratedImage").get(verifyLogin, checkForUserIsGeneratedImage)
