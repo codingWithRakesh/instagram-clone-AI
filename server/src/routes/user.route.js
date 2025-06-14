@@ -18,7 +18,7 @@ import {
 import { verifyLogin } from "../middlewares/user.middleware.js"
 import { upload } from "../middlewares/multer.middleware.js"
 
-const router = Router()
+const router = Router();
 
 router.route("/register").post(register);
 router.route("/verfiyEmail").post(verfiyEmail);
