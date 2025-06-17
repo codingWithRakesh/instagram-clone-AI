@@ -33,6 +33,6 @@ router.route("/allFollowers").get(verifyLogin, allFollowers);
 router.route("/searchUser").post(verifyLogin, searchUser);
 router.route("/checkGenerateImage").patch(verifyLogin, checkGenerateImage);
 router.route("/checkForUserIsGeneratedImage").get(verifyLogin, checkForUserIsGeneratedImage);
-router.route("/suggestedUsers").get(verifyLogin, suggestedUsers)
+router.route("/suggestedUsers").get(verifyLogin, suggestedUsers);
 
 export default router
