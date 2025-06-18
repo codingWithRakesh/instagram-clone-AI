@@ -33,7 +33,7 @@ app.use("/api/v1/message", messageRouter)
 app.use("/api/v1/notification", notificationRouter)
 
 app.get("/", (_, res) => {
-    res.send("working")
+    res.send("working");
 })
 
 
