@@ -6,7 +6,7 @@ import { verifyLogin } from "../middlewares/user.middleware.js"
 
 const router = Router();
 
-router.route("/allNotification").get(verifyLogin, allNotification)
+router.route("/allNotification").get(verifyLogin, allNotification);
 
 
 export default router;
