@@ -29,7 +29,7 @@ router.route("/allUserPosts/:userName").get(verifyLogin, allUserPosts);
 router.route("/allPosts").get(verifyLogin, allPosts);
 router.route("/editPostData").post(verifyLogin, editPostData);
 router.route("/savePosts").get(verifyLogin, savePost);
-router.route("/reels/:userName").get(verifyLogin, allReels)
+router.route("/reels/:userName").get(verifyLogin, allReels);
 router.route("/tagged/:userName").get(verifyLogin, allTagUsers)
 router.route("/allPostExplore").get(verifyLogin, allPostExplore)
 router.route("/allReelsPage").get(verifyLogin, allReelsPage)
