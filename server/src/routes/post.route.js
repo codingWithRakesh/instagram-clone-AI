@@ -31,7 +31,7 @@ router.route("/editPostData").post(verifyLogin, editPostData);
 router.route("/savePosts").get(verifyLogin, savePost);
 router.route("/reels/:userName").get(verifyLogin, allReels);
 router.route("/tagged/:userName").get(verifyLogin, allTagUsers);
-router.route("/allPostExplore").get(verifyLogin, allPostExplore)
+router.route("/allPostExplore").get(verifyLogin, allPostExplore);
 router.route("/allReelsPage").get(verifyLogin, allReelsPage)
 router.route("/commentOnReel/:postId").get(verifyLogin, commentOnReel)
 router.route("/reelPostLike/:postId").get(verifyLogin, reelPostLike)
