@@ -33,7 +33,7 @@ router.route("/reels/:userName").get(verifyLogin, allReels);
 router.route("/tagged/:userName").get(verifyLogin, allTagUsers);
 router.route("/allPostExplore").get(verifyLogin, allPostExplore);
 router.route("/allReelsPage").get(verifyLogin, allReelsPage);
-router.route("/commentOnReel/:postId").get(verifyLogin, commentOnReel)
+router.route("/commentOnReel/:postId").get(verifyLogin, commentOnReel);
 router.route("/reelPostLike/:postId").get(verifyLogin, reelPostLike)
 router.route("/reelSavePost/:postId").get(verifyLogin, reelSavePost)
 
