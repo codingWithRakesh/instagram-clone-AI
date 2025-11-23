@@ -70,7 +70,7 @@ const useAuthStore = create((set) => ({
                         'Content-Type': 'application/json'
                     }
                 }
-            );
+            )
 
             if (response.status === 200) {
                 set({
